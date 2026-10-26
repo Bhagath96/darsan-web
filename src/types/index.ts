@@ -14,9 +14,34 @@ export interface AuthUser {
   templeId: string | null
 }
 
+/**
+ * Devotees and temple staff log in on separate pages. Each page only accepts its own
+ * kind of account, so a staff member can't land in the devotee site by mistake.
+ */
+export type LoginPortal = 'devotee' | 'staff'
+
 export interface LoginRequest {
   username: string
   password: string
+  portal: LoginPortal
+}
+
+/** Sign-up form for a new devotee account. */
+export interface RegisterRequest {
+  name: string
+  phone: string
+  username: string
+  password: string
+}
+
+export interface ProfileUpdate {
+  name: string
+  phone: string
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
 }
 
 export interface Session {

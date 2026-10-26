@@ -2,6 +2,7 @@ import type { UserRole } from '@/types'
 
 /** Every action the app guards. One list for the UI, the route guards and the mock server. */
 export type Permission =
+  | 'admin:access'
   | 'booking:create'
   | 'booking:viewOwn'
   | 'booking:viewAny'
@@ -16,6 +17,7 @@ export type Permission =
 const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
   DEVOTEE: ['booking:create', 'booking:viewOwn', 'booking:cancelOwn', 'order:create'],
   STAFF: [
+    'admin:access',
     'booking:create',
     'booking:viewOwn',
     'booking:viewAny',
@@ -26,6 +28,7 @@ const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
     'order:cancelAny',
   ],
   ADMIN: [
+    'admin:access',
     'booking:create',
     'booking:viewOwn',
     'booking:viewAny',

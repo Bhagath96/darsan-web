@@ -1,4 +1,5 @@
-import { LogOut, UserRound } from 'lucide-react'
+import { LayoutDashboard, LogOut, UserRound } from 'lucide-react'
+import { Link } from 'react-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useLogout } from '@/hooks/useLogout'
 import { useT } from '@/i18n'
+import { can } from '@/lib/permissions'
 import type { AuthUser } from '@/types'
 
 export function RoleBadge({ user }: { user: AuthUser }) {
@@ -39,7 +41,22 @@ export function UserMenu({ user }: { user: AuthUser }) {
           <RoleBadge user={user} />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={logout}>
+        <DropdownMenuItem asChild>
+          <Link to="/account">
+            <UserRound aria-hidden="true" />
+            {t('nav.account')}
+          </Link>
+        </DropdownMenuItem>
+        {can(user.role, 'admin:access') && (
+          <DropdownMenuItem asChild>
+            <Link to="/admin">
+              <LayoutDashboard aria-hidden="true" />
+              {t('nav.admin')}
+            </Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onSelect={() => void logout()}>
           <LogOut aria-hidden="true" />
           {t('user.logout')}
         </DropdownMenuItem>

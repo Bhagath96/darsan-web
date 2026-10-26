@@ -1,13 +1,16 @@
 import { createSeed } from './seed'
+import { loadStoredUsers } from './userStore'
 
 /**
  * In-memory "server" database. Lives only in this browser tab:
- * a full page reload re-seeds it.
+ * a full page reload re-seeds it. User accounts are the exception: they are
+ * kept in localStorage (see userStore.ts) so sign-ups survive a reload.
  */
 function createDb(now: Date) {
   const seed = createSeed(now)
   return {
     ...seed,
+    users: loadStoredUsers() ?? seed.users,
     /** token → userId */
     sessions: new Map<string, string>(),
     /** idempotency key → first result */

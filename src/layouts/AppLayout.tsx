@@ -6,6 +6,7 @@ import { Header } from '@/components/common/Header'
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/common/SkipLink'
 import { Toaster } from '@/components/ui/sonner'
 import { useLatestNotices } from '@/hooks/useLatestNotices'
+import { useSessionExpiredNotice } from '@/hooks/useSessionExpiredNotice'
 import { useWelcomeToast } from '@/hooks/useWelcomeToast'
 import { useT } from '@/i18n'
 
@@ -31,6 +32,7 @@ export function AppLayout() {
   const { lang } = useT()
   useLatestNotices() // loads notices for the header bell on every page
   useWelcomeToast()
+  useSessionExpiredNotice()
   useFocusMainOnNavigate()
 
   // Keep <html lang> in sync so screen readers use the right voice.

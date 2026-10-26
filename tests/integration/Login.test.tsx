@@ -53,15 +53,17 @@ describe('Login page', () => {
 
   it('ignores a redirect to another site', async () => {
     const { user, router } = renderApp({ url: '/login?redirect=%2F%2Fevil.example.com' })
-    await logIn(user, 'admin', 'admin123')
+    await logIn(user, 'lakshmi', 'lakshmi123')
     await waitFor(() => expect(currentUrl(router)).toBe('/'))
   })
 
   it('fills the form from the demo accounts box', async () => {
     const { user } = renderApp({ url: '/login' })
-    await user.click(await screen.findByRole('button', { name: 'Use staff' }))
-    expect(screen.getByLabelText('Username')).toHaveValue('staff')
-    expect(screen.getByLabelText('Password')).toHaveValue('staff123')
+    await user.click(await screen.findByRole('button', { name: 'Use lakshmi' }))
+    expect(screen.getByLabelText('Username')).toHaveValue('lakshmi')
+    expect(screen.getByLabelText('Password')).toHaveValue('lakshmi123')
+    // Staff accounts are listed on the staff login, not here.
+    expect(screen.queryByRole('button', { name: 'Use staff' })).not.toBeInTheDocument()
   })
 
   it('a double click sends one login request', async () => {

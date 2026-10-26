@@ -78,12 +78,15 @@ function MobileMenu({ items }: { items: NavItem[] }) {
                 <p className="font-medium">{user.name}</p>
                 <RoleBadge user={user} />
               </div>
+              <NavLink to="/account" className={linkClass} onClick={close}>
+                {t('nav.account')}
+              </NavLink>
               <Button
                 variant="outline"
                 className="h-11 w-full justify-start px-3"
                 onClick={() => {
                   close()
-                  logout()
+                  void logout()
                 }}
               >
                 <LogOut aria-hidden="true" />

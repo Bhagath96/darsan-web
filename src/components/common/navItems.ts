@@ -18,6 +18,7 @@ export const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'nav.home', end: true },
   { to: '/temples', label: 'nav.temples' },
   { to: '/notifications', label: 'nav.notifications' },
+  { to: '/admin', label: 'nav.admin', permission: 'admin:access' },
 ]
 
 /** The links this user is allowed to see. Guards still protect the routes themselves. */
