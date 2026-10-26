@@ -23,7 +23,9 @@ function useFocusMainOnNavigate() {
       first.current = false
       return
     }
-    document.getElementById(MAIN_CONTENT_ID)?.focus({ preventScroll: true })
+    const main = document.getElementById(MAIN_CONTENT_ID)
+    // A page may already have put focus somewhere useful (e.g. a confirmation heading).
+    if (main && !main.contains(document.activeElement)) main.focus({ preventScroll: true })
   }, [pathname])
 }
 

@@ -1,4 +1,5 @@
 import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
+import { logoutRequested, sessionExpired } from '../auth/authSlice'
 import { asyncState, type AppError, type AsyncState } from '../types'
 import type { RootState } from '../rootReducer'
 import type { Booking, BookingQuery, BookingStatus, Paged } from '@/types'
@@ -65,6 +66,10 @@ const bookingsSlice = createSlice({
       delete state.cancelling[action.payload]
       if (previous) setStatus(state, action.payload, previous)
     },
+  },
+  extraReducers: (builder) => {
+    // Never show one user's list to the next person on a shared device.
+    builder.addCase(logoutRequested, () => initialState).addCase(sessionExpired, () => initialState)
   },
 })
 

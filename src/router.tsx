@@ -11,6 +11,8 @@ import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
 import { AdminRatesPage } from '@/pages/admin/AdminRatesPage'
 import { AdminSlotsPage } from '@/pages/admin/AdminSlotsPage'
 import { ForbiddenPage } from '@/pages/ForbiddenPage'
+import { DarshanPage } from '@/pages/darshan/DarshanPage'
+import { MyBookingsPage } from '@/pages/darshan/MyBookingsPage'
 import { HomePage } from '@/pages/HomePage'
 import { LoginPage, StaffLoginPage } from '@/pages/LoginPage'
 import { NoticeDetailPage } from '@/pages/NoticeDetailPage'
@@ -20,6 +22,10 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { RouteErrorPage } from '@/pages/RouteErrorPage'
 import { TempleDetailPage } from '@/pages/TempleDetailPage'
 import { TemplesPage } from '@/pages/TemplesPage'
+import { CheckoutPage } from '@/pages/vazhipadu/CheckoutPage'
+import { MyOrdersPage } from '@/pages/vazhipadu/MyOrdersPage'
+import { ReceiptPage } from '@/pages/vazhipadu/ReceiptPage'
+import { VazhipaduPage } from '@/pages/vazhipadu/VazhipaduPage'
 
 /** Route table. Exported as plain objects so tests can mount it in a memory router. */
 export const routes: RouteObject[] = [
@@ -36,6 +42,19 @@ export const routes: RouteObject[] = [
           { path: 'temples/:templeId', element: <TempleDetailPage /> },
           { path: 'notifications', element: <NotificationsPage /> },
           { path: 'notifications/:noticeId', element: <NoticeDetailPage /> },
+
+          // Devotee services: browsing is public, booking needs a login
+          { path: 'darshan', element: <DarshanPage /> },
+          { path: 'vazhipadu', element: <VazhipaduPage /> },
+          {
+            element: <RequireAuth />,
+            children: [
+              { path: 'darshan/my-bookings', element: <MyBookingsPage /> },
+              { path: 'vazhipadu/checkout', element: <CheckoutPage /> },
+              { path: 'vazhipadu/orders/:orderNumber', element: <ReceiptPage /> },
+              { path: 'vazhipadu/my-orders', element: <MyOrdersPage /> },
+            ],
+          },
 
           // Accounts
           { path: 'login', element: <LoginPage /> },

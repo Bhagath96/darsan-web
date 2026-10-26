@@ -23,8 +23,8 @@ import {
   orderCancelRequested,
   ordersExportRequested,
   ordersRequested,
-  selectAdminOrders,
-} from '@/store/admin/ordersSlice'
+  selectOrders,
+} from '@/store/orders/ordersSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { Order, OrderStatus } from '@/types'
 
@@ -33,7 +33,7 @@ const isStatus = (v: string): v is OrderStatus => (ORDER_STATUSES as readonly st
 function CancelOrderButton({ order }: { order: Order }) {
   const { t } = useT()
   const dispatch = useAppDispatch()
-  const cancelling = useAppSelector((s) => order.id in s.adminOrders.cancelling)
+  const cancelling = useAppSelector((s) => order.id in s.orders.cancelling)
   if (order.status !== 'CONFIRMED') return null
   return (
     <ConfirmDialog
@@ -59,7 +59,7 @@ function CancelOrderButton({ order }: { order: Order }) {
 export function AdminOrdersPage() {
   const { t, pick, date, err, lang } = useT()
   const dispatch = useAppDispatch()
-  const list = useAppSelector(selectAdminOrders)
+  const list = useAppSelector(selectOrders)
   const temples = useTemples()
   const { get, update } = useQueryParams()
 

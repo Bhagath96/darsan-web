@@ -165,6 +165,8 @@ export interface CreateOrderRequest extends DevoteeDetails {
 }
 
 export interface OrderQuery {
+  /** Only orders the logged-in user placed (the "My orders" page, for any role). */
+  mine?: boolean
   status?: OrderStatus
   date?: IsoDate
   phone?: string

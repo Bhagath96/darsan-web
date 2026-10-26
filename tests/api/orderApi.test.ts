@@ -128,3 +128,32 @@ describe('orderApi', () => {
     })
   })
 })
+
+describe('orderApi.getOrder', () => {
+  beforeEach(() => freezeTime())
+  afterEach(() => vi.useRealTimers())
+
+  it('returns your own order by number, and hides other people’s', async () => {
+    actAs('devotee')
+    const created = await orderApi.createOrder(order())
+    await expect(orderApi.getOrder(created.orderNumber)).resolves.toMatchObject({ id: created.id })
+
+    actAs('lakshmi')
+    await expect(orderApi.getOrder(created.orderNumber)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+
+    actAs('staff') // the order is for Sree Krishna Temple, staff's temple
+    await expect(orderApi.getOrder(created.orderNumber)).resolves.toMatchObject({ id: created.id })
+  })
+})
+
+describe('orderApi.getOrders mine', () => {
+  beforeEach(() => freezeTime())
+  afterEach(() => vi.useRealTimers())
+
+  it('returns only the orders the user placed, even for staff', async () => {
+    actAs('staff')
+    const own = await orderApi.createOrder(order())
+    const mine = await orderApi.getOrders({ mine: true, page: 1, pageSize: 50 })
+    expect(mine.items.map((o) => o.id)).toEqual([own.id])
+  })
+})

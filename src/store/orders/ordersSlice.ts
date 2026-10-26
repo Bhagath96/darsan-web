@@ -1,9 +1,10 @@
 import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
+import { logoutRequested, sessionExpired } from '../auth/authSlice'
 import { asyncState, type AppError, type AsyncState } from '../types'
 import type { RootState } from '../rootReducer'
 import type { Order, OrderQuery, OrderStatus, Paged, RequestStatus } from '@/types'
 
-export interface AdminOrdersState extends AsyncState<Paged<Order> | null> {
+export interface OrdersState extends AsyncState<Paged<Order> | null> {
   requestId: string | null
   /** The query of the latest request (to tell whether an answer belongs to it). */
   query: OrderQuery | null
@@ -12,7 +13,7 @@ export interface AdminOrdersState extends AsyncState<Paged<Order> | null> {
   export: { status: RequestStatus; error: AppError | null }
 }
 
-const initialState: AdminOrdersState = {
+const initialState: OrdersState = {
   ...asyncState<Paged<Order> | null>(null),
   requestId: null,
   query: null,
@@ -20,13 +21,13 @@ const initialState: AdminOrdersState = {
   export: { status: 'idle', error: null },
 }
 
-const setStatus = (state: AdminOrdersState, id: string, status: OrderStatus) => {
+const setStatus = (state: OrdersState, id: string, status: OrderStatus) => {
   const order = state.data?.items.find((o) => o.id === id)
   if (order) order.status = status
 }
 
 const ordersSlice = createSlice({
-  name: 'adminOrders',
+  name: 'orders',
   initialState,
   reducers: {
     ordersRequested: {
@@ -79,6 +80,10 @@ const ordersSlice = createSlice({
       state.export = { status: 'error', error: action.payload }
     },
   },
+  extraReducers: (builder) => {
+    // Never show one user's list to the next person on a shared device.
+    builder.addCase(logoutRequested, () => initialState).addCase(sessionExpired, () => initialState)
+  },
 })
 
 export const {
@@ -93,4 +98,5 @@ export const {
   ordersExportFailed,
 } = ordersSlice.actions
 export default ordersSlice.reducer
-export const selectAdminOrders = (state: RootState) => state.adminOrders
+/** Order list shared by the admin orders page and the devotee's "My orders" page. */
+export const selectOrders = (state: RootState) => state.orders

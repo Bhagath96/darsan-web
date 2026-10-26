@@ -13,6 +13,39 @@ import { cn } from '@/lib/utils'
 
 const HOME_NOTICE_COUNT = 3
 
+const SERVICES = [
+  { to: '/darshan', title: 'home.darshanTitle', text: 'home.darshanText', image: 'lamp' },
+  { to: '/vazhipadu', title: 'home.vazhipaduTitle', text: 'home.vazhipaduText', image: 'payasam' },
+] as const
+
+function ServicesSection() {
+  const { t } = useT()
+  return (
+    <section aria-labelledby="home-services" className="space-y-4">
+      <h2 id="home-services" className="text-2xl font-semibold text-primary">
+        {t('home.servicesTitle')}
+      </h2>
+      <ul className="grid gap-4 sm:grid-cols-2">
+        {SERVICES.map((s) => (
+          <li key={s.to}>
+            <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition focus-within:ring-2 focus-within:ring-ring hover:shadow-md sm:flex-row">
+              <img src={imageFor(s.image)} alt="" loading="lazy" className="aspect-[16/9] w-full object-cover sm:aspect-auto sm:w-40" />
+              <div className="space-y-1 p-4">
+                <h3 className="text-xl font-semibold text-primary">
+                  <Link to={s.to} className="outline-none after:absolute after:inset-0 group-hover:underline focus-visible:underline">
+                    {t(s.title)}
+                  </Link>
+                </h3>
+                <p className="text-sm text-muted-foreground">{t(s.text)}</p>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 function TemplesSection() {
   const { t, err } = useT()
   const temples = useTemples()
@@ -97,8 +130,11 @@ export function HomePage() {
           <h1 className="text-3xl font-semibold sm:text-4xl">{t('home.heroTitle')}</h1>
           <p className="text-base sm:text-lg">{t('home.heroText')}</p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <Link to="/temples" className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}>
-              {t('home.ctaTemples')}
+            <Link to="/darshan" className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}>
+              {t('home.darshanTitle')}
+            </Link>
+            <Link to="/vazhipadu" className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}>
+              {t('home.vazhipaduTitle')}
             </Link>
             <Link
               to="/notifications"
@@ -113,6 +149,7 @@ export function HomePage() {
         </div>
       </section>
 
+      <ServicesSection />
       <NoticesSection />
       <TemplesSection />
     </div>

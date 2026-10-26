@@ -17,6 +17,8 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'nav.home', end: true },
   { to: '/temples', label: 'nav.temples' },
+  { to: '/darshan', label: 'nav.darshan' },
+  { to: '/vazhipadu', label: 'nav.vazhipadu' },
   { to: '/notifications', label: 'nav.notifications' },
   { to: '/admin', label: 'nav.admin', permission: 'admin:access' },
 ]

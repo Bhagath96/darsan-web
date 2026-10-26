@@ -4,6 +4,7 @@ import { loadAuthState } from './auth/authSlice'
 import { loadI18nState } from './i18n/i18nSlice'
 import { initialNoticesState, loadNoticesSeen } from './notices/noticesSlice'
 import { rootReducer, type RootState } from './rootReducer'
+import { loadCartState } from './vazhipadu/cartSlice'
 import { rootSaga } from './rootSaga'
 
 /** Builds a store. Tests pass their own `preloadedState`; the app loads saved preferences. */
@@ -21,6 +22,7 @@ export function makeStore(preloadedState?: Partial<RootState>) {
 export function loadPersistedState(): Partial<RootState> {
   return {
     auth: loadAuthState(),
+    cart: loadCartState(),
     i18n: loadI18nState(),
     notices: { ...initialNoticesState, lastSeenAt: loadNoticesSeen() },
   }

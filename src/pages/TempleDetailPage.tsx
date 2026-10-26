@@ -136,6 +136,14 @@ export function TempleDetailPage() {
               <MapPin aria-hidden="true" className="size-4" />
               {pick(temple.location)}
             </p>
+            <div className="flex flex-wrap gap-3 pt-3">
+              <Link to={`/darshan?temple=${temple.id}`} className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}>
+                {t('temple.bookDarshan')}
+              </Link>
+              <Link to={`/vazhipadu?temple=${temple.id}`} className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}>
+                {t('temple.offerVazhipadu')}
+              </Link>
+            </div>
           </div>
         </section>
       </div>

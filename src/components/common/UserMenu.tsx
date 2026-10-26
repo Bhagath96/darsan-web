@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogOut, UserRound } from 'lucide-react'
+import { CalendarCheck, LayoutDashboard, LogOut, ReceiptText, UserRound } from 'lucide-react'
 import { Link } from 'react-router'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -41,6 +41,18 @@ export function UserMenu({ user }: { user: AuthUser }) {
           <RoleBadge user={user} />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/darshan/my-bookings">
+            <CalendarCheck aria-hidden="true" />
+            {t('nav.myBookings')}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link to="/vazhipadu/my-orders">
+            <ReceiptText aria-hidden="true" />
+            {t('nav.myOrders')}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/account">
             <UserRound aria-hidden="true" />

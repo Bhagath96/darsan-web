@@ -9,7 +9,7 @@ export function Footer() {
   const { t } = useT()
   const user = useAppSelector(selectCurrentUser)
   return (
-    <footer className="mt-12 border-t border-border bg-secondary/40">
+    <footer className="mt-12 print:hidden border-t border-border bg-secondary/40">
       <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 text-sm text-muted-foreground sm:grid-cols-2">
         <div className="space-y-3">
           <p className="font-heading text-lg font-semibold text-primary">{t('app.name')}</p>

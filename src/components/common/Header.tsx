@@ -3,6 +3,7 @@ import { LogIn, LogOut, Menu } from 'lucide-react'
 import { Link, NavLink, useLocation } from 'react-router'
 import { LanguageToggle } from './LanguageToggle'
 import { visibleNavItems, type NavItem } from './navItems'
+import { CartButton } from './CartButton'
 import { NotificationBell } from './NotificationBell'
 import { RoleBadge, UserMenu } from './UserMenu'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -59,7 +60,7 @@ function MobileMenu({ items }: { items: NavItem[] }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon-lg" className="size-11 md:hidden" aria-label={t('nav.openMenu')}>
+        <Button variant="outline" size="icon-lg" className="size-11 lg:hidden" aria-label={t('nav.openMenu')}>
           <Menu aria-hidden="true" className="size-5" />
         </Button>
       </SheetTrigger>
@@ -78,6 +79,12 @@ function MobileMenu({ items }: { items: NavItem[] }) {
                 <p className="font-medium">{user.name}</p>
                 <RoleBadge user={user} />
               </div>
+              <NavLink to="/darshan/my-bookings" className={linkClass} onClick={close}>
+                {t('nav.myBookings')}
+              </NavLink>
+              <NavLink to="/vazhipadu/my-orders" className={linkClass} onClick={close}>
+                {t('nav.myOrders')}
+              </NavLink>
               <NavLink to="/account" className={linkClass} onClick={close}>
                 {t('nav.account')}
               </NavLink>
@@ -108,8 +115,8 @@ export function Header() {
   const items = visibleNavItems(user)
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-2 md:gap-4">
+    <header className="sticky top-0 z-40 print:hidden border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-2 lg:gap-4">
         <Link to="/" className="flex min-w-0 items-center gap-2 rounded-md py-1">
           <span
             aria-hidden="true"
@@ -125,13 +132,14 @@ export function Header() {
           </span>
         </Link>
 
-        <nav aria-label={t('nav.main')} className="ms-4 hidden md:block">
+        <nav aria-label={t('nav.main')} className="ms-4 hidden lg:block">
           <NavLinks items={items} className="flex items-center gap-1" />
         </nav>
 
         <div className="ms-auto flex items-center gap-2">
+          <CartButton />
           <NotificationBell />
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 lg:flex">
             <LanguageToggle />
             {user ? <UserMenu user={user} /> : <LoginLink />}
           </div>

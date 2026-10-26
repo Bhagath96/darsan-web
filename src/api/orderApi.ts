@@ -81,6 +81,7 @@ export function getOrders(query: OrderQuery): Promise<Paged<Order>> {
     const phoneDigits = query.phone?.replace(/\D/g, '') ?? ''
     const matches = visibleOrders(user).filter(
       (o) =>
+        (!query.mine || o.userId === user.id) &&
         (!query.status || o.status === query.status) &&
         (!query.date || o.offeringDate === query.date) &&
         (!query.templeId || o.templeId === query.templeId) &&
@@ -95,6 +96,16 @@ export function getOrders(query: OrderQuery): Promise<Paged<Order>> {
       page,
       pageSize,
     }
+  })
+}
+
+/** One order by its number (receipt page). Devotees only get their own orders. */
+export function getOrder(orderNumber: string): Promise<Order> {
+  return simulate('vazhipadu', () => {
+    const user = requireUser()
+    const order = visibleOrders(user).find((o) => o.orderNumber === orderNumber)
+    if (!order) throw new ApiError('NOT_FOUND', 'We could not find this order.')
+    return order
   })
 }
 
