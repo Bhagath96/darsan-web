@@ -13,6 +13,7 @@ export type Permission =
   | 'order:cancelAny'
   | 'catalog:manage'
   | 'dashboard:view'
+  | 'notice:manage'
 
 const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
   DEVOTEE: ['booking:create', 'booking:viewOwn', 'booking:cancelOwn', 'order:create'],
@@ -26,6 +27,7 @@ const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
     'order:create',
     'order:viewAny',
     'order:cancelAny',
+    'notice:manage',
   ],
   ADMIN: [
     'admin:access',
@@ -39,6 +41,7 @@ const ROLE_PERMISSIONS: Record<UserRole, readonly Permission[]> = {
     'order:cancelAny',
     'catalog:manage',
     'dashboard:view',
+    'notice:manage',
   ],
 }
 

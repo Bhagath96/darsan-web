@@ -1,3 +1,4 @@
+export * as adminApi from './adminApi'
 export * as authApi from './authApi'
 export * as bookingApi from './bookingApi'
 export * as noticeApi from './noticeApi'

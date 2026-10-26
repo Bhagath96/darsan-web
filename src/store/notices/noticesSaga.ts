@@ -1,5 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { call, put, takeEvery, takeLatest, takeLeading } from 'redux-saga/effects'
+import { call, put, select, takeEvery, takeLatest, takeLeading } from 'redux-saga/effects'
+import { callApi } from '../callApi'
+import { notify, notifyError } from '../notify'
+import type { RootState } from '../rootReducer'
 import { toAppError } from '../errors'
 import { saveJson, STORAGE_KEYS } from '../persistence'
 import {
@@ -13,9 +16,15 @@ import {
   noticesLoaded,
   noticesRequested,
   noticesSeen,
+  noticeCreated,
+  noticeCreateFailed,
+  noticeCreateRequested,
+  noticeDeleteConfirmed,
+  noticeDeleteRequested,
+  noticeDeleteReverted,
 } from './noticesSlice'
 import { noticeApi } from '@/api'
-import type { Notice, NoticeQuery } from '@/types'
+import type { Notice, NoticeInput, NoticeQuery } from '@/types'
 
 /** Enough for the home page and the unread count. */
 const LATEST_LIMIT = 20
@@ -52,7 +61,33 @@ function* persistSeen(action: PayloadAction<string>) {
   yield call(saveJson, STORAGE_KEYS.noticesSeen, action.payload)
 }
 
+function* createNotice(action: PayloadAction<NoticeInput>) {
+  try {
+    const notice: Notice = yield* callApi(noticeApi.createNotice, action.payload)
+    yield put(noticeCreated(notice))
+    yield* notify('success', 'adminNotices.published')
+  } catch (error) {
+    yield put(noticeCreateFailed(toAppError(error)))
+  }
+}
+
+function* deleteNotice(action: PayloadAction<string>) {
+  const id = action.payload
+  const started: boolean = yield select((s: RootState) => id in s.notices.deleting)
+  if (!started) return
+  try {
+    yield* callApi(noticeApi.deleteNotice, id)
+    yield put(noticeDeleteConfirmed(id))
+    yield* notify('success', 'adminNotices.deleted')
+  } catch (error) {
+    yield put(noticeDeleteReverted(id))
+    yield* notifyError(toAppError(error))
+  }
+}
+
 export function* noticesSaga() {
+  yield takeLeading(noticeCreateRequested.type, createNotice)
+  yield takeEvery(noticeDeleteRequested.type, deleteNotice)
   yield takeLeading(latestNoticesRequested.type, loadLatest)
   // Changing a filter cancels the request for the previous one.
   yield takeLatest(noticesRequested.type, loadList)

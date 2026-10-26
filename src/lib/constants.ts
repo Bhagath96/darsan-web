@@ -46,6 +46,16 @@ export const MAX_QUANTITY = 10
 export const MAX_DAYS_AHEAD = 90
 
 export const ORDERS_PAGE_SIZE = 10
+export const BOOKINGS_PAGE_SIZE = 10
+
+/** Limits for admin edits. */
+export const MAX_SLOT_CAPACITY = 500
+export const MAX_OFFERING_PRICE = 100_000
+export const NOTICE_TITLE_MAX = 120
+export const NOTICE_BODY_MAX = 2000
+
+/** Most rows a CSV export will include. */
+export const EXPORT_ROW_LIMIT = 5000
 
 /** Darshan tickets one booking can hold. */
 export const MAX_TICKETS_PER_BOOKING = 10

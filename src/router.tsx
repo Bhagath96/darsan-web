@@ -1,9 +1,15 @@
 import type { RouteObject } from 'react-router'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { AppLayout } from '@/layouts/AppLayout'
-import { RequireAuth, RequireRole } from '@/layouts/guards'
+import { RequireAuth, RequirePermission, RequireRole } from '@/layouts/guards'
 import { AccountPage } from '@/pages/AccountPage'
+import { AdminBookingsPage } from '@/pages/admin/AdminBookingsPage'
+import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage'
 import { AdminHomePage } from '@/pages/admin/AdminHomePage'
+import { AdminNoticesPage } from '@/pages/admin/AdminNoticesPage'
+import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
+import { AdminRatesPage } from '@/pages/admin/AdminRatesPage'
+import { AdminSlotsPage } from '@/pages/admin/AdminSlotsPage'
 import { ForbiddenPage } from '@/pages/ForbiddenPage'
 import { HomePage } from '@/pages/HomePage'
 import { LoginPage, StaffLoginPage } from '@/pages/LoginPage'
@@ -48,7 +54,32 @@ export const routes: RouteObject[] = [
             children: [
               {
                 element: <AdminLayout />,
-                children: [{ index: true, element: <AdminHomePage /> }],
+                children: [
+                  { index: true, element: <AdminHomePage /> },
+                  {
+                    element: <RequirePermission permission="dashboard:view" />,
+                    children: [{ path: 'dashboard', element: <AdminDashboardPage /> }],
+                  },
+                  {
+                    element: <RequirePermission permission="booking:viewAny" />,
+                    children: [{ path: 'bookings', element: <AdminBookingsPage /> }],
+                  },
+                  {
+                    element: <RequirePermission permission="order:viewAny" />,
+                    children: [{ path: 'orders', element: <AdminOrdersPage /> }],
+                  },
+                  {
+                    element: <RequirePermission permission="catalog:manage" />,
+                    children: [
+                      { path: 'slots', element: <AdminSlotsPage /> },
+                      { path: 'rates', element: <AdminRatesPage /> },
+                    ],
+                  },
+                  {
+                    element: <RequirePermission permission="notice:manage" />,
+                    children: [{ path: 'notices', element: <AdminNoticesPage /> }],
+                  },
+                ],
               },
             ],
           },

@@ -1,4 +1,5 @@
 import { CheckCircle2 } from 'lucide-react'
+import { Link } from 'react-router'
 import { PageHeading } from '@/components/common/PageTitle'
 import { RoleBadge } from '@/components/common/UserMenu'
 import { useTemples } from '@/hooks/useTemples'
@@ -8,11 +9,12 @@ import { selectCurrentUser } from '@/store/auth/authSlice'
 import { useAppSelector } from '@/store/hooks'
 
 /** Permissions worth listing to staff, in a sensible order, with their description. */
-const LISTED: ReadonlyArray<[Permission, MessageKey]> = [
-  ['booking:viewAny', 'admin.perm.booking:viewAny'],
-  ['order:viewAny', 'admin.perm.order:viewAny'],
-  ['catalog:manage', 'admin.perm.catalog:manage'],
-  ['dashboard:view', 'admin.perm.dashboard:view'],
+const LISTED: ReadonlyArray<[Permission, MessageKey, string]> = [
+  ['dashboard:view', 'admin.perm.dashboard:view', '/admin/dashboard'],
+  ['booking:viewAny', 'admin.perm.booking:viewAny', '/admin/bookings'],
+  ['order:viewAny', 'admin.perm.order:viewAny', '/admin/orders'],
+  ['catalog:manage', 'admin.perm.catalog:manage', '/admin/slots'],
+  ['notice:manage', 'admin.perm.notice:manage', '/admin/notices'],
 ]
 
 export function AdminHomePage() {
@@ -39,10 +41,12 @@ export function AdminHomePage() {
           {t('admin.yourAccess')}
         </h2>
         <ul className="space-y-2">
-          {LISTED.filter(([p]) => can(user.role, p)).map(([p, label]) => (
+          {LISTED.filter(([p]) => can(user.role, p)).map(([p, label, to]) => (
             <li key={p} className="flex items-start gap-2">
               <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-success" />
-              {t(label)}
+              <Link to={to} className="text-primary underline-offset-4 hover:underline">
+                {t(label)}
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router'
+import { can, type Permission } from '@/lib/permissions'
 import { selectCurrentUser } from '@/store/auth/authSlice'
 import { useAppSelector } from '@/store/hooks'
 import type { UserRole } from '@/types'
@@ -29,5 +30,12 @@ export function RequireRole({ roles, loginPath = '/admin/login' }: { roles: User
   const here = useHere()
   if (!user) return <Navigate to={`${loginPath}?redirect=${here}`} replace />
   if (!roles.includes(user.role)) return <Navigate to="/403" replace />
+  return <Outlet />
+}
+
+/** Children render only for users with this permission (use inside RequireRole/RequireAuth). */
+export function RequirePermission({ permission }: { permission: Permission }) {
+  const user = useAppSelector(selectCurrentUser)
+  if (!can(user?.role, permission)) return <Navigate to="/403" replace />
   return <Outlet />
 }

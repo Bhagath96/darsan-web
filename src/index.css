@@ -19,6 +19,8 @@
   --color-destructive: var(--destructive);
   --color-success: var(--success);
   --color-gold: var(--gold);
+  --color-chart-bar: var(--chart-bar);
+  --color-chart-track: var(--chart-track);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -61,6 +63,9 @@
   --border: #e4d8c5;
   --input: #cbbca6;
   --ring: #8a5a12;
+  /* Charts: one temple-red hue (validated: L 0.43–0.77, >= 3:1 on white) and a light step of it for tracks. */
+  --chart-bar: #9b2c2c;
+  --chart-track: #f3e1de;
   --radius: 0.625rem;
 }
 

@@ -216,5 +216,69 @@ export interface CreateBookingRequest {
   idempotencyKey: string
 }
 
+/** Staff/admin search over darshan bookings. */
+export interface BookingQuery {
+  /** Partial match on the 10-digit number. */
+  phone?: string
+  date?: IsoDate
+  templeId?: string
+  status?: BookingStatus
+  page: number
+  pageSize: number
+}
+
+/** Admin change to one darshan slot. Omitted fields stay as they are. */
+export interface SlotUpdate {
+  slotId: string
+  totalCapacity?: number
+  isBlocked?: boolean
+}
+
+/** Admin change to one offering. Omitted fields stay as they are. */
+export interface OfferingUpdate {
+  offeringId: string
+  price?: number
+  isActive?: boolean
+}
+
+/** New notice from the admin portal. */
+export interface NoticeInput {
+  templeId: string | null
+  category: NoticeCategory
+  important: boolean
+  title: Localized
+  body: Localized
+  eventDate: IsoDate | null
+}
+
+export interface DashboardStats {
+  /** null = all temples. */
+  templeId: string | null
+  today: IsoDate
+  orders: {
+    byStatus: Record<OrderStatus, number>
+    /** Orders whose offering date is today (not cancelled). */
+    today: number
+    /** Confirmed + completed. */
+    revenue: number
+  }
+  bookings: {
+    /** Active bookings for today's darshan. */
+    today: number
+    ticketsToday: number
+    /** Active bookings from tomorrow on. */
+    upcoming: number
+    cancelled: number
+  }
+  slots: {
+    /** Share of tickets taken over the next 7 days, 0–1. */
+    utilisation: number
+    full: number
+    blocked: number
+  }
+  /** One row per temple in scope. */
+  byTemple: Array<{ templeId: string; revenue: number; orders: number; bookings: number }>
+}
+
 /** Standard shape for any piece of server data held in the store. */
 export type RequestStatus = 'idle' | 'loading' | 'success' | 'error'

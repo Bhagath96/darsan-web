@@ -3,11 +3,11 @@ import { getDb } from './db'
 import { simulate } from './mockClient'
 import { requireUser } from './session'
 import type { StoredUser } from './seed'
-import { MAX_TICKETS_PER_BOOKING } from '@/lib/constants'
+import { MAX_SLOT_CAPACITY, MAX_TICKETS_PER_BOOKING } from '@/lib/constants'
 import { isValidIsoDate } from '@/lib/date'
 import { can } from '@/lib/permissions'
 import { normalizePhone } from '@/lib/phone'
-import type { Booking, CreateBookingRequest, DarshanSlot, IsoDate } from '@/types'
+import type { Booking, BookingQuery, CreateBookingRequest, DarshanSlot, IsoDate, Paged, SlotUpdate } from '@/types'
 
 const hasStarted = (startsAt: string) => new Date(startsAt).getTime() <= Date.now()
 
@@ -111,5 +111,60 @@ export function cancelBooking(bookingId: string): Promise<Booking> {
     const slot = db.slots.find((s) => s.id === booking.slotId)
     if (slot) slot.remainingTickets = Math.min(slot.totalCapacity, slot.remainingTickets + booking.ticketCount)
     return booking
+  })
+}
+
+/** Pages a sorted list; an out-of-range page snaps to the last one. */
+function paginate<T>(items: T[], page: number, pageSize: number): Paged<T> {
+  const size = Math.max(1, pageSize)
+  const lastPage = Math.max(1, Math.ceil(items.length / size))
+  const current = Math.min(Math.max(1, page), lastPage)
+  return { items: items.slice((current - 1) * size, current * size), total: items.length, page: current, pageSize: size }
+}
+
+/**
+ * Staff/admin search over bookings, latest slot first. Staff only see their temple.
+ * Phone is a partial match, so "98470" finds every number containing it.
+ */
+export function searchBookings(query: BookingQuery): Promise<Paged<Booking>> {
+  return simulate('darshan', () => {
+    const user = requireUser('booking:viewAny')
+    const digits = query.phone?.replace(/\D/g, '') ?? ''
+    const matches = getDb()
+      .bookings.filter(
+        (b) =>
+          canSeeBooking(user, b) &&
+          (!digits || b.phone.includes(digits)) &&
+          (!query.date || b.date === query.date) &&
+          (!query.templeId || b.templeId === query.templeId) &&
+          (!query.status || b.status === query.status),
+      )
+      .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
+    return paginate(matches, query.page, query.pageSize)
+  })
+}
+
+/**
+ * Admin: change a slot's capacity or block it. Capacity can't go below the tickets
+ * already booked; the remaining count moves by the same amount as the capacity.
+ */
+export function updateSlot({ slotId, totalCapacity, isBlocked }: SlotUpdate): Promise<DarshanSlot> {
+  return simulate('darshan', () => {
+    requireUser('catalog:manage')
+    const slot = getDb().slots.find((s) => s.id === slotId)
+    if (!slot) throw new ApiError('NOT_FOUND', 'This slot no longer exists.')
+    if (totalCapacity !== undefined) {
+      const booked = slot.totalCapacity - slot.remainingTickets
+      if (!Number.isInteger(totalCapacity) || totalCapacity < 1 || totalCapacity > MAX_SLOT_CAPACITY) {
+        throw new ApiError('VALIDATION', `Capacity must be a whole number from 1 to ${MAX_SLOT_CAPACITY}.`)
+      }
+      if (totalCapacity < booked) {
+        throw new ApiError('CONFLICT', `${booked} tickets are already booked, so capacity can't be lower than that.`)
+      }
+      slot.remainingTickets = totalCapacity - booked
+      slot.totalCapacity = totalCapacity
+    }
+    if (isBlocked !== undefined) slot.isBlocked = isBlocked
+    return slot
   })
 }

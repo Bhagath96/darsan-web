@@ -2,7 +2,7 @@ import { createSlice, nanoid, type PayloadAction } from '@reduxjs/toolkit'
 import { loadJson, STORAGE_KEYS } from '../persistence'
 import { asyncState, type AppError, type AsyncState } from '../types'
 import type { RootState } from '../rootReducer'
-import type { IsoDateTime, Notice, NoticeQuery } from '@/types'
+import type { IsoDateTime, Notice, NoticeInput, NoticeQuery, RequestStatus } from '@/types'
 
 /** How far back a first-time visitor's "new notices" count reaches. */
 const NEW_FOR_FIRST_VISIT_MS = 7 * 24 * 60 * 60 * 1000
@@ -16,6 +16,10 @@ export interface NoticesState {
   detail: AsyncState<Notice | null>
   /** When the visitor last opened the notifications page (persisted). */
   lastSeenAt: IsoDateTime | null
+  /** Admin: publishing a new notice. */
+  create: { status: RequestStatus; error: AppError | null }
+  /** Admin: deletes in flight, with what is needed to put the notice back if it fails. */
+  deleting: Record<string, { notice: Notice; latestIndex: number; listIndex: number }>
 }
 
 const isIsoString = (value: unknown): value is string =>
@@ -30,6 +34,12 @@ export const initialNoticesState: NoticesState = {
   list: { ...asyncState<Notice[]>([]), requestId: null, query: {} },
   detail: asyncState<Notice | null>(null),
   lastSeenAt: null,
+  create: { status: 'idle', error: null },
+  deleting: {},
+}
+
+const insertAt = (list: Notice[], index: number, notice: Notice) => {
+  if (index >= 0 && !list.some((n) => n.id === notice.id)) list.splice(Math.min(index, list.length), 0, notice)
 }
 
 const noticesSlice = createSlice({
@@ -86,6 +96,45 @@ const noticesSlice = createSlice({
       state.detail.error = action.payload
     },
 
+    noticeCreateRequested(state, _action: PayloadAction<NoticeInput>) {
+      state.create = { status: 'loading', error: null }
+    },
+    noticeCreated(state, action: PayloadAction<Notice>) {
+      state.create = { status: 'success', error: null }
+      state.latest.data.unshift(action.payload)
+      state.list.data.unshift(action.payload)
+    },
+    noticeCreateFailed(state, action: PayloadAction<AppError>) {
+      state.create = { status: 'error', error: action.payload }
+    },
+    noticeCreateReset(state) {
+      state.create = { status: 'idle', error: null }
+    },
+
+    /** Optimistic: the notice disappears at once and comes back if the server refuses. */
+    noticeDeleteRequested(state, action: PayloadAction<string>) {
+      const id = action.payload
+      const notice = state.list.data.find((n) => n.id === id) ?? state.latest.data.find((n) => n.id === id)
+      if (!notice || state.deleting[id]) return
+      state.deleting[id] = {
+        notice,
+        latestIndex: state.latest.data.findIndex((n) => n.id === id),
+        listIndex: state.list.data.findIndex((n) => n.id === id),
+      }
+      state.latest.data = state.latest.data.filter((n) => n.id !== id)
+      state.list.data = state.list.data.filter((n) => n.id !== id)
+    },
+    noticeDeleteConfirmed(state, action: PayloadAction<string>) {
+      delete state.deleting[action.payload]
+    },
+    noticeDeleteReverted(state, action: PayloadAction<string>) {
+      const saved = state.deleting[action.payload]
+      delete state.deleting[action.payload]
+      if (!saved) return
+      insertAt(state.latest.data, saved.latestIndex, saved.notice)
+      insertAt(state.list.data, saved.listIndex, saved.notice)
+    },
+
     /** The visitor has looked at the notifications page: everything up to now is "seen". */
     noticesSeen: {
       reducer(state, action: PayloadAction<IsoDateTime>) {
@@ -109,6 +158,13 @@ export const {
   noticeLoaded,
   noticeFailed,
   noticesSeen,
+  noticeCreateRequested,
+  noticeCreated,
+  noticeCreateFailed,
+  noticeCreateReset,
+  noticeDeleteRequested,
+  noticeDeleteConfirmed,
+  noticeDeleteReverted,
 } = noticesSlice.actions
 export default noticesSlice.reducer
 
