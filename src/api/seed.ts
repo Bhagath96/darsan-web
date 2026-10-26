@@ -1,10 +1,11 @@
+import noticesJson from './data/notices.json'
 import offeringsJson from './data/offerings.json'
 import templesJson from './data/temples.json'
 import usersJson from './data/users.json'
 import { createRng, type Rng } from './rng'
 import { NAKSHATRA_IDS } from '@/lib/constants'
 import { addDays, istToInstant, todayIST } from '@/lib/date'
-import type { AuthUser, Booking, DarshanSlot, Offering, Order, OrderStatus, Temple } from '@/types'
+import type { AuthUser, Booking, DarshanSlot, Notice, Offering, Order, OrderStatus, Temple } from '@/types'
 
 /** A user record as the "server" stores it. */
 export interface StoredUser extends AuthUser {
@@ -15,6 +16,28 @@ export interface StoredUser extends AuthUser {
 export const seedUsers = usersJson as StoredUser[]
 export const seedTemples = templesJson as Temple[]
 export const seedOfferings = offeringsJson as Offering[]
+
+/** A notice as written in notices.json: dates are relative, so the demo always looks current. */
+export interface NoticeSeed extends Omit<Notice, 'publishedAt' | 'eventDate'> {
+  publishedDaysAgo: number
+  eventInDays: number | null
+}
+
+export const seedNotices = noticesJson as NoticeSeed[]
+
+export function generateNotices(now: Date): Notice[] {
+  const today = todayIST(now)
+  return seedNotices
+    .map(({ publishedDaysAgo, eventInDays, ...notice }) => ({
+      ...notice,
+      // Published at 09:00 IST, n days ago (never in the future, for an early-morning load).
+      publishedAt: new Date(
+        Math.min(now.getTime(), Date.parse(istToInstant(addDays(today, -publishedDaysAgo), '09:00'))),
+      ).toISOString(),
+      eventDate: eventInDays === null ? null : addDays(today, eventInDays),
+    }))
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+}
 
 /** Darshan slot start times (IST) and their length in minutes. */
 const SLOT_TIMES = ['05:00', '06:30', '08:00', '10:00', '17:00', '18:30'] as const
@@ -146,6 +169,7 @@ export function createSeed(now: Date) {
     users: structuredClone(seedUsers),
     temples: structuredClone(seedTemples),
     offerings: structuredClone(seedOfferings),
+    notices: generateNotices(now),
     slots,
     bookings: generateBookings(rng, slots, now),
     orders: generateOrders(rng, now),

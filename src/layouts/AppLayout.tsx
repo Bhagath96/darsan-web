@@ -1,15 +1,37 @@
-import { useEffect } from 'react'
-import { Outlet } from 'react-router'
+import { useEffect, useRef } from 'react'
+import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { Announcer } from '@/components/common/Announcer'
 import { Footer } from '@/components/common/Footer'
 import { Header } from '@/components/common/Header'
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/common/SkipLink'
 import { Toaster } from '@/components/ui/sonner'
+import { useLatestNotices } from '@/hooks/useLatestNotices'
+import { useWelcomeToast } from '@/hooks/useWelcomeToast'
 import { useT } from '@/i18n'
+
+/**
+ * After moving to another page, put focus on <main> so keyboard and screen reader
+ * users start at the new content instead of wherever the old page left them.
+ * Only the path counts: changing a filter (?query) keeps focus where it is.
+ */
+function useFocusMainOnNavigate() {
+  const { pathname } = useLocation()
+  const first = useRef(true)
+  useEffect(() => {
+    if (first.current) {
+      first.current = false
+      return
+    }
+    document.getElementById(MAIN_CONTENT_ID)?.focus({ preventScroll: true })
+  }, [pathname])
+}
 
 /** Page frame shared by every route: skip link, header, main landmark, footer, toasts. */
 export function AppLayout() {
   const { lang } = useT()
+  useLatestNotices() // loads notices for the header bell on every page
+  useWelcomeToast()
+  useFocusMainOnNavigate()
 
   // Keep <html lang> in sync so screen readers use the right voice.
   useEffect(() => {
@@ -26,6 +48,7 @@ export function AppLayout() {
       <Footer />
       <Announcer />
       <Toaster position="top-center" richColors closeButton />
+      <ScrollRestoration />
     </div>
   )
 }

@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
   language: 'darsan:lang:v1',
   session: 'darsan:session:v1',
   cart: 'darsan:cart:v1',
+  noticesSeen: 'darsan:notices-seen:v1',
 } as const
 
 export function loadJson<T>(key: string, isValid: (value: unknown) => value is T): T | undefined {

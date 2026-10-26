@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
+import { loadAuthState } from './auth/authSlice'
 import { loadI18nState } from './i18n/i18nSlice'
+import { initialNoticesState, loadNoticesSeen } from './notices/noticesSlice'
 import { rootReducer, type RootState } from './rootReducer'
 import { rootSaga } from './rootSaga'
 
@@ -17,7 +19,11 @@ export function makeStore(preloadedState?: Partial<RootState>) {
 }
 
 export function loadPersistedState(): Partial<RootState> {
-  return { i18n: loadI18nState() }
+  return {
+    auth: loadAuthState(),
+    i18n: loadI18nState(),
+    notices: { ...initialNoticesState, lastSeenAt: loadNoticesSeen() },
+  }
 }
 
 export type AppStore = ReturnType<typeof makeStore>

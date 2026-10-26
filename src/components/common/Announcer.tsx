@@ -12,9 +12,12 @@ export function Announcer() {
 
   useEffect(() => {
     if (id === 0) return
-    setText({ polite: '', assertive: '' })
-    const timer = setTimeout(() => setText((prev) => ({ ...prev, [politeness]: message })), 50)
-    return () => clearTimeout(timer)
+    const clear = setTimeout(() => setText({ polite: '', assertive: '' }), 0)
+    const show = setTimeout(() => setText((prev) => ({ ...prev, [politeness]: message })), 50)
+    return () => {
+      clearTimeout(clear)
+      clearTimeout(show)
+    }
   }, [id, message, politeness])
 
   return (

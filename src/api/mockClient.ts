@@ -7,7 +7,8 @@ import { getDb } from './db'
  * can never mutate the "server" data by accident.
  */
 
-export type ApiDomain = 'auth' | 'darshan' | 'vazhipadu'
+/** 'content' = public temple information and notices. */
+export type ApiDomain = 'auth' | 'content' | 'darshan' | 'vazhipadu'
 
 export interface MockConfig {
   minDelay: number
@@ -19,12 +20,14 @@ export interface MockConfig {
 
 const DEFAULTS: Record<ApiDomain, Omit<MockConfig, 'random'>> = {
   auth: { minDelay: 200, maxDelay: 800, failureRate: 0.05 },
+  content: { minDelay: 200, maxDelay: 800, failureRate: 0.05 },
   darshan: { minDelay: 200, maxDelay: 1500, failureRate: 0.2 },
   vazhipadu: { minDelay: 200, maxDelay: 1000, failureRate: 0.1 },
 }
 
 const configs: Record<ApiDomain, MockConfig> = {
   auth: { ...DEFAULTS.auth, random: Math.random },
+  content: { ...DEFAULTS.content, random: Math.random },
   darshan: { ...DEFAULTS.darshan, random: Math.random },
   vazhipadu: { ...DEFAULTS.vazhipadu, random: Math.random },
 }

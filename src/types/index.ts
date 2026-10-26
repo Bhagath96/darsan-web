@@ -1,4 +1,4 @@
-import type { NAKSHATRAS, OFFERING_CATEGORIES } from '@/lib/constants'
+import type { NAKSHATRAS, NOTICE_CATEGORIES, OFFERING_CATEGORIES } from '@/lib/constants'
 
 export type UserRole = 'DEVOTEE' | 'STAFF' | 'ADMIN'
 export type Language = 'en' | 'ml'
@@ -38,13 +38,49 @@ export type IsoDate = string
 /** Instant in time, ISO 8601 UTC string. */
 export type IsoDateTime = string
 
+/** One fixed ritual in a temple's day, e.g. 04:30 Usha Pooja. */
+export interface ScheduleItem {
+  /** 24-hour IST wall-clock time, HH:mm. */
+  time: string
+  name: Localized
+}
+
 export interface Temple {
   id: string
   name: Localized
   location: Localized
   deity: Localized
   image: string
+  /** Opening hours as shown to devotees, e.g. "3:00 am – 1:30 pm · 4:30 pm – 9:15 pm". */
   timings: string
+  about: Localized
+  address: Localized
+  contactPhone: string
+  schedule: ScheduleItem[]
+}
+
+export type NoticeCategory = (typeof NOTICE_CATEGORIES)[number]
+
+/** A temple announcement: festival, timing change, closure or general information. */
+export interface Notice {
+  id: string
+  /** null = applies to every temple. */
+  templeId: string | null
+  category: NoticeCategory
+  /** Shown first and highlighted. */
+  important: boolean
+  title: Localized
+  body: Localized
+  publishedAt: IsoDateTime
+  /** The day the notice is about, if any (festival day, closure day). */
+  eventDate: IsoDate | null
+}
+
+export interface NoticeQuery {
+  templeId?: string
+  category?: NoticeCategory
+  /** Return at most this many, newest first. */
+  limit?: number
 }
 
 export interface Offering {

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import { getDb } from '@/api/db'
-import { seedOfferings, seedTemples, seedUsers } from '@/api/seed'
-import { NAKSHATRA_IDS, OFFERING_CATEGORIES } from '@/lib/constants'
+import { seedNotices, seedOfferings, seedTemples, seedUsers } from '@/api/seed'
+import { NAKSHATRA_IDS, NOTICE_CATEGORIES, OFFERING_CATEGORIES } from '@/lib/constants'
 import { freezeTime, TODAY } from '../utils/api'
 
 // The JSON files are cast to their types in seed.ts; these schemas check that the cast is true.
@@ -25,6 +25,21 @@ const templeSchema = z.strictObject({
   deity: localized,
   image: z.string(),
   timings: z.string(),
+  about: localized,
+  address: localized,
+  contactPhone: z.string().regex(/^0\d{10}$/),
+  schedule: z.array(z.strictObject({ time: z.string().regex(/^\d{2}:\d{2}$/), name: localized })).min(1),
+})
+
+const noticeSchema = z.strictObject({
+  id: z.string(),
+  templeId: z.string().nullable(),
+  category: z.enum(NOTICE_CATEGORIES),
+  important: z.boolean(),
+  publishedDaysAgo: z.number().int().min(0),
+  eventInDays: z.number().int().nullable(),
+  title: localized,
+  body: localized,
 })
 
 const offeringSchema = z.strictObject({
@@ -43,6 +58,14 @@ describe('seed JSON files', () => {
     expect(() => z.array(userSchema).parse(seedUsers)).not.toThrow()
     expect(() => z.array(templeSchema).parse(seedTemples)).not.toThrow()
     expect(() => z.array(offeringSchema).parse(seedOfferings)).not.toThrow()
+    expect(() => z.array(noticeSchema).parse(seedNotices)).not.toThrow()
+  })
+
+  it('tie every notice to an existing temple (or to all temples)', () => {
+    const templeIds = seedTemples.map((t) => t.id)
+    for (const n of seedNotices) {
+      if (n.templeId !== null) expect(templeIds).toContain(n.templeId)
+    }
   })
 
   it('have the four demo users, with staff tied to an existing temple', () => {
@@ -65,7 +88,7 @@ describe('seed JSON files', () => {
   })
 
   it('use unique ids', () => {
-    const ids = [...seedUsers, ...seedTemples, ...seedOfferings].map((x) => x.id)
+    const ids = [...seedUsers, ...seedTemples, ...seedOfferings, ...seedNotices].map((x) => x.id)
     expect(new Set(ids).size).toBe(ids.length)
   })
 })

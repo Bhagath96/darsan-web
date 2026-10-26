@@ -1,5 +1,6 @@
 export * as authApi from './authApi'
 export * as bookingApi from './bookingApi'
+export * as noticeApi from './noticeApi'
 export * as orderApi from './orderApi'
 export * as templeApi from './templeApi'
 export { ApiError, toErrorMessage, type ApiErrorCode } from './errors'

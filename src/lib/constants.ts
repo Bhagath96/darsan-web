@@ -33,6 +33,9 @@ export const NAKSHATRA_IDS = NAKSHATRAS.map((n) => n.id)
 
 export const OFFERING_CATEGORIES = ['POOJA', 'ABHISHEKAM', 'NIVEDYAM', 'SPECIAL'] as const
 
+/** Kinds of temple notice, in the order the filter shows them. */
+export const NOTICE_CATEGORIES = ['FESTIVAL', 'TIMING', 'CLOSURE', 'GENERAL'] as const
+
 export const ORDER_STATUSES = ['CONFIRMED', 'CANCELLED', 'COMPLETED'] as const
 
 /** Quantity limits for one cart line. */

@@ -49,8 +49,11 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  closeLabel = "Close",
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
+  /** Screen reader name of the close (X) button; pass the translated word. */
+  closeLabel?: string
   showCloseButton?: boolean
 }) {
   return (
@@ -70,11 +73,11 @@ function DialogContent({
             <Button
               variant="ghost"
               className="absolute top-2 right-2"
-              size="icon-sm"
+              size="icon-lg"
             >
               <XIcon
               />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{closeLabel}</span>
             </Button>
           </DialogPrimitive.Close>
         )}
