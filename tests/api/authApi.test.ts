@@ -14,7 +14,9 @@ describe('authApi.login', () => {
   })
 
   it('ignores case and spaces in the username', async () => {
-    await expect(authApi.login({ username: '  ADMIN ', password: 'admin123', portal: 'staff' })).resolves.toMatchObject({
+    await expect(
+      authApi.login({ username: '  ADMIN ', password: 'admin123', portal: 'staff' }),
+    ).resolves.toMatchObject({
       user: { role: 'ADMIN' },
     })
   })
@@ -31,7 +33,9 @@ describe('authApi.login', () => {
   })
 
   it('keeps devotees and staff on their own login page', async () => {
-    await expect(authApi.login({ username: 'staff', password: 'staff123', portal: 'devotee' })).rejects.toMatchObject({
+    await expect(
+      authApi.login({ username: 'staff', password: 'staff123', portal: 'devotee' }),
+    ).rejects.toMatchObject({
       code: 'FORBIDDEN',
       message: expect.stringContaining('use the staff login'),
     })
@@ -42,7 +46,9 @@ describe('authApi.login', () => {
   })
 
   it('does not reveal the account type when the password is wrong', async () => {
-    await expect(authApi.login({ username: 'admin', password: 'x', portal: 'devotee' })).rejects.toMatchObject({
+    await expect(
+      authApi.login({ username: 'admin', password: 'x', portal: 'devotee' }),
+    ).rejects.toMatchObject({
       code: 'UNAUTHORIZED',
     })
   })
@@ -50,8 +56,15 @@ describe('authApi.login', () => {
 
 describe('authApi.me', () => {
   it('restores the user behind a token', async () => {
-    const { token } = await authApi.login({ username: 'staff', password: 'staff123', portal: 'staff' })
-    await expect(authApi.me(token)).resolves.toMatchObject({ username: 'staff', templeId: 'tm-krishna' })
+    const { token } = await authApi.login({
+      username: 'staff',
+      password: 'staff123',
+      portal: 'staff',
+    })
+    await expect(authApi.me(token)).resolves.toMatchObject({
+      username: 'staff',
+      templeId: 'tm-krishna',
+    })
   })
 
   it('rejects a malformed or expired token', async () => {
@@ -71,16 +84,27 @@ describe('authApi.register', () => {
 
   it('creates a devotee account, logs it in and survives a reload of the mock server', async () => {
     const session = await authApi.register(signUp)
-    expect(session.user).toMatchObject({ username: 'meera_m', phone: '9745011223', role: 'DEVOTEE', templeId: null })
+    expect(session.user).toMatchObject({
+      username: 'meera_m',
+      phone: '9745011223',
+      role: 'DEVOTEE',
+      templeId: null,
+    })
 
     resetDb() // what a page reload does
-    await expect(authApi.login({ username: 'meera_m', password: 'temple2026', portal: 'devotee' })).resolves.toBeTruthy()
+    await expect(
+      authApi.login({ username: 'meera_m', password: 'temple2026', portal: 'devotee' }),
+    ).resolves.toBeTruthy()
     await expect(authApi.me(session.token)).resolves.toMatchObject({ name: 'Meera Menon' })
   })
 
   it('refuses a username or mobile number that is already used', async () => {
-    await expect(authApi.register({ ...signUp, username: 'devotee' })).rejects.toMatchObject({ code: 'CONFLICT' })
-    await expect(authApi.register({ ...signUp, phone: '9847012345' })).rejects.toMatchObject({ code: 'CONFLICT' })
+    await expect(authApi.register({ ...signUp, username: 'devotee' })).rejects.toMatchObject({
+      code: 'CONFLICT',
+    })
+    await expect(authApi.register({ ...signUp, phone: '9847012345' })).rejects.toMatchObject({
+      code: 'CONFLICT',
+    })
   })
 
   it.each([
@@ -90,14 +114,18 @@ describe('authApi.register', () => {
     ['a bad phone', { phone: '12345' }],
     ['a name with digits', { name: 'R2D2' }],
   ])('rejects %s', async (_label, change) => {
-    await expect(authApi.register({ ...signUp, ...change })).rejects.toMatchObject({ code: 'VALIDATION' })
+    await expect(authApi.register({ ...signUp, ...change })).rejects.toMatchObject({
+      code: 'VALIDATION',
+    })
   })
 })
 
 describe('authApi.updateProfile and changePassword', () => {
   it('updates name and phone for the logged-in user', async () => {
     actAs('devotee')
-    await expect(authApi.updateProfile({ name: '  Anil   K ', phone: '9847099999' })).resolves.toMatchObject({
+    await expect(
+      authApi.updateProfile({ name: '  Anil   K ', phone: '9847099999' }),
+    ).resolves.toMatchObject({
       name: 'Anil K',
       phone: '9847099999',
     })
@@ -105,13 +133,17 @@ describe('authApi.updateProfile and changePassword', () => {
 
   it("won't take another account's phone number", async () => {
     actAs('devotee')
-    await expect(authApi.updateProfile({ name: 'Anil', phone: '9995012345' })).rejects.toMatchObject({ code: 'CONFLICT' })
+    await expect(
+      authApi.updateProfile({ name: 'Anil', phone: '9995012345' }),
+    ).rejects.toMatchObject({ code: 'CONFLICT' })
   })
 
   it('needs a login', async () => {
-    await expect(authApi.updateProfile({ name: 'X Y', phone: '9847099999' })).rejects.toMatchObject({
-      code: 'UNAUTHORIZED',
-    })
+    await expect(authApi.updateProfile({ name: 'X Y', phone: '9847099999' })).rejects.toMatchObject(
+      {
+        code: 'UNAUTHORIZED',
+      },
+    )
   })
 
   it('changes the password only when the current one is right', async () => {

@@ -39,7 +39,14 @@ export function CopyLinkButton() {
           <label htmlFor={fallbackId} className="text-sm">
             {t('darshan.copyFallback')}
           </label>
-          <Input id={fallbackId} readOnly value={url} onFocus={(e) => e.currentTarget.select()} autoFocus className="h-11" />
+          <Input
+            id={fallbackId}
+            readOnly
+            value={url}
+            onFocus={(e) => e.currentTarget.select()}
+            autoFocus
+            className="h-11"
+          />
         </div>
       )}
     </div>

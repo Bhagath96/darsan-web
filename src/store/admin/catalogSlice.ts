@@ -15,9 +15,12 @@ export interface AdminCatalogState {
   offerings: Editable<Offering>
 }
 
-const editable = <T,>(): Editable<T> => ({ ...asyncState<T[]>([]), requestId: null, saving: {} })
+const editable = <T>(): Editable<T> => ({ ...asyncState<T[]>([]), requestId: null, saving: {} })
 
-const initialState: AdminCatalogState = { slots: editable<DarshanSlot>(), offerings: editable<Offering>() }
+const initialState: AdminCatalogState = {
+  slots: editable<DarshanSlot>(),
+  offerings: editable<Offering>(),
+}
 
 function start(list: Editable<unknown>, requestId: string) {
   list.status = 'loading'
@@ -30,7 +33,10 @@ const catalogSlice = createSlice({
   initialState,
   reducers: {
     adminSlotsRequested: {
-      reducer(state, action: PayloadAction<{ templeId: string; date: IsoDate; requestId: string }>) {
+      reducer(
+        state,
+        action: PayloadAction<{ templeId: string; date: IsoDate; requestId: string }>,
+      ) {
         start(state.slots, action.payload.requestId)
       },
       prepare(templeId: string, date: IsoDate) {
@@ -74,7 +80,10 @@ const catalogSlice = createSlice({
         return { payload: { templeId, requestId: nanoid() } }
       },
     },
-    adminOfferingsLoaded(state, action: PayloadAction<{ offerings: Offering[]; requestId: string }>) {
+    adminOfferingsLoaded(
+      state,
+      action: PayloadAction<{ offerings: Offering[]; requestId: string }>,
+    ) {
       if (action.payload.requestId !== state.offerings.requestId) return
       state.offerings.data = action.payload.offerings
       state.offerings.status = 'success'

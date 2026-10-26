@@ -89,7 +89,9 @@ describe('V2 · cart and order form', () => {
   it('keeps the cart after a reload', async () => {
     const { user, unmount } = renderApp({ url: '/vazhipadu?temple=tm-krishna' })
     await addToCart(user, 'Archana', 2)
-    await waitFor(() => expect(localStorage.getItem(STORAGE_KEYS.cart)).toContain('tm-krishna--archana'))
+    await waitFor(() =>
+      expect(localStorage.getItem(STORAGE_KEYS.cart)).toContain('tm-krishna--archana'),
+    )
     unmount()
 
     renderApp({ url: '/vazhipadu', preloadedState: { cart: loadCartState() } })
@@ -119,7 +121,15 @@ describe('V2 · cart and order form', () => {
       preloadedState: {
         cart: {
           templeId: 'tm-krishna',
-          items: [{ offeringId: 'tm-krishna--pushpanjali', templeId: 'tm-krishna', name: { en: 'Pushpanjali', ml: 'പുഷ്പാഞ്ജലി' }, unitPrice: 30, quantity: 1 }],
+          items: [
+            {
+              offeringId: 'tm-krishna--pushpanjali',
+              templeId: 'tm-krishna',
+              name: { en: 'Pushpanjali', ml: 'പുഷ്പാഞ്ജലി' },
+              unitPrice: 30,
+              quantity: 1,
+            },
+          ],
         },
       },
     })
@@ -132,7 +142,9 @@ describe('V2 · cart and order form', () => {
     await user.click(screen.getByRole('button', { name: /Place order/ }))
 
     expect(await screen.findByText('Please fix 4 fields below.')).toBeInTheDocument()
-    expect(screen.getByLabelText('Birth star (nakshatra)')).toHaveAccessibleDescription('Choose the birth star.')
+    expect(screen.getByLabelText('Birth star (nakshatra)')).toHaveAccessibleDescription(
+      'Choose the birth star.',
+    )
     expect(date).toHaveAccessibleDescription(/Choose a date from today up to 90 days ahead./)
     expect(screen.getByLabelText('Mobile number')).toHaveAttribute('aria-invalid', 'true')
   })
@@ -164,7 +176,10 @@ describe('V3 · placing the order', () => {
     expect(currentUrl(router)).toBe(`/vazhipadu/orders/${order.orderNumber}`)
     expect(order).toMatchObject({ totalAmount: 110, star: 'Rohini', devoteeName: 'Anil Kumar' })
     expect(screen.getByText(order.orderNumber)).toBeInTheDocument()
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.cart) ?? '{}')).toEqual({ templeId: null, items: [] })
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.cart) ?? '{}')).toEqual({
+      templeId: null,
+      items: [],
+    })
   })
 
   it('a double click places exactly one order', async () => {
@@ -183,7 +198,9 @@ describe('V3 · placing the order', () => {
     failNextCalls(1, 'after') // saved on the server, but the answer is lost
     await fillAndPlace(user)
 
-    const alert = (await screen.findByText('The order did not go through')).closest('[role="alert"]') as HTMLElement
+    const alert = (await screen.findByText('The order did not go through')).closest(
+      '[role="alert"]',
+    ) as HTMLElement
     expect(alert).toHaveFocus()
     expect(screen.getByLabelText('Birth star (nakshatra)')).toHaveValue('Rohini')
     expect(screen.getByRole('button', { name: 'Place order · ₹110' })).toBeInTheDocument()
@@ -212,8 +229,15 @@ describe('Receipt and my orders', () => {
     const order = getDb().orders[0]!
 
     await view.user.click(screen.getByRole('link', { name: 'See my orders' }))
-    await view.user.click(await screen.findByRole('link', { name: `View receipt for order ${order.orderNumber}` }))
-    expect(await screen.findByRole('heading', { level: 1, name: `Receipt for order ${order.orderNumber}` })).toBeInTheDocument()
+    await view.user.click(
+      await screen.findByRole('link', { name: `View receipt for order ${order.orderNumber}` }),
+    )
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: `Receipt for order ${order.orderNumber}`,
+      }),
+    ).toBeInTheDocument()
   })
 
   it('does not show another person’s receipt', async () => {

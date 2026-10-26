@@ -8,7 +8,8 @@ import { currentUrl, renderApp } from '../utils/renderWithProviders'
 
 const TEN_LEFT = `sl-tm-krishna-${TOMORROW}-0800`
 const url = `/darshan?temple=tm-krishna&date=${TOMORROW}`
-const slotCard = (time: string) => screen.getByRole('button', { name: `Book the ${time} slot` }).closest('article')!
+const slotCard = (time: string) =>
+  screen.getByRole('button', { name: `Book the ${time} slot` }).closest('article')!
 
 beforeEach(() => freezeTime())
 afterEach(() => {
@@ -24,7 +25,9 @@ async function openForm(user: ReturnType<typeof renderApp>['user'], time = '8:00
 describe('P1 · slot list and booking', () => {
   it('shows each slot with its IST time and tickets left', async () => {
     renderApp({ url })
-    expect(await screen.findByRole('heading', { name: 'Slots on Tue, 27 Oct, 2026' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'Slots on Tue, 27 Oct, 2026' }),
+    ).toBeInTheDocument()
     expect(within(slotCard('8:00 am')).getByText('10 of 100 tickets left')).toBeInTheDocument()
   })
 
@@ -56,7 +59,9 @@ describe('P1 · slot list and booking', () => {
     await user.clear(tickets)
     await user.type(tickets, '11')
     await user.click(within(dialog).getByRole('button', { name: 'Confirm booking' }))
-    expect(await within(dialog).findByText('Choose from 1 up to the number of tickets left.')).toBeInTheDocument()
+    expect(
+      await within(dialog).findByText('Choose from 1 up to the number of tickets left.'),
+    ).toBeInTheDocument()
     expect(getDb().bookings.filter((b) => b.slotId === TEN_LEFT)).toHaveLength(0)
   })
 
@@ -69,10 +74,12 @@ describe('P1 · slot list and booking', () => {
     const started = await screen.findByRole('button', { name: 'Book the 5:00 am slot' })
     expect(started).toBeDisabled()
     expect(started).toHaveAccessibleDescription('This slot has already started.')
-    expect(screen.getByRole('button', { name: 'Book the 5:00 pm slot' })).toHaveAccessibleDescription('All tickets are booked.')
-    expect(screen.getByRole('button', { name: 'Book the 6:30 pm slot' })).toHaveAccessibleDescription(
-      'The temple has closed this slot for booking.',
-    )
+    expect(
+      screen.getByRole('button', { name: 'Book the 5:00 pm slot' }),
+    ).toHaveAccessibleDescription('All tickets are booked.')
+    expect(
+      screen.getByRole('button', { name: 'Book the 6:30 pm slot' }),
+    ).toHaveAccessibleDescription('The temple has closed this slot for booking.')
   })
 
   it('a load failure shows an error, and Try again loads the slots', async () => {
@@ -85,7 +92,9 @@ describe('P1 · slot list and booking', () => {
   })
 
   it('shows an empty state for a day with no slots', async () => {
-    getDb().slots = getDb().slots.filter((s) => !(s.templeId === 'tm-krishna' && s.date === TOMORROW))
+    getDb().slots = getDb().slots.filter(
+      (s) => !(s.templeId === 'tm-krishna' && s.date === TOMORROW),
+    )
     renderApp({ url })
     expect(await screen.findByText('No darshan slots on this day.')).toBeInTheDocument()
   })
@@ -137,7 +146,10 @@ describe('P2 · shareable filters', () => {
     const slow = deferred<DarshanSlot[]>()
     const fast = deferred<DarshanSlot[]>()
     const real = getDb().slots
-    const spy = vi.spyOn(bookingApi, 'getSlots').mockImplementationOnce(() => slow.promise).mockImplementationOnce(() => fast.promise)
+    const spy = vi
+      .spyOn(bookingApi, 'getSlots')
+      .mockImplementationOnce(() => slow.promise)
+      .mockImplementationOnce(() => fast.promise)
     const { user } = renderApp({ url })
     await waitFor(() => expect(spy).toHaveBeenCalledTimes(1))
     await user.selectOptions(screen.getByLabelText('Temple'), 'tm-sastha')
@@ -145,12 +157,20 @@ describe('P2 · shareable filters', () => {
 
     fast.resolve(real.filter((s) => s.templeId === 'tm-sastha' && s.date === TOMORROW))
     await screen.findByRole('button', { name: 'Book the 8:00 am slot' })
-    slow.resolve(real.filter((s) => s.templeId === 'tm-krishna' && s.date === TOMORROW).map((s) => ({ ...s, remainingTickets: 1 })))
+    slow.resolve(
+      real
+        .filter((s) => s.templeId === 'tm-krishna' && s.date === TOMORROW)
+        .map((s) => ({ ...s, remainingTickets: 1 })),
+    )
     await act(() => Promise.resolve())
 
     expect(within(slotCard('8:00 am')).queryByText(/^1 of/)).not.toBeInTheDocument()
     const shown = getDb().slots.find((s) => s.id === `sl-tm-sastha-${TOMORROW}-0800`)!
-    expect(within(slotCard('8:00 am')).getByText(`${shown.remainingTickets} of ${shown.totalCapacity} tickets left`)).toBeInTheDocument()
+    expect(
+      within(slotCard('8:00 am')).getByText(
+        `${shown.remainingTickets} of ${shown.totalCapacity} tickets left`,
+      ),
+    ).toBeInTheDocument()
   })
 })
 
@@ -175,7 +195,9 @@ describe('P3 · safe submit', () => {
     failNextCalls(1)
     await user.click(within(dialog).getByRole('button', { name: 'Confirm booking' }))
 
-    const alert = (await within(dialog).findByText('The booking did not go through')).closest('[role="alert"]')!
+    const alert = (await within(dialog).findByText('The booking did not go through')).closest(
+      '[role="alert"]',
+    )!
     expect(alert).toHaveFocus()
     expect(name).toHaveValue('Lakshmi Amma')
     await user.click(within(alert as HTMLElement).getByRole('button', { name: 'Try again' }))
@@ -208,7 +230,9 @@ describe('P4 · my bookings', () => {
     const { user } = renderApp({ url: '/darshan/my-bookings', as: 'devotee' })
     const upcoming = getDb().bookings.find((b) => b.phone === '9847012345' && b.date > TODAY)!
     configureMock({ minDelay: 300, maxDelay: 300 })
-    await user.click(await screen.findByRole('button', { name: `Cancel booking ${upcoming.bookingRef}` }))
+    await user.click(
+      await screen.findByRole('button', { name: `Cancel booking ${upcoming.bookingRef}` }),
+    )
     await user.click(await screen.findByRole('button', { name: 'Yes, cancel' }))
 
     const card = screen.getByText(`Booking ${upcoming.bookingRef}`).closest('article')!
@@ -220,7 +244,9 @@ describe('P4 · my bookings', () => {
   it('a failed cancel goes back to Booked and shows the error', async () => {
     const { user } = renderApp({ url: '/darshan/my-bookings', as: 'devotee' })
     const upcoming = getDb().bookings.find((b) => b.phone === '9847012345' && b.date > TODAY)!
-    const cancel = await screen.findByRole('button', { name: `Cancel booking ${upcoming.bookingRef}` })
+    const cancel = await screen.findByRole('button', {
+      name: `Cancel booking ${upcoming.bookingRef}`,
+    })
     failNextCalls(1)
     await user.click(cancel)
     await user.click(await screen.findByRole('button', { name: 'Yes, cancel' }))
@@ -233,18 +259,23 @@ describe('P4 · my bookings', () => {
     renderApp({ url: '/darshan/my-bookings', as: 'devotee' })
     const started = getDb().bookings.find((b) => b.phone === '9847012345' && b.date === TODAY)!
     const card = (await screen.findByText(`Booking ${started.bookingRef}`)).closest('article')!
-    expect(within(card).getByText('Darshan has started — it can no longer be cancelled.')).toBeInTheDocument()
+    expect(
+      within(card).getByText('Darshan has started — it can no longer be cancelled.'),
+    ).toBeInTheDocument()
     expect(within(card).queryByRole('button')).not.toBeInTheDocument()
   })
 
   it('shows times in IST even when the device is in New York', async () => {
-    const env = (globalThis as unknown as { process: { env: Record<string, string | undefined> } }).process.env
+    const env = (globalThis as unknown as { process: { env: Record<string, string | undefined> } })
+      .process.env
     const original = env.TZ
     env.TZ = 'America/New_York'
     try {
       expect(new Date('2026-10-27T02:30:00Z').getHours()).toBe(22) // the device really is in New York
       renderApp({ url })
-      expect(await screen.findByRole('button', { name: 'Book the 8:00 am slot' })).toBeInTheDocument()
+      expect(
+        await screen.findByRole('button', { name: 'Book the 8:00 am slot' }),
+      ).toBeInTheDocument()
     } finally {
       env.TZ = original
     }
@@ -285,7 +316,9 @@ describe('P5 · keyboard and Malayalam', () => {
     await screen.findByRole('button', { name: 'Book the 8:00 am slot' })
     await user.click(screen.getByRole('button', { name: 'Switch to Malayalam' }))
 
-    expect(await screen.findByRole('heading', { level: 1, name: 'ദർശനം ബുക്ക് ചെയ്യുക' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'ദർശനം ബുക്ക് ചെയ്യുക' }),
+    ).toBeInTheDocument()
     expect(screen.getByLabelText('ക്ഷേത്രം')).toBeInTheDocument()
     const radio = screen.getByRole('radio', { checked: true })
     expect(radio.getAttribute('aria-label')).toMatch(/ഒക്ടോ/) // Malayalam month name

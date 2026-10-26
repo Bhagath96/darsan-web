@@ -118,10 +118,13 @@ function* changePassword(action: PayloadAction<ChangePasswordRequest>) {
 export function* authSaga() {
   yield fork(restoreSession)
   // A second click on "Log in" / "Create account" while the first is running is ignored.
-  yield takeLeading([loginRequested.type, registerRequested.type], function* route(action: PayloadAction<unknown>) {
-    if (loginRequested.match(action)) yield* login(action)
-    else if (registerRequested.match(action)) yield* register(action)
-  })
+  yield takeLeading(
+    [loginRequested.type, registerRequested.type],
+    function* route(action: PayloadAction<unknown>) {
+      if (loginRequested.match(action)) yield* login(action)
+      else if (registerRequested.match(action)) yield* register(action)
+    },
+  )
   yield takeLeading(profileUpdateRequested.type, updateProfile)
   yield takeLeading(passwordChangeRequested.type, changePassword)
   yield takeEvery([logoutRequested.type, sessionExpired.type], clearSession)

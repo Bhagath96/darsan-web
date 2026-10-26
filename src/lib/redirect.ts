@@ -1,7 +1,10 @@
 import type { AuthUser, LoginPortal } from '@/types'
 
 /** Login page for each kind of account. */
-export const PORTAL_LOGIN_PATH: Record<LoginPortal, string> = { devotee: '/login', staff: '/admin/login' }
+export const PORTAL_LOGIN_PATH: Record<LoginPortal, string> = {
+  devotee: '/login',
+  staff: '/admin/login',
+}
 
 /**
  * Returns `target` only if it is a path on this site, else `fallback`.

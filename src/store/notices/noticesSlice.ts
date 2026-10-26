@@ -39,7 +39,8 @@ export const initialNoticesState: NoticesState = {
 }
 
 const insertAt = (list: Notice[], index: number, notice: Notice) => {
-  if (index >= 0 && !list.some((n) => n.id === notice.id)) list.splice(Math.min(index, list.length), 0, notice)
+  if (index >= 0 && !list.some((n) => n.id === notice.id))
+    list.splice(Math.min(index, list.length), 0, notice)
 }
 
 const noticesSlice = createSlice({
@@ -114,7 +115,8 @@ const noticesSlice = createSlice({
     /** Optimistic: the notice disappears at once and comes back if the server refuses. */
     noticeDeleteRequested(state, action: PayloadAction<string>) {
       const id = action.payload
-      const notice = state.list.data.find((n) => n.id === id) ?? state.latest.data.find((n) => n.id === id)
+      const notice =
+        state.list.data.find((n) => n.id === id) ?? state.latest.data.find((n) => n.id === id)
       if (!notice || state.deleting[id]) return
       state.deleting[id] = {
         notice,

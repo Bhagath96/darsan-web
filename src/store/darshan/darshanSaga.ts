@@ -52,7 +52,10 @@ function* submitBooking(action: PayloadAction<BookingDraft>) {
     yield put(bookingKeyAssigned({ key, fingerprint }))
   }
   try {
-    const booking: Booking = yield* callApi(bookingApi.createBooking, { ...draft, idempotencyKey: key })
+    const booking: Booking = yield* callApi(bookingApi.createBooking, {
+      ...draft,
+      idempotencyKey: key,
+    })
     yield put(bookingSucceeded(booking))
     yield* notify('success', 'darshan.booked', { ref: booking.bookingRef })
   } catch (error) {

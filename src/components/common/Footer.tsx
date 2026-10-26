@@ -24,12 +24,22 @@ export function Footer() {
               <ul className="mt-1 space-y-1">
                 {IMAGE_CREDITS.map((c) => (
                   <li key={c.key} className="break-words">
-                    <a href={c.page} className="underline underline-offset-2" rel="noreferrer" target="_blank">
+                    <a
+                      href={c.page}
+                      className="underline underline-offset-2"
+                      rel="noreferrer"
+                      target="_blank"
+                    >
                       {c.title.replace(/^File:/, '')}
                     </a>{' '}
                     — {c.artist || t('footer.unknownArtist')},{' '}
                     {c.licenseUrl ? (
-                      <a href={c.licenseUrl} className="underline underline-offset-2" rel="noreferrer" target="_blank">
+                      <a
+                        href={c.licenseUrl}
+                        className="underline underline-offset-2"
+                        rel="noreferrer"
+                        target="_blank"
+                      >
                         {c.license}
                       </a>
                     ) : (
@@ -46,7 +56,10 @@ export function Footer() {
           <ul className="space-y-1">
             {visibleNavItems(user).map((item) => (
               <li key={item.to}>
-                <Link to={item.to} className="inline-flex min-h-11 items-center underline-offset-4 hover:text-foreground hover:underline">
+                <Link
+                  to={item.to}
+                  className="inline-flex min-h-11 items-center underline-offset-4 hover:text-foreground hover:underline"
+                >
                   {t(item.label)}
                 </Link>
               </li>

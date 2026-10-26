@@ -16,7 +16,13 @@ import { cartReplacedWith, selectCart } from '@/store/vazhipadu/cartSlice'
 import type { Offering } from '@/types'
 
 /** One temple per order: asks before swapping a cart from another temple for this offering. */
-export function ReplaceCartDialog({ offering, onClose }: { offering: Offering | null; onClose: () => void }) {
+export function ReplaceCartDialog({
+  offering,
+  onClose,
+}: {
+  offering: Offering | null
+  onClose: () => void
+}) {
   const { t, pick } = useT()
   const dispatch = useAppDispatch()
   const cart = useAppSelector(selectCart)

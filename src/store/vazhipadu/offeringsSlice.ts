@@ -8,7 +8,11 @@ export interface OfferingsState extends AsyncState<Offering[]> {
   templeId: string | null
 }
 
-const initialState: OfferingsState = { ...asyncState<Offering[]>([]), requestId: null, templeId: null }
+const initialState: OfferingsState = {
+  ...asyncState<Offering[]>([]),
+  requestId: null,
+  templeId: null,
+}
 
 const offeringsSlice = createSlice({
   name: 'offerings',
@@ -26,7 +30,10 @@ const offeringsSlice = createSlice({
         return { payload: { templeId, requestId: nanoid() } }
       },
     },
-    offeringsLoaded(state, action: PayloadAction<{ offerings: Offering[]; templeId: string; requestId: string }>) {
+    offeringsLoaded(
+      state,
+      action: PayloadAction<{ offerings: Offering[]; templeId: string; requestId: string }>,
+    ) {
       if (action.payload.requestId !== state.requestId) return
       state.data = action.payload.offerings
       state.status = 'success'

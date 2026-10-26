@@ -5,7 +5,14 @@ import { toAppError } from '../errors'
 import { notify } from '../notify'
 import { saveJson, STORAGE_KEYS } from '../persistence'
 import type { RootState } from '../rootReducer'
-import { cartCleared, cartReplacedWith, itemAdded, itemRemoved, quantitySet, type CartState } from './cartSlice'
+import {
+  cartCleared,
+  cartReplacedWith,
+  itemAdded,
+  itemRemoved,
+  quantitySet,
+  type CartState,
+} from './cartSlice'
 import {
   orderFailed,
   orderFingerprint,

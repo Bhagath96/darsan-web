@@ -26,7 +26,11 @@ describe('orderApi', () => {
     it('totals 2 × ₹30 + 1 × ₹50 = ₹110 using server prices', async () => {
       actAs('devotee')
       const created = await orderApi.createOrder(order())
-      expect(created).toMatchObject({ totalAmount: 110, status: 'CONFIRMED', templeId: 'tm-krishna' })
+      expect(created).toMatchObject({
+        totalAmount: 110,
+        status: 'CONFIRMED',
+        templeId: 'tm-krishna',
+      })
       expect(created.orderNumber).toMatch(/^VZ\d+$/)
     })
 
@@ -37,19 +41,27 @@ describe('orderApi', () => {
         orderApi.createOrder(order({ items: [{ offeringId: inactive.id, quantity: 1 }] })),
       ).rejects.toMatchObject({ code: 'CONFLICT' })
       await expect(
-        orderApi.createOrder(order({ items: [{ offeringId: 'tm-sastha--pushpanjali', quantity: 1 }] })),
+        orderApi.createOrder(
+          order({ items: [{ offeringId: 'tm-sastha--pushpanjali', quantity: 1 }] }),
+        ),
       ).rejects.toMatchObject({ code: 'CONFLICT' })
       await expect(
-        orderApi.createOrder(order({ items: [{ offeringId: 'tm-krishna--pushpanjali', quantity: 11 }] })),
+        orderApi.createOrder(
+          order({ items: [{ offeringId: 'tm-krishna--pushpanjali', quantity: 11 }] }),
+        ),
       ).rejects.toMatchObject({ code: 'VALIDATION' })
     })
 
     it('rejects a past offering date, an empty cart and an unknown star', async () => {
       actAs('devotee')
-      await expect(orderApi.createOrder(order({ offeringDate: '2026-10-25' }))).rejects.toMatchObject({
+      await expect(
+        orderApi.createOrder(order({ offeringDate: '2026-10-25' })),
+      ).rejects.toMatchObject({
         code: 'VALIDATION',
       })
-      await expect(orderApi.createOrder(order({ items: [] }))).rejects.toMatchObject({ code: 'VALIDATION' })
+      await expect(orderApi.createOrder(order({ items: [] }))).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
       await expect(
         orderApi.createOrder(order({ star: 'Pluto' as CreateOrderRequest['star'] })),
       ).rejects.toMatchObject({ code: 'VALIDATION' })
@@ -88,7 +100,11 @@ describe('orderApi', () => {
       const byDate = await orderApi.getOrders({ date: sample.offeringDate, page: 1, pageSize: 50 })
       expect(byDate.items.every((o) => o.offeringDate === sample.offeringDate)).toBe(true)
 
-      const byPhone = await orderApi.getOrders({ phone: sample.phone.slice(2, 7), page: 1, pageSize: 50 })
+      const byPhone = await orderApi.getOrders({
+        phone: sample.phone.slice(2, 7),
+        page: 1,
+        pageSize: 50,
+      })
       expect(byPhone.items.map((o) => o.id)).toContain(sample.id)
     })
 
@@ -103,7 +119,9 @@ describe('orderApi', () => {
     })
 
     it('needs a login', async () => {
-      await expect(orderApi.getOrders({ page: 1, pageSize: 10 })).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+      await expect(orderApi.getOrders({ page: 1, pageSize: 10 })).rejects.toMatchObject({
+        code: 'UNAUTHORIZED',
+      })
     })
   })
 
@@ -111,8 +129,12 @@ describe('orderApi', () => {
     it('cancels a confirmed order; a second cancel is harmless', async () => {
       actAs('admin')
       const confirmed = getDb().orders.find((o) => o.status === 'CONFIRMED')!
-      await expect(orderApi.cancelOrder(confirmed.id)).resolves.toMatchObject({ status: 'CANCELLED' })
-      await expect(orderApi.cancelOrder(confirmed.id)).resolves.toMatchObject({ status: 'CANCELLED' })
+      await expect(orderApi.cancelOrder(confirmed.id)).resolves.toMatchObject({
+        status: 'CANCELLED',
+      })
+      await expect(orderApi.cancelOrder(confirmed.id)).resolves.toMatchObject({
+        status: 'CANCELLED',
+      })
     })
 
     it('refuses to cancel a completed order', async () => {
@@ -123,7 +145,9 @@ describe('orderApi', () => {
 
     it("staff cannot cancel another temple's order", async () => {
       actAs('staff')
-      const other = getDb().orders.find((o) => o.templeId !== 'tm-krishna' && o.status === 'CONFIRMED')!
+      const other = getDb().orders.find(
+        (o) => o.templeId !== 'tm-krishna' && o.status === 'CONFIRMED',
+      )!
       await expect(orderApi.cancelOrder(other.id)).rejects.toMatchObject({ code: 'NOT_FOUND' })
     })
   })
@@ -139,7 +163,9 @@ describe('orderApi.getOrder', () => {
     await expect(orderApi.getOrder(created.orderNumber)).resolves.toMatchObject({ id: created.id })
 
     actAs('lakshmi')
-    await expect(orderApi.getOrder(created.orderNumber)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    await expect(orderApi.getOrder(created.orderNumber)).rejects.toMatchObject({
+      code: 'NOT_FOUND',
+    })
 
     actAs('staff') // the order is for Sree Krishna Temple, staff's temple
     await expect(orderApi.getOrder(created.orderNumber)).resolves.toMatchObject({ id: created.id })

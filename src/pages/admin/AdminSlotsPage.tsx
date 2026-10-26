@@ -15,7 +15,11 @@ import { useTemples } from '@/hooks/useTemples'
 import { useT } from '@/i18n'
 import { MAX_SLOT_CAPACITY } from '@/lib/constants'
 import { addDays, todayIST } from '@/lib/date'
-import { adminSlotsRequested, selectAdminSlots, slotUpdateRequested } from '@/store/admin/catalogSlice'
+import {
+  adminSlotsRequested,
+  selectAdminSlots,
+  slotUpdateRequested,
+} from '@/store/admin/catalogSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { DarshanSlot } from '@/types'
 
@@ -104,8 +108,14 @@ function SlotRow({ slot }: { slot: DarshanSlot }) {
             variant="outline"
             className="h-11 px-3"
             disabled={saving}
-            aria-label={slot.isBlocked ? t('adminSlots.openOf', { time: label }) : t('adminSlots.closeOf', { time: label })}
-            onClick={() => dispatch(slotUpdateRequested({ slotId: slot.id, isBlocked: !slot.isBlocked }))}
+            aria-label={
+              slot.isBlocked
+                ? t('adminSlots.openOf', { time: label })
+                : t('adminSlots.closeOf', { time: label })
+            }
+            onClick={() =>
+              dispatch(slotUpdateRequested({ slotId: slot.id, isBlocked: !slot.isBlocked }))
+            }
           >
             {slot.isBlocked ? <LockOpen aria-hidden="true" /> : <Lock aria-hidden="true" />}
             {slot.isBlocked ? t('adminSlots.open') : t('adminSlots.close')}
@@ -125,7 +135,9 @@ export function AdminSlotsPage() {
 
   const today = todayIST()
   const days = Array.from({ length: SLOT_DAYS }, (_, i) => addDays(today, i))
-  const templeId = temples.data.some((x) => x.id === get('temple')) ? get('temple') : (temples.data[0]?.id ?? '')
+  const templeId = temples.data.some((x) => x.id === get('temple'))
+    ? get('temple')
+    : (temples.data[0]?.id ?? '')
   const day = days.includes(get('date')) ? get('date') : today
 
   const load = () => {
@@ -141,11 +153,22 @@ export function AdminSlotsPage() {
     <div className="space-y-6">
       <PageHeading title={t('adminSlots.title')} intro={t('adminSlots.intro')} />
 
-      <form onSubmit={(e) => e.preventDefault()} className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-2">
-        <TempleScopeField id="slots-temple" value={templeId} onChange={(id) => update({ temple: id })} />
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-2"
+      >
+        <TempleScopeField
+          id="slots-temple"
+          value={templeId}
+          onChange={(id) => update({ temple: id })}
+        />
         <FormField id="slots-date" label={t('common.date')}>
           {(control) => (
-            <NativeSelect {...control} value={day} onChange={(e) => update({ date: e.target.value })}>
+            <NativeSelect
+              {...control}
+              value={day}
+              onChange={(e) => update({ date: e.target.value })}
+            >
               {days.map((d) => (
                 <option key={d} value={d}>
                   {date(d)}

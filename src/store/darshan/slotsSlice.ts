@@ -17,7 +17,10 @@ const slotsSlice = createSlice({
   initialState,
   reducers: {
     slotsRequested: {
-      reducer(state, action: PayloadAction<{ templeId: string; date: IsoDate; requestId: string }>) {
+      reducer(
+        state,
+        action: PayloadAction<{ templeId: string; date: IsoDate; requestId: string }>,
+      ) {
         const { templeId, date, requestId } = action.payload
         state.status = 'loading'
         state.error = null
@@ -45,7 +48,8 @@ const slotsSlice = createSlice({
     // After booking 3 of 10, show 7 left straight away.
     builder.addCase(bookingSucceeded, (state, action) => {
       const slot = state.data.find((s) => s.id === action.payload.slotId)
-      if (slot) slot.remainingTickets = Math.max(0, slot.remainingTickets - action.payload.ticketCount)
+      if (slot)
+        slot.remainingTickets = Math.max(0, slot.remainingTickets - action.payload.ticketCount)
     })
   },
 })

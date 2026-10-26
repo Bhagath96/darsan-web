@@ -9,12 +9,17 @@ describe('safeRedirect', () => {
     expect(safeRedirect('/darshan?temple=tm-sastha')).toBe('/darshan?temple=tm-sastha')
   })
 
-  it.each(['//evil.com', '/\\evil.com', 'https://evil.com', 'javascript:alert(1)', '', null, undefined])(
-    'falls back for %s',
-    (target) => {
-      expect(safeRedirect(target)).toBe('/')
-    },
-  )
+  it.each([
+    '//evil.com',
+    '/\\evil.com',
+    'https://evil.com',
+    'javascript:alert(1)',
+    '',
+    null,
+    undefined,
+  ])('falls back for %s', (target) => {
+    expect(safeRedirect(target)).toBe('/')
+  })
 })
 
 describe('dates in IST', () => {

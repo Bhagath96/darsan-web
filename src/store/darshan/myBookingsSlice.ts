@@ -10,7 +10,11 @@ export interface MyBookingsState extends AsyncState<Booking[]> {
   cancelling: Record<string, BookingStatus>
 }
 
-const initialState: MyBookingsState = { ...asyncState<Booking[]>([]), requestId: null, cancelling: {} }
+const initialState: MyBookingsState = {
+  ...asyncState<Booking[]>([]),
+  requestId: null,
+  cancelling: {},
+}
 
 const myBookingsSlice = createSlice({
   name: 'myBookings',

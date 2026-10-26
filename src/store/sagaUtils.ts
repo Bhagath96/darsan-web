@@ -6,7 +6,10 @@ import { fork, take } from 'redux-saga/effects'
  * a second "cancel #42" while the first is still in flight is ignored.
  * Different ids run side by side.
  */
-export function* takeOnePerId(pattern: string, worker: (action: PayloadAction<string>) => Generator) {
+export function* takeOnePerId(
+  pattern: string,
+  worker: (action: PayloadAction<string>) => Generator,
+) {
   const busy = new Set<string>()
   while (true) {
     const action: PayloadAction<string> = yield take(pattern)

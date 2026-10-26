@@ -20,7 +20,9 @@ export function RHead(props: ComponentProps<'thead'>) {
 }
 
 export function RBody({ className, ...props }: ComponentProps<'tbody'>) {
-  return <tbody role="rowgroup" className={cn('max-md:block max-md:space-y-3', className)} {...props} />
+  return (
+    <tbody role="rowgroup" className={cn('max-md:block max-md:space-y-3', className)} {...props} />
+  )
 }
 
 export function RRow({ className, ...props }: ComponentProps<'tr'>) {
@@ -37,7 +39,14 @@ export function RRow({ className, ...props }: ComponentProps<'tr'>) {
 }
 
 export function RHeader({ className, ...props }: ComponentProps<'th'>) {
-  return <th role="columnheader" scope="col" className={cn('px-3 py-2.5 text-start font-medium', className)} {...props} />
+  return (
+    <th
+      role="columnheader"
+      scope="col"
+      className={cn('px-3 py-2.5 text-start font-medium', className)}
+      {...props}
+    />
+  )
 }
 
 /** `label` is shown before the value in card view. */

@@ -28,8 +28,12 @@ describe('bookingApi', () => {
     })
 
     it('rejects an unknown temple and a malformed date', async () => {
-      await expect(bookingApi.getSlots('tm-nowhere', TODAY)).rejects.toMatchObject({ code: 'NOT_FOUND' })
-      await expect(bookingApi.getSlots('tm-krishna', '2026-13-45')).rejects.toMatchObject({ code: 'VALIDATION' })
+      await expect(bookingApi.getSlots('tm-nowhere', TODAY)).rejects.toMatchObject({
+        code: 'NOT_FOUND',
+      })
+      await expect(bookingApi.getSlots('tm-krishna', '2026-13-45')).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
     })
 
     it('is public: no login needed', async () => {
@@ -39,14 +43,18 @@ describe('bookingApi', () => {
 
   describe('createBooking', () => {
     it('needs a logged-in user', async () => {
-      await expect(bookingApi.createBooking(request())).rejects.toMatchObject({ code: 'UNAUTHORIZED' })
+      await expect(bookingApi.createBooking(request())).rejects.toMatchObject({
+        code: 'UNAUTHORIZED',
+      })
     })
 
     it('books 3 of 10 and leaves 7', async () => {
       actAs('devotee')
       const booking = await bookingApi.createBooking(request())
       expect(booking).toMatchObject({ status: 'BOOKED', ticketCount: 3, slotId: TEN_LEFT })
-      const slot = (await bookingApi.getSlots('tm-krishna', TOMORROW)).find((s) => s.id === TEN_LEFT)
+      const slot = (await bookingApi.getSlots('tm-krishna', TOMORROW)).find(
+        (s) => s.id === TEN_LEFT,
+      )
       expect(slot?.remainingTickets).toBe(7)
     })
 
@@ -71,10 +79,18 @@ describe('bookingApi', () => {
 
     it('validates name, phone and ticket count', async () => {
       actAs('devotee')
-      await expect(bookingApi.createBooking(request({ phone: '12345' }))).rejects.toMatchObject({ code: 'VALIDATION' })
-      await expect(bookingApi.createBooking(request({ devoteeName: ' ' }))).rejects.toMatchObject({ code: 'VALIDATION' })
-      await expect(bookingApi.createBooking(request({ ticketCount: 0 }))).rejects.toMatchObject({ code: 'VALIDATION' })
-      await expect(bookingApi.createBooking(request({ ticketCount: 11 }))).rejects.toMatchObject({ code: 'VALIDATION' })
+      await expect(bookingApi.createBooking(request({ phone: '12345' }))).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
+      await expect(bookingApi.createBooking(request({ devoteeName: ' ' }))).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
+      await expect(bookingApi.createBooking(request({ ticketCount: 0 }))).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
+      await expect(bookingApi.createBooking(request({ ticketCount: 11 }))).rejects.toMatchObject({
+        code: 'VALIDATION',
+      })
     })
 
     it('normalises +91 phone numbers', async () => {
@@ -97,7 +113,7 @@ describe('bookingApi', () => {
   })
 
   describe('getBookings', () => {
-    it("devotee sees their own bookings, latest slot first", async () => {
+    it('devotee sees their own bookings, latest slot first', async () => {
       actAs('devotee')
       const bookings = await bookingApi.getBookings('9847012345')
       expect(bookings.length).toBeGreaterThanOrEqual(3)

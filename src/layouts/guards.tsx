@@ -25,7 +25,13 @@ export function RequireAuth({ loginPath = '/login' }: { loginPath?: string }) {
  * Children render only for the given roles. Guests go to the staff login;
  * logged-in users with another role get the 403 page.
  */
-export function RequireRole({ roles, loginPath = '/admin/login' }: { roles: UserRole[]; loginPath?: string }) {
+export function RequireRole({
+  roles,
+  loginPath = '/admin/login',
+}: {
+  roles: UserRole[]
+  loginPath?: string
+}) {
   const user = useAppSelector(selectCurrentUser)
   const here = useHere()
   if (!user) return <Navigate to={`${loginPath}?redirect=${here}`} replace />

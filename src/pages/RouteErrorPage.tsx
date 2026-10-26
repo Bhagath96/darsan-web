@@ -23,7 +23,11 @@ export function RouteErrorPage() {
         <Button className="h-11 px-5" onClick={() => window.location.reload()}>
           {t('crash.reload')}
         </Button>
-        <Link to="/" reloadDocument className={buttonVariants({ variant: 'outline', className: 'h-11 px-5' })}>
+        <Link
+          to="/"
+          reloadDocument
+          className={buttonVariants({ variant: 'outline', className: 'h-11 px-5' })}
+        >
           {t('common.backHome')}
         </Link>
       </div>

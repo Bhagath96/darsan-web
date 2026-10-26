@@ -41,7 +41,9 @@ import type {
 
 // ---- Lists (takeLatest: a new filter cancels the old request) -------------
 
-function* loadDashboard(action: PayloadAction<{ templeId: string | undefined; requestId: string }>) {
+function* loadDashboard(
+  action: PayloadAction<{ templeId: string | undefined; requestId: string }>,
+) {
   const { templeId, requestId } = action.payload
   try {
     const stats: DashboardStats = yield* callApi(adminApi.getDashboard, templeId)
@@ -101,7 +103,9 @@ function* cancelBooking(action: PayloadAction<string>) {
 
 function* updateSlot(action: PayloadAction<SlotUpdate>) {
   const { slotId } = action.payload
-  const snapshot: DarshanSlot | undefined = yield select((s: RootState) => s.adminCatalog.slots.saving[slotId])
+  const snapshot: DarshanSlot | undefined = yield select(
+    (s: RootState) => s.adminCatalog.slots.saving[slotId],
+  )
   try {
     const saved: DarshanSlot = yield* callApi(bookingApi.updateSlot, action.payload)
     yield put(slotSettled(saved))
@@ -114,7 +118,9 @@ function* updateSlot(action: PayloadAction<SlotUpdate>) {
 
 function* updateOffering(action: PayloadAction<OfferingUpdate>) {
   const { offeringId } = action.payload
-  const snapshot: Offering | undefined = yield select((s: RootState) => s.adminCatalog.offerings.saving[offeringId])
+  const snapshot: Offering | undefined = yield select(
+    (s: RootState) => s.adminCatalog.offerings.saving[offeringId],
+  )
   try {
     const saved: Offering = yield* callApi(templeApi.updateOffering, action.payload)
     yield put(offeringSettled(saved))

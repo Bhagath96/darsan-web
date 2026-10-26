@@ -25,7 +25,14 @@ interface ConfirmDialogProps {
  * "Are you sure?" for destructive actions. Radix traps focus inside, Esc closes it,
  * and focus starts on the safe choice (keep), not on the destructive one.
  */
-export function ConfirmDialog({ trigger, title, description, confirmLabel, cancelLabel, onConfirm }: ConfirmDialogProps) {
+export function ConfirmDialog({
+  trigger,
+  title,
+  description,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+}: ConfirmDialogProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>

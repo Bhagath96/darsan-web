@@ -91,7 +91,10 @@ export function DarshanPage() {
       <PageHeading title={t('darshan.title')} intro={t('darshan.intro')} />
 
       {badLink && (
-        <p role="status" className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm">
+        <p
+          role="status"
+          className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm"
+        >
           <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           {t('darshan.badLink')}
         </p>
@@ -102,7 +105,11 @@ export function DarshanPage() {
       ) : (
         <div className="space-y-4 rounded-xl border bg-card p-4">
           <div className="flex flex-wrap items-end gap-4">
-            <FormField id="darshan-temple" label={t('darshan.temple')} className="min-w-0 flex-1 basis-64">
+            <FormField
+              id="darshan-temple"
+              label={t('darshan.temple')}
+              className="min-w-0 flex-1 basis-64"
+            >
               {(control) => (
                 <NativeSelect
                   {...control}
@@ -125,7 +132,12 @@ export function DarshanPage() {
             <p id={dayLabelId} className="text-sm font-medium">
               {t('darshan.day')}
             </p>
-            <DayPicker days={days} value={validDate ? dateParam : today} onChange={(d) => choose({ date: d })} labelId={dayLabelId} />
+            <DayPicker
+              days={days}
+              value={validDate ? dateParam : today}
+              onChange={(d) => choose({ date: d })}
+              labelId={dayLabelId}
+            />
           </div>
         </div>
       )}
@@ -142,10 +154,17 @@ export function DarshanPage() {
           ) : slots.data.length === 0 ? (
             <EmptyState title={t('darshan.empty')} />
           ) : (
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy={slots.status === 'loading'}>
+            <ul
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+              aria-busy={slots.status === 'loading'}
+            >
               {slots.data.map((slot) => (
                 <li key={slot.id}>
-                  <SlotCard slot={slot} availability={availabilityOf(slot, now)} onBook={() => book(slot.id)} />
+                  <SlotCard
+                    slot={slot}
+                    availability={availabilityOf(slot, now)}
+                    onBook={() => book(slot.id)}
+                  />
                 </li>
               ))}
             </ul>

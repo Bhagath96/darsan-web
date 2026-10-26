@@ -34,7 +34,10 @@ export function errorText(lang: Language, error: AppError): string {
  */
 export function useT() {
   const lang = useAppSelector((s) => s.i18n.language)
-  const t = useCallback((key: MessageKey, vars?: TranslateVars) => translate(lang, key, vars), [lang])
+  const t = useCallback(
+    (key: MessageKey, vars?: TranslateVars) => translate(lang, key, vars),
+    [lang],
+  )
   const pick = useCallback((text: Localized) => text[lang] || text.en, [lang])
   const date = useCallback((value: IsoDate) => formatDate(value, lang), [lang])
   const time = useCallback((value: IsoDateTime) => formatTimeIST(value, lang), [lang])

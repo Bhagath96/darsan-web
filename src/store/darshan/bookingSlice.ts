@@ -33,7 +33,12 @@ const initialState: BookingState = {
 }
 
 export const fingerprintOf = (draft: BookingDraft) =>
-  JSON.stringify([draft.slotId, draft.devoteeName.trim(), draft.phone.replace(/\D/g, '').slice(-10), draft.ticketCount])
+  JSON.stringify([
+    draft.slotId,
+    draft.devoteeName.trim(),
+    draft.phone.replace(/\D/g, '').slice(-10),
+    draft.ticketCount,
+  ])
 
 const bookingSlice = createSlice({
   name: 'booking',

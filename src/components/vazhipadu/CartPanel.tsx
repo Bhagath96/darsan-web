@@ -15,7 +15,8 @@ function CartLine({ item, idPrefix }: { item: CartItem; idPrefix: string }) {
   const { t, pick } = useT()
   const dispatch = useAppDispatch()
   const name = pick(item.name)
-  const setQty = (quantity: number) => dispatch(quantitySet({ offeringId: item.offeringId, quantity }))
+  const setQty = (quantity: number) =>
+    dispatch(quantitySet({ offeringId: item.offeringId, quantity }))
   const inputId = `${idPrefix}-${item.offeringId}`
 
   return (
@@ -111,7 +112,11 @@ export function CartPanel({ idPrefix, hideCheckout = false, onNavigate }: CartPa
 
   return (
     <div className="space-y-3">
-      {temple && <p className="text-sm text-muted-foreground">{t('cart.forTemple', { temple: pick(temple.name) })}</p>}
+      {temple && (
+        <p className="text-sm text-muted-foreground">
+          {t('cart.forTemple', { temple: pick(temple.name) })}
+        </p>
+      )}
       <ul>
         {cart.items.map((item) => (
           <CartLine key={item.offeringId} item={item} idPrefix={idPrefix} />

@@ -7,7 +7,15 @@ import { MAX_SLOT_CAPACITY, MAX_TICKETS_PER_BOOKING } from '@/lib/constants'
 import { isValidIsoDate } from '@/lib/date'
 import { can } from '@/lib/permissions'
 import { normalizePhone } from '@/lib/phone'
-import type { Booking, BookingQuery, CreateBookingRequest, DarshanSlot, IsoDate, Paged, SlotUpdate } from '@/types'
+import type {
+  Booking,
+  BookingQuery,
+  CreateBookingRequest,
+  DarshanSlot,
+  IsoDate,
+  Paged,
+  SlotUpdate,
+} from '@/types'
 
 const hasStarted = (startsAt: string) => new Date(startsAt).getTime() <= Date.now()
 
@@ -15,7 +23,8 @@ const hasStarted = (startsAt: string) => new Date(startsAt).getTime() <= Date.no
 export function getSlots(templeId: string, date: IsoDate): Promise<DarshanSlot[]> {
   return simulate('darshan', () => {
     const db = getDb()
-    if (!db.temples.some((t) => t.id === templeId)) throw new ApiError('NOT_FOUND', 'Temple not found.')
+    if (!db.temples.some((t) => t.id === templeId))
+      throw new ApiError('NOT_FOUND', 'Temple not found.')
     if (!isValidIsoDate(date)) throw new ApiError('VALIDATION', 'Please choose a valid date.')
     return db.slots
       .filter((s) => s.templeId === templeId && s.date === date)
@@ -36,7 +45,8 @@ export function createBooking(request: CreateBookingRequest): Promise<Booking> {
       const slot = db.slots.find((s) => s.id === request.slotId)
       if (!slot) throw new ApiError('NOT_FOUND', 'This slot no longer exists.')
       if (slot.isBlocked) throw new ApiError('CONFLICT', 'This slot is closed for booking.')
-      if (hasStarted(slot.startsAt)) throw new ApiError('CONFLICT', 'This slot has already started.')
+      if (hasStarted(slot.startsAt))
+        throw new ApiError('CONFLICT', 'This slot has already started.')
 
       const phone = normalizePhone(request.phone)
       const name = request.devoteeName.trim()
@@ -47,7 +57,10 @@ export function createBooking(request: CreateBookingRequest): Promise<Booking> {
         throw new ApiError('VALIDATION', `You can book 1 to ${MAX_TICKETS_PER_BOOKING} tickets.`)
       }
       if (tickets > slot.remainingTickets) {
-        throw new ApiError('CONFLICT', `Only ${slot.remainingTickets} tickets are left in this slot.`)
+        throw new ApiError(
+          'CONFLICT',
+          `Only ${slot.remainingTickets} tickets are left in this slot.`,
+        )
       }
 
       slot.remainingTickets -= tickets
@@ -89,7 +102,8 @@ export function getBookings(phone: string): Promise<Booking[]> {
   return simulate('darshan', () => {
     const user = requireUser('booking:viewOwn')
     const normalized = normalizePhone(phone)
-    if (!normalized) throw new ApiError('VALIDATION', 'Please enter a valid 10-digit mobile number.')
+    if (!normalized)
+      throw new ApiError('VALIDATION', 'Please enter a valid 10-digit mobile number.')
     return getDb()
       .bookings.filter((b) => b.phone === normalized && canSeeBooking(user, b))
       .sort((a, b) => b.startsAt.localeCompare(a.startsAt))
@@ -102,14 +116,22 @@ export function cancelBooking(bookingId: string): Promise<Booking> {
     const user = requireUser('booking:cancelOwn')
     const db = getDb()
     const booking = db.bookings.find((b) => b.id === bookingId)
-    if (!booking || !canSeeBooking(user, booking)) throw new ApiError('NOT_FOUND', 'Booking not found.')
+    if (!booking || !canSeeBooking(user, booking))
+      throw new ApiError('NOT_FOUND', 'Booking not found.')
     if (booking.status === 'CANCELLED') return booking
     if (hasStarted(booking.startsAt)) {
-      throw new ApiError('CONFLICT', 'This darshan has already started, so it can no longer be cancelled.')
+      throw new ApiError(
+        'CONFLICT',
+        'This darshan has already started, so it can no longer be cancelled.',
+      )
     }
     booking.status = 'CANCELLED'
     const slot = db.slots.find((s) => s.id === booking.slotId)
-    if (slot) slot.remainingTickets = Math.min(slot.totalCapacity, slot.remainingTickets + booking.ticketCount)
+    if (slot)
+      slot.remainingTickets = Math.min(
+        slot.totalCapacity,
+        slot.remainingTickets + booking.ticketCount,
+      )
     return booking
   })
 }
@@ -119,7 +141,12 @@ function paginate<T>(items: T[], page: number, pageSize: number): Paged<T> {
   const size = Math.max(1, pageSize)
   const lastPage = Math.max(1, Math.ceil(items.length / size))
   const current = Math.min(Math.max(1, page), lastPage)
-  return { items: items.slice((current - 1) * size, current * size), total: items.length, page: current, pageSize: size }
+  return {
+    items: items.slice((current - 1) * size, current * size),
+    total: items.length,
+    page: current,
+    pageSize: size,
+  }
 }
 
 /**
@@ -155,11 +182,21 @@ export function updateSlot({ slotId, totalCapacity, isBlocked }: SlotUpdate): Pr
     if (!slot) throw new ApiError('NOT_FOUND', 'This slot no longer exists.')
     if (totalCapacity !== undefined) {
       const booked = slot.totalCapacity - slot.remainingTickets
-      if (!Number.isInteger(totalCapacity) || totalCapacity < 1 || totalCapacity > MAX_SLOT_CAPACITY) {
-        throw new ApiError('VALIDATION', `Capacity must be a whole number from 1 to ${MAX_SLOT_CAPACITY}.`)
+      if (
+        !Number.isInteger(totalCapacity) ||
+        totalCapacity < 1 ||
+        totalCapacity > MAX_SLOT_CAPACITY
+      ) {
+        throw new ApiError(
+          'VALIDATION',
+          `Capacity must be a whole number from 1 to ${MAX_SLOT_CAPACITY}.`,
+        )
       }
       if (totalCapacity < booked) {
-        throw new ApiError('CONFLICT', `${booked} tickets are already booked, so capacity can't be lower than that.`)
+        throw new ApiError(
+          'CONFLICT',
+          `${booked} tickets are already booked, so capacity can't be lower than that.`,
+        )
       }
       slot.remainingTickets = totalCapacity - booked
       slot.totalCapacity = totalCapacity

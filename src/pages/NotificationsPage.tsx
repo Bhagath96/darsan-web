@@ -34,7 +34,8 @@ export function NotificationsPage() {
   const templeParam = params.get('temple')
   const categoryParam = params.get('category')
   const templesReady = temples.status === 'success'
-  const templeValid = !templeParam || (templesReady && temples.data.some((x) => x.id === templeParam))
+  const templeValid =
+    !templeParam || (templesReady && temples.data.some((x) => x.id === templeParam))
   const categoryValid = !categoryParam || isCategory(categoryParam)
   const badLink = (location.state as FixedLinkState | null)?.badLink === true
 
@@ -88,7 +89,10 @@ export function NotificationsPage() {
       <PageHeading title={t('notices.title')} intro={t('notices.intro')} />
 
       {badLink && (
-        <p role="status" className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm">
+        <p
+          role="status"
+          className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm"
+        >
           <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           {t('notices.badLink')}
         </p>
@@ -144,7 +148,11 @@ export function NotificationsPage() {
           title={t('notices.empty')}
           action={
             hasFilters && (
-              <Button variant="outline" className="h-11" onClick={() => setParams(new URLSearchParams())}>
+              <Button
+                variant="outline"
+                className="h-11"
+                onClick={() => setParams(new URLSearchParams())}
+              >
                 {t('notices.clearFilters')}
               </Button>
             )

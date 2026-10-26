@@ -41,7 +41,10 @@ export function updateOffering({ offeringId, price, isActive }: OfferingUpdate):
     if (!offering) throw new ApiError('NOT_FOUND', 'Offering not found.')
     if (price !== undefined) {
       if (!Number.isInteger(price) || price < 1 || price > MAX_OFFERING_PRICE) {
-        throw new ApiError('VALIDATION', `Price must be whole rupees from ₹1 to ₹${MAX_OFFERING_PRICE.toLocaleString('en-IN')}.`)
+        throw new ApiError(
+          'VALIDATION',
+          `Price must be whole rupees from ₹1 to ₹${MAX_OFFERING_PRICE.toLocaleString('en-IN')}.`,
+        )
       }
       offering.price = price
     }

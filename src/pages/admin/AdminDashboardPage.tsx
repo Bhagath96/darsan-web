@@ -15,7 +15,15 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { DashboardStats } from '@/types'
 
 /** One headline number with a label and an optional note underneath. */
-function StatTile({ label, value, note }: { label: string; value: string | number; note?: string }) {
+function StatTile({
+  label,
+  value,
+  note,
+}: {
+  label: string
+  value: string | number
+  note?: string
+}) {
   return (
     <div className="rounded-xl border bg-card p-4">
       <p className="text-sm text-muted-foreground">{label}</p>
@@ -73,7 +81,12 @@ function RevenueByTemple({ stats }: { stats: DashboardStats }) {
         <h2 id="by-temple" className="text-lg font-semibold">
           {t('dashboard.byTemple')}
         </h2>
-        <Button variant="outline" className="h-11 px-3" aria-pressed={asTable} onClick={() => setAsTable((v) => !v)}>
+        <Button
+          variant="outline"
+          className="h-11 px-3"
+          aria-pressed={asTable}
+          onClick={() => setAsTable((v) => !v)}
+        >
           {asTable ? <BarChart3 aria-hidden="true" /> : <Table2 aria-hidden="true" />}
           {asTable ? t('dashboard.showChart') : t('dashboard.showTable')}
         </Button>
@@ -114,15 +127,28 @@ function RevenueByTemple({ stats }: { stats: DashboardStats }) {
       ) : (
         <ul className="space-y-3">
           {stats.byTemple.map((row) => {
-            const tip = t('dashboard.barTooltip', { revenue: formatINR(row.revenue), orders: row.orders })
+            const tip = t('dashboard.barTooltip', {
+              revenue: formatINR(row.revenue),
+              orders: row.orders,
+            })
             return (
-              <li key={row.templeId} className="group relative space-y-1" tabIndex={0} aria-label={`${name(row.templeId)}: ${tip}`}>
+              <li
+                key={row.templeId}
+                className="group relative space-y-1"
+                tabIndex={0}
+                aria-label={`${name(row.templeId)}: ${tip}`}
+              >
                 <div className="flex items-baseline justify-between gap-3 text-sm">
                   <span className="min-w-0 truncate">{name(row.templeId)}</span>
-                  <span className="font-medium whitespace-nowrap tabular-nums">{formatINR(row.revenue)}</span>
+                  <span className="font-medium whitespace-nowrap tabular-nums">
+                    {formatINR(row.revenue)}
+                  </span>
                 </div>
                 <div className="h-5 rounded-e-[4px] bg-transparent" aria-hidden="true">
-                  <div className="h-full rounded-e-[4px] bg-chart-bar" style={{ width: `${(row.revenue / max) * 100}%` }} />
+                  <div
+                    className="h-full rounded-e-[4px] bg-chart-bar"
+                    style={{ width: `${(row.revenue / max) * 100}%` }}
+                  />
                 </div>
                 <span
                   role="tooltip"
@@ -160,7 +186,12 @@ export function AdminDashboardPage() {
     <div className="space-y-6">
       <PageHeading title={t('dashboard.title')} intro={t('dashboard.intro')} />
       <div className="grid gap-4 sm:grid-cols-2">
-        <TempleScopeField id="dashboard-temple" value={templeId} allowAll onChange={(id) => update({ temple: id })} />
+        <TempleScopeField
+          id="dashboard-temple"
+          value={templeId}
+          allowAll
+          onChange={(id) => update({ temple: id })}
+        />
       </div>
 
       {dashboard.status === 'error' && dashboard.error ? (
@@ -169,14 +200,20 @@ export function AdminDashboardPage() {
         <LoadingState rows={4} />
       ) : (
         <div className="space-y-6" aria-busy={dashboard.status === 'loading'}>
-          <p className="text-sm text-muted-foreground">{t('dashboard.asOf', { date: date(stats.today) })}</p>
+          <p className="text-sm text-muted-foreground">
+            {t('dashboard.asOf', { date: date(stats.today) })}
+          </p>
 
           <section aria-labelledby="hero-revenue" className="rounded-xl border bg-card p-5">
             <h2 id="hero-revenue" className="text-sm font-normal text-muted-foreground">
               {t('dashboard.revenue')}
             </h2>
-            <p className="font-sans text-5xl font-semibold text-foreground">{formatINR(stats.orders.revenue)}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{t('dashboard.revenueNote', { count: earning })}</p>
+            <p className="font-sans text-5xl font-semibold text-foreground">
+              {formatINR(stats.orders.revenue)}
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {t('dashboard.revenueNote', { count: earning })}
+            </p>
           </section>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -192,7 +229,10 @@ export function AdminDashboardPage() {
 
           <div className="grid gap-4 lg:grid-cols-2">
             <UtilisationMeter stats={stats} />
-            <section aria-labelledby="orders-by-status" className="space-y-3 rounded-xl border bg-card p-4">
+            <section
+              aria-labelledby="orders-by-status"
+              className="space-y-3 rounded-xl border bg-card p-4"
+            >
               <h2 id="orders-by-status" className="text-sm font-normal text-muted-foreground">
                 {t('dashboard.ordersByStatus')}
               </h2>

@@ -18,18 +18,31 @@ export function Pagination({ page, pageSize, total, onPageChange }: PaginationPr
   const to = Math.min(total, page * pageSize)
 
   return (
-    <nav aria-label={t('common.pagination')} className="flex flex-wrap items-center justify-between gap-3 text-sm">
+    <nav
+      aria-label={t('common.pagination')}
+      className="flex flex-wrap items-center justify-between gap-3 text-sm"
+    >
       <p className="text-muted-foreground">{t('common.showing', { from, to, total })}</p>
       {pages > 1 && (
         <div className="flex items-center gap-2">
-          <Button variant="outline" className="h-11 px-3" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+          <Button
+            variant="outline"
+            className="h-11 px-3"
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+          >
             <ChevronLeft aria-hidden="true" />
             {t('common.previous')}
           </Button>
           <span aria-current="page" className="px-2 tabular-nums">
             {t('common.pageOf', { page, pages })}
           </span>
-          <Button variant="outline" className="h-11 px-3" disabled={page >= pages} onClick={() => onPageChange(page + 1)}>
+          <Button
+            variant="outline"
+            className="h-11 px-3"
+            disabled={page >= pages}
+            onClick={() => onPageChange(page + 1)}
+          >
             {t('common.next')}
             <ChevronRight aria-hidden="true" />
           </Button>

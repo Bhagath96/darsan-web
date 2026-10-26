@@ -36,7 +36,10 @@ export function PhoneSearchField({ id, value, onSearch }: PhoneSearchFieldProps)
     <FormField id={id} label={t('common.phone')} hint={t('common.phoneSearchHint')}>
       {(control) => (
         <div className="relative">
-          <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          />
           <Input
             {...control}
             type="search"

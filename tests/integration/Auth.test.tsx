@@ -15,7 +15,9 @@ async function fillLogin(user: User, username: string, password: string) {
 describe('Two login portals', () => {
   it('staff log in on the staff page and land in the admin portal', async () => {
     const { user, router } = renderApp({ url: '/admin/login' })
-    expect(await screen.findByRole('heading', { level: 1, name: 'Staff login' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Staff login' }),
+    ).toBeInTheDocument()
     await fillLogin(user, 'staff', 'staff123')
     await waitFor(() => expect(currentUrl(router)).toBe('/admin'))
     expect(await screen.findByRole('heading', { name: 'Welcome, Ravi Menon' })).toBeInTheDocument()
@@ -26,7 +28,11 @@ describe('Two login portals', () => {
     const { user, router } = renderApp({ url: '/login?redirect=%2Fadmin' })
     await fillLogin(user, 'admin', 'admin123')
     const message = await screen.findByText(/use the staff login/)
-    await user.click(within(message.closest('[role="alert"]') as HTMLElement).getByRole('link', { name: 'Go to the other login' }))
+    await user.click(
+      within(message.closest('[role="alert"]') as HTMLElement).getByRole('link', {
+        name: 'Go to the other login',
+      }),
+    )
     expect(currentUrl(router)).toBe('/admin/login?redirect=%2Fadmin')
   })
 
@@ -59,7 +65,9 @@ describe('Route guards', () => {
 
   it('shows 403 when a devotee opens the admin portal', async () => {
     const { router } = renderApp({ url: '/admin', as: 'devotee' })
-    expect(await screen.findByRole('heading', { name: 'You do not have access to this page' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'You do not have access to this page' }),
+    ).toBeInTheDocument()
     expect(currentUrl(router)).toBe('/403')
     expect(screen.getByText(/Your account \(Devotee\)/)).toBeInTheDocument()
   })
@@ -67,7 +75,10 @@ describe('Route guards', () => {
   it('shows the admin link only to staff and admins', async () => {
     renderApp({ as: 'admin' })
     const nav = within(screen.getByRole('banner')).getByRole('navigation', { name: 'Main' })
-    expect(await within(nav).findByRole('link', { name: 'Admin portal' })).toHaveAttribute('href', '/admin')
+    expect(await within(nav).findByRole('link', { name: 'Admin portal' })).toHaveAttribute(
+      'href',
+      '/admin',
+    )
   })
 
   it('hides the admin link from devotees and guests', async () => {
@@ -93,7 +104,9 @@ describe('Sign-up', () => {
     await user.type(screen.getByLabelText('Confirm password'), 'other')
     await user.click(screen.getByRole('button', { name: 'Create account' }))
 
-    const summary = (await screen.findByText('Please fix 5 fields below.')).closest('[role="alert"]')
+    const summary = (await screen.findByText('Please fix 5 fields below.')).closest(
+      '[role="alert"]',
+    )
     expect(summary).toHaveFocus()
     expect(screen.getByLabelText('Mobile number')).toHaveAccessibleDescription(
       'Enter a valid 10-digit mobile number starting with 6–9. 10-digit Indian mobile number. Bookings are linked to it.',
@@ -141,7 +154,9 @@ describe('My account', () => {
     await user.click(screen.getByRole('button', { name: 'Save changes' }))
 
     expect(await screen.findByText('Your details have been saved.')).toBeInTheDocument()
-    expect(await screen.findByRole('button', { name: 'Account menu for Anil K Nair' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', { name: 'Account menu for Anil K Nair' }),
+    ).toBeInTheDocument()
     expect(localStorage.getItem(STORAGE_KEYS.session)).toContain('Anil K Nair')
   })
 
@@ -169,7 +184,9 @@ describe('My account', () => {
     await user.click(screen.getByRole('button', { name: 'Save changes' }))
 
     await waitFor(() => expect(store.getState().auth.user).toBeNull())
-    expect(await screen.findByText('Your session has expired. Please log in again.')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Your session has expired. Please log in again.'),
+    ).toBeInTheDocument()
     await waitFor(() => expect(currentUrl(router)).toBe('/login?redirect=%2Faccount'))
   })
 })

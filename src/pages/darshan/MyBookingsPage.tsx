@@ -10,7 +10,11 @@ import { useNow } from '@/hooks/useNow'
 import { useTemples } from '@/hooks/useTemples'
 import { useT } from '@/i18n'
 import { selectCurrentUser } from '@/store/auth/authSlice'
-import { myBookingCancelRequested, myBookingsRequested, selectMyBookings } from '@/store/darshan/myBookingsSlice'
+import {
+  myBookingCancelRequested,
+  myBookingsRequested,
+  selectMyBookings,
+} from '@/store/darshan/myBookingsSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { Booking } from '@/types'
 
@@ -26,7 +30,9 @@ function BookingCard({ booking, now }: { booking: Booking; now: number }) {
     <article className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm sm:flex-row sm:items-center">
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex flex-wrap items-center gap-2">
-          <h2 className="font-sans text-base font-semibold">{t('myBookings.ref', { ref: booking.bookingRef })}</h2>
+          <h2 className="font-sans text-base font-semibold">
+            {t('myBookings.ref', { ref: booking.bookingRef })}
+          </h2>
           <StatusBadge kind="booking" status={booking.status} />
         </div>
         {temple && <p className="font-medium text-primary">{pick(temple.name)}</p>}
@@ -96,7 +102,9 @@ export function MyBookingsPage() {
   return (
     <div className="space-y-6">
       <PageHeading title={t('myBookings.title')} intro={t('myBookings.intro')} />
-      {phone && <p className="text-sm text-muted-foreground">{t('myBookings.phoneNote', { phone })}</p>}
+      {phone && (
+        <p className="text-sm text-muted-foreground">{t('myBookings.phoneNote', { phone })}</p>
+      )}
 
       {list.status === 'error' && list.error ? (
         <ErrorState message={err(list.error)} onRetry={load} />

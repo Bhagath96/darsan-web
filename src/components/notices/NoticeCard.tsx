@@ -44,7 +44,12 @@ interface NoticeCardProps {
 }
 
 /** One notice in a list. The title links to the notice's own page. */
-export function NoticeCard({ notice, temple, showExcerpt = true, headingLevel = 3 }: NoticeCardProps) {
+export function NoticeCard({
+  notice,
+  temple,
+  showExcerpt = true,
+  headingLevel = 3,
+}: NoticeCardProps) {
   const { t, pick } = useT()
   const Heading = headingLevel === 2 ? 'h2' : 'h3'
   return (

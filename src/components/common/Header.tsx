@@ -25,7 +25,8 @@ function LoginLink({ className, onClick }: { className?: string; onClick?: () =>
   const { t } = useT()
   const { pathname, search } = useLocation()
   const here = pathname + search
-  const to = pathname === '/login' || here === '/' ? '/login' : `/login?redirect=${encodeURIComponent(here)}`
+  const to =
+    pathname === '/login' || here === '/' ? '/login' : `/login?redirect=${encodeURIComponent(here)}`
   return (
     <Link to={to} onClick={onClick} className={cn(buttonVariants(), 'h-11 px-4', className)}>
       <LogIn aria-hidden="true" />
@@ -34,7 +35,15 @@ function LoginLink({ className, onClick }: { className?: string; onClick?: () =>
   )
 }
 
-function NavLinks({ items, onNavigate, className }: { items: NavItem[]; onNavigate?: () => void; className?: string }) {
+function NavLinks({
+  items,
+  onNavigate,
+  className,
+}: {
+  items: NavItem[]
+  onNavigate?: () => void
+  className?: string
+}) {
   const { t } = useT()
   return (
     <ul className={className}>
@@ -60,11 +69,20 @@ function MobileMenu({ items }: { items: NavItem[] }) {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon-lg" className="size-11 lg:hidden" aria-label={t('nav.openMenu')}>
+        <Button
+          variant="outline"
+          size="icon-lg"
+          className="size-11 lg:hidden"
+          aria-label={t('nav.openMenu')}
+        >
           <Menu aria-hidden="true" className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" closeLabel={t('common.close')} className="w-72 gap-0 overflow-y-auto">
+      <SheetContent
+        side="right"
+        closeLabel={t('common.close')}
+        className="w-72 gap-0 overflow-y-auto"
+      >
         <SheetHeader>
           <SheetTitle>{t('nav.menuTitle')}</SheetTitle>
         </SheetHeader>
@@ -128,7 +146,9 @@ export function Header() {
             <span className="block font-heading text-lg leading-tight font-semibold text-primary">
               {t('app.name')}
             </span>
-            <span className="hidden text-xs text-muted-foreground lg:block">{t('app.tagline')}</span>
+            <span className="hidden text-xs text-muted-foreground lg:block">
+              {t('app.tagline')}
+            </span>
           </span>
         </Link>
 

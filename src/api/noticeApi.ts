@@ -45,8 +45,10 @@ function assertNoticeScope(user: StoredUser, templeId: string | null) {
 function cleanText(text: Localized, max: number, what: string): Localized {
   const en = text.en.trim()
   const ml = text.ml.trim()
-  if (!en || !ml) throw new ApiError('VALIDATION', `Please enter the ${what} in English and Malayalam.`)
-  if (en.length > max || ml.length > max) throw new ApiError('VALIDATION', `The ${what} can be at most ${max} characters.`)
+  if (!en || !ml)
+    throw new ApiError('VALIDATION', `Please enter the ${what} in English and Malayalam.`)
+  if (en.length > max || ml.length > max)
+    throw new ApiError('VALIDATION', `The ${what} can be at most ${max} characters.`)
   return { en, ml }
 }
 

@@ -10,7 +10,11 @@ import { useQueryParams } from '@/hooks/useQueryParams'
 import { useTemples } from '@/hooks/useTemples'
 import { useT } from '@/i18n'
 import { MAX_OFFERING_PRICE } from '@/lib/constants'
-import { adminOfferingsRequested, offeringUpdateRequested, selectAdminOfferings } from '@/store/admin/catalogSlice'
+import {
+  adminOfferingsRequested,
+  offeringUpdateRequested,
+  selectAdminOfferings,
+} from '@/store/admin/catalogSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { Offering } from '@/types'
 
@@ -62,7 +66,10 @@ function OfferingRow({ offering }: { offering: Offering }) {
               className="h-11 w-28"
             />
             {error && (
-              <p id={`${offering.id}-error`} className="max-w-48 text-xs font-medium text-destructive">
+              <p
+                id={`${offering.id}-error`}
+                className="max-w-48 text-xs font-medium text-destructive"
+              >
                 {error}
               </p>
             )}
@@ -84,7 +91,9 @@ function OfferingRow({ offering }: { offering: Offering }) {
             checked={offering.isActive}
             disabled={saving}
             aria-label={t('adminRates.availableOf', { name })}
-            onCheckedChange={(isActive) => dispatch(offeringUpdateRequested({ offeringId: offering.id, isActive }))}
+            onCheckedChange={(isActive) =>
+              dispatch(offeringUpdateRequested({ offeringId: offering.id, isActive }))
+            }
           />
           <span className="text-sm text-muted-foreground" aria-hidden="true">
             {offering.isActive ? t('adminRates.available') : t('adminRates.hidden')}
@@ -101,7 +110,9 @@ export function AdminRatesPage() {
   const offerings = useAppSelector(selectAdminOfferings)
   const temples = useTemples()
   const { get, update } = useQueryParams()
-  const templeId = temples.data.some((x) => x.id === get('temple')) ? get('temple') : (temples.data[0]?.id ?? '')
+  const templeId = temples.data.some((x) => x.id === get('temple'))
+    ? get('temple')
+    : (temples.data[0]?.id ?? '')
 
   const load = () => {
     if (templeId) dispatch(adminOfferingsRequested(templeId))
@@ -115,8 +126,15 @@ export function AdminRatesPage() {
   return (
     <div className="space-y-6">
       <PageHeading title={t('adminRates.title')} intro={t('adminRates.intro')} />
-      <form onSubmit={(e) => e.preventDefault()} className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-2">
-        <TempleScopeField id="rates-temple" value={templeId} onChange={(id) => update({ temple: id })} />
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="grid gap-4 rounded-xl border bg-card p-4 sm:grid-cols-2"
+      >
+        <TempleScopeField
+          id="rates-temple"
+          value={templeId}
+          onChange={(id) => update({ temple: id })}
+        />
       </form>
 
       {offerings.status === 'error' && offerings.error ? (

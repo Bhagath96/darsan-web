@@ -10,7 +10,10 @@
       "en": "A traditional Kerala temple dedicated to Lord Krishna as a child, known for its morning Nirmalyam darshan, the Palpayasam offering and the annual Ekadasi festival.",
       "ml": "ബാലരൂപത്തിലുള്ള ശ്രീകൃഷ്ണനെ പ്രതിഷ്ഠിച്ചിരിക്കുന്ന പരമ്പരാഗത കേരള ക്ഷേത്രം. നിർമ്മാല്യ ദർശനം, പാൽപ്പായസം വഴിപാട്, ഏകാദശി ഉത്സവം എന്നിവയ്ക്ക് പ്രസിദ്ധം."
     },
-    "address": { "en": "East Nada, Thrissur, Kerala 680001", "ml": "കിഴക്കേ നട, തൃശ്ശൂർ, കേരളം 680001" },
+    "address": {
+      "en": "East Nada, Thrissur, Kerala 680001",
+      "ml": "കിഴക്കേ നട, തൃശ്ശൂർ, കേരളം 680001"
+    },
     "contactPhone": "04872000001",
     "schedule": [
       { "time": "03:00", "name": { "en": "Nirmalyam darshan", "ml": "നിർമ്മാല്യ ദർശനം" } },
@@ -20,7 +23,10 @@
       { "time": "11:30", "name": { "en": "Ucha Pooja", "ml": "ഉച്ചപൂജ" } },
       { "time": "18:30", "name": { "en": "Deeparadhana", "ml": "ദീപാരാധന" } },
       { "time": "19:30", "name": { "en": "Athazha Pooja", "ml": "അത്താഴപൂജ" } },
-      { "time": "21:00", "name": { "en": "Thrippuka (temple closes)", "ml": "തൃപ്പുക (നട അടയ്ക്കൽ)" } }
+      {
+        "time": "21:00",
+        "name": { "en": "Thrippuka (temple closes)", "ml": "തൃപ്പുക (നട അടയ്ക്കൽ)" }
+      }
     ]
   },
   {
@@ -34,7 +40,10 @@
       "en": "An old Shiva temple on the riverbank, with a large temple pond and a granite sreekovil. Jaladhara and Ksheera Dhara are the main offerings, and Shivaratri is the biggest festival of the year.",
       "ml": "പുഴയോരത്തുള്ള പഴക്കമേറിയ ശിവക്ഷേത്രം. വലിയ ക്ഷേത്രക്കുളവും കരിങ്കൽ ശ്രീകോവിലുമുണ്ട്. ജലധാരയും ക്ഷീരധാരയുമാണ് പ്രധാന വഴിപാടുകൾ. ശിവരാത്രിയാണ് പ്രധാന ഉത്സവം."
     },
-    "address": { "en": "Temple Road, Kozhikode, Kerala 673001", "ml": "ടെമ്പിൾ റോഡ്, കോഴിക്കോട്, കേരളം 673001" },
+    "address": {
+      "en": "Temple Road, Kozhikode, Kerala 673001",
+      "ml": "ടെമ്പിൾ റോഡ്, കോഴിക്കോട്, കേരളം 673001"
+    },
     "contactPhone": "04952000002",
     "schedule": [
       { "time": "04:00", "name": { "en": "Nada opens", "ml": "നട തുറക്കൽ" } },
@@ -42,7 +51,10 @@
       { "time": "06:00", "name": { "en": "Usha Pooja", "ml": "ഉഷഃപൂജ" } },
       { "time": "10:30", "name": { "en": "Ucha Pooja", "ml": "ഉച്ചപൂജ" } },
       { "time": "18:15", "name": { "en": "Deeparadhana", "ml": "ദീപാരാധന" } },
-      { "time": "20:00", "name": { "en": "Athazha Pooja (temple closes)", "ml": "അത്താഴപൂജ (നട അടയ്ക്കൽ)" } }
+      {
+        "time": "20:00",
+        "name": { "en": "Athazha Pooja (temple closes)", "ml": "അത്താഴപൂജ (നട അടയ്ക്കൽ)" }
+      }
     ]
   },
   {
@@ -56,15 +68,24 @@
       "en": "A hill temple of Lord Ayyappa surrounded by forest. Neyyabhishekam (ghee abhishekam) is the main offering, and the Mandala–Makaravilakku season brings the largest number of devotees.",
       "ml": "വനത്താൽ ചുറ്റപ്പെട്ട അയ്യപ്പന്റെ മലക്ഷേത്രം. നെയ്യഭിഷേകമാണ് പ്രധാന വഴിപാട്. മണ്ഡല–മകരവിളക്ക് കാലത്താണ് ഏറ്റവും കൂടുതൽ ഭക്തർ എത്തുന്നത്."
     },
-    "address": { "en": "Sannidhanam Road, Pathanamthitta, Kerala 689645", "ml": "സന്നിധാനം റോഡ്, പത്തനംതിട്ട, കേരളം 689645" },
+    "address": {
+      "en": "Sannidhanam Road, Pathanamthitta, Kerala 689645",
+      "ml": "സന്നിധാനം റോഡ്, പത്തനംതിട്ട, കേരളം 689645"
+    },
     "contactPhone": "04682000003",
     "schedule": [
-      { "time": "04:00", "name": { "en": "Nada opens, Nirmalyam", "ml": "നട തുറക്കൽ, നിർമ്മാല്യം" } },
+      {
+        "time": "04:00",
+        "name": { "en": "Nada opens, Nirmalyam", "ml": "നട തുറക്കൽ, നിർമ്മാല്യം" }
+      },
       { "time": "04:30", "name": { "en": "Neyyabhishekam begins", "ml": "നെയ്യഭിഷേകം ആരംഭം" } },
       { "time": "07:30", "name": { "en": "Usha Pooja", "ml": "ഉഷഃപൂജ" } },
       { "time": "12:30", "name": { "en": "Ucha Pooja", "ml": "ഉച്ചപൂജ" } },
       { "time": "18:30", "name": { "en": "Deeparadhana", "ml": "ദീപാരാധന" } },
-      { "time": "22:50", "name": { "en": "Harivarasanam (temple closes)", "ml": "ഹരിവരാസനം (നട അടയ്ക്കൽ)" } }
+      {
+        "time": "22:50",
+        "name": { "en": "Harivarasanam (temple closes)", "ml": "ഹരിവരാസനം (നട അടയ്ക്കൽ)" }
+      }
     ]
   }
 ]

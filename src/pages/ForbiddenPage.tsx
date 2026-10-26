@@ -14,7 +14,11 @@ export function ForbiddenPage() {
       <PageTitle title={t('forbidden.title')} />
       <ShieldAlert aria-hidden="true" className="mx-auto size-10 text-primary" />
       <h1 className="text-3xl font-semibold text-primary">{t('forbidden.title')}</h1>
-      {user && <p className="text-muted-foreground">{t('forbidden.text', { role: t(`role.${user.role}`) })}</p>}
+      {user && (
+        <p className="text-muted-foreground">
+          {t('forbidden.text', { role: t(`role.${user.role}`) })}
+        </p>
+      )}
       <Link to="/" className={buttonVariants({ size: 'lg', className: 'h-11 px-5' })}>
         {t('forbidden.home')}
       </Link>

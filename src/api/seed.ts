@@ -5,7 +5,16 @@ import usersJson from './data/users.json'
 import { createRng, type Rng } from './rng'
 import { NAKSHATRA_IDS } from '@/lib/constants'
 import { addDays, istToInstant, todayIST } from '@/lib/date'
-import type { AuthUser, Booking, DarshanSlot, Notice, Offering, Order, OrderStatus, Temple } from '@/types'
+import type {
+  AuthUser,
+  Booking,
+  DarshanSlot,
+  Notice,
+  Offering,
+  Order,
+  OrderStatus,
+  Temple,
+} from '@/types'
 
 /** A user record as the "server" stores it. */
 export interface StoredUser extends AuthUser {
@@ -32,7 +41,10 @@ export function generateNotices(now: Date): Notice[] {
       ...notice,
       // Published at 09:00 IST, n days ago (never in the future, for an early-morning load).
       publishedAt: new Date(
-        Math.min(now.getTime(), Date.parse(istToInstant(addDays(today, -publishedDaysAgo), '09:00'))),
+        Math.min(
+          now.getTime(),
+          Date.parse(istToInstant(addDays(today, -publishedDaysAgo), '09:00')),
+        ),
       ).toISOString(),
       eventDate: eventInDays === null ? null : addDays(today, eventInDays),
     }))
@@ -45,9 +57,22 @@ const SLOT_MINUTES = 90
 const SLOT_DAYS = 7
 
 const DEVOTEE_NAMES = [
-  'Anil Kumar', 'Lakshmi Nair', 'Suresh Pillai', 'Meera Menon', 'Gopika Varma', 'Hari Krishnan',
-  'Divya Raj', 'Arjun Nambiar', 'Sreeja Thampi', 'Vishnu Prasad', 'Anjali Das', 'Rajesh Kurup',
-  'Parvathy Iyer', 'Midhun Mohan', 'Keerthana S', 'Gokul Unni',
+  'Anil Kumar',
+  'Lakshmi Nair',
+  'Suresh Pillai',
+  'Meera Menon',
+  'Gopika Varma',
+  'Hari Krishnan',
+  'Divya Raj',
+  'Arjun Nambiar',
+  'Sreeja Thampi',
+  'Vishnu Prasad',
+  'Anjali Das',
+  'Rajesh Kurup',
+  'Parvathy Iyer',
+  'Midhun Mohan',
+  'Keerthana S',
+  'Gokul Unni',
 ] as const
 
 function phoneFor(rng: Rng): string {

@@ -5,7 +5,12 @@ import { issueToken, requireUser, toAuthUser, userFromToken } from './session'
 import type { StoredUser } from './seed'
 import { saveStoredUsers } from './userStore'
 import { normalizePhone } from '@/lib/phone'
-import { isStrongPassword, isValidName, isValidUsername, PASSWORD_MIN_LENGTH } from '@/lib/validators'
+import {
+  isStrongPassword,
+  isValidName,
+  isValidUsername,
+  PASSWORD_MIN_LENGTH,
+} from '@/lib/validators'
 import type {
   AuthUser,
   ChangePasswordRequest,
@@ -29,7 +34,8 @@ function persistUsers() {
 
 function validName(name: string): string {
   const trimmed = name.trim().replace(/\s+/g, ' ')
-  if (!isValidName(trimmed)) throw new ApiError('VALIDATION', 'Please enter your name (letters only, 2–60 characters).')
+  if (!isValidName(trimmed))
+    throw new ApiError('VALIDATION', 'Please enter your name (letters only, 2–60 characters).')
   return trimmed
 }
 
@@ -69,16 +75,25 @@ export function register(request: RegisterRequest): Promise<Session> {
     const phone = validPhone(request.phone)
     const username = request.username.trim().toLowerCase()
     if (!isValidUsername(username)) {
-      throw new ApiError('VALIDATION', 'Username must be 3–20 lowercase letters, digits or underscores.')
+      throw new ApiError(
+        'VALIDATION',
+        'Username must be 3–20 lowercase letters, digits or underscores.',
+      )
     }
     if (!isStrongPassword(request.password)) {
-      throw new ApiError('VALIDATION', `Password must be at least ${PASSWORD_MIN_LENGTH} characters with a letter and a number.`)
+      throw new ApiError(
+        'VALIDATION',
+        `Password must be at least ${PASSWORD_MIN_LENGTH} characters with a letter and a number.`,
+      )
     }
     if (db.users.some((u) => u.username === username)) {
       throw new ApiError('CONFLICT', 'This username is already taken. Please choose another.')
     }
     if (db.users.some((u) => u.phone === phone)) {
-      throw new ApiError('CONFLICT', 'An account with this mobile number already exists. Please log in instead.')
+      throw new ApiError(
+        'CONFLICT',
+        'An account with this mobile number already exists. Please log in instead.',
+      )
     }
 
     const user: StoredUser = {
@@ -112,12 +127,19 @@ export function updateProfile(update: ProfileUpdate): Promise<AuthUser> {
   })
 }
 
-export function changePassword({ currentPassword, newPassword }: ChangePasswordRequest): Promise<void> {
+export function changePassword({
+  currentPassword,
+  newPassword,
+}: ChangePasswordRequest): Promise<void> {
   return simulate('auth', () => {
     const user = requireUser()
-    if (user.password !== currentPassword) throw new ApiError('VALIDATION', 'Your current password is not correct.')
+    if (user.password !== currentPassword)
+      throw new ApiError('VALIDATION', 'Your current password is not correct.')
     if (!isStrongPassword(newPassword)) {
-      throw new ApiError('VALIDATION', `Password must be at least ${PASSWORD_MIN_LENGTH} characters with a letter and a number.`)
+      throw new ApiError(
+        'VALIDATION',
+        `Password must be at least ${PASSWORD_MIN_LENGTH} characters with a letter and a number.`,
+      )
     }
     if (newPassword === currentPassword) {
       throw new ApiError('VALIDATION', 'The new password must be different from the current one.')

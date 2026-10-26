@@ -53,7 +53,10 @@ describe('cart slice', () => {
     store.dispatch(itemAdded(other))
     expect(store.getState().cart.items.map((i) => i.offeringId)).toEqual([pushpanjali.id])
     store.dispatch(cartReplacedWith(other))
-    expect(store.getState().cart).toMatchObject({ templeId: 'tm-sastha', items: [{ offeringId: other.id }] })
+    expect(store.getState().cart).toMatchObject({
+      templeId: 'tm-sastha',
+      items: [{ offeringId: other.id }],
+    })
   })
 
   it('forgets the temple when the last line is removed', () => {
@@ -71,10 +74,15 @@ describe('cart slice', () => {
       offeringsLoaded({
         templeId: 'tm-krishna',
         requestId: 'any',
-        offerings: [{ ...pushpanjali, price: 40 }, { ...archana, isActive: false }],
+        offerings: [
+          { ...pushpanjali, price: 40 },
+          { ...archana, isActive: false },
+        ],
       }),
     )
-    expect(store.getState().cart.items).toMatchObject([{ offeringId: pushpanjali.id, unitPrice: 40 }])
+    expect(store.getState().cart.items).toMatchObject([
+      { offeringId: pushpanjali.id, unitPrice: 40 },
+    ])
   })
 
   it('is saved and loaded back, ignoring a damaged copy', async () => {
@@ -83,7 +91,10 @@ describe('cart slice', () => {
     await Promise.resolve()
     expect(loadCartState().items).toHaveLength(1)
 
-    localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify({ templeId: 'x', items: [{ offeringId: 'y', quantity: 99 }] }))
+    localStorage.setItem(
+      STORAGE_KEYS.cart,
+      JSON.stringify({ templeId: 'x', items: [{ offeringId: 'y', quantity: 99 }] }),
+    )
     expect(loadCartState()).toEqual({ templeId: null, items: [] })
   })
 })

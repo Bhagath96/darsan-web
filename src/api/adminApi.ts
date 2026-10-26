@@ -11,7 +11,8 @@ export function getDashboard(templeId?: string): Promise<DashboardStats> {
   return simulate('vazhipadu', () => {
     requireUser('dashboard:view')
     const db = getDb()
-    if (templeId && !db.temples.some((t) => t.id === templeId)) throw new ApiError('NOT_FOUND', 'Temple not found.')
+    if (templeId && !db.temples.some((t) => t.id === templeId))
+      throw new ApiError('NOT_FOUND', 'Temple not found.')
 
     const today = todayIST()
     const weekEnd = addDays(today, 6)
@@ -20,7 +21,10 @@ export function getDashboard(templeId?: string): Promise<DashboardStats> {
     const bookings = db.bookings.filter(inScope)
     const weekSlots = db.slots.filter((s) => inScope(s) && s.date >= today && s.date <= weekEnd)
 
-    const byStatus = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<OrderStatus, number>
+    const byStatus = Object.fromEntries(ORDER_STATUSES.map((s) => [s, 0])) as Record<
+      OrderStatus,
+      number
+    >
     for (const o of orders) byStatus[o.status] += 1
     const earns = (status: OrderStatus) => status === 'CONFIRMED' || status === 'COMPLETED'
 

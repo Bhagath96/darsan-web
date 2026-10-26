@@ -26,8 +26,18 @@ describe('notices slice', () => {
     const first = store.dispatch(noticesRequested({ templeId: 'tm-krishna' }))
     const second = store.dispatch(noticesRequested({ templeId: 'tm-sastha' }))
 
-    store.dispatch(noticesLoaded({ notices: [notice('sastha', '2026-10-25T00:00:00Z')], requestId: second.payload.requestId }))
-    store.dispatch(noticesLoaded({ notices: [notice('krishna', '2026-10-25T00:00:00Z')], requestId: first.payload.requestId }))
+    store.dispatch(
+      noticesLoaded({
+        notices: [notice('sastha', '2026-10-25T00:00:00Z')],
+        requestId: second.payload.requestId,
+      }),
+    )
+    store.dispatch(
+      noticesLoaded({
+        notices: [notice('krishna', '2026-10-25T00:00:00Z')],
+        requestId: first.payload.requestId,
+      }),
+    )
 
     expect(store.getState().notices.list.data.map((n) => n.id)).toEqual(['sastha'])
   })

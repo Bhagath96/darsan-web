@@ -6,7 +6,13 @@ import { Link } from 'react-router'
 import { z } from 'zod'
 import { FormField } from '@/components/common/FormField'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { useT, type MessageKey } from '@/i18n'
 import { MAX_TICKETS_PER_BOOKING } from '@/lib/constants'
@@ -63,7 +69,8 @@ function BookingForm({ slot }: { slot: DarshanSlot }) {
         ticketCount: Number(values.ticketCount),
       }),
     )
-  const message = (e?: { message?: string }) => (e?.message ? t(e.message as MessageKey) : undefined)
+  const message = (e?: { message?: string }) =>
+    e?.message ? t(e.message as MessageKey) : undefined
 
   return (
     <form noValidate onSubmit={handleSubmit(send)} className="space-y-4" aria-busy={submitting}>
@@ -96,11 +103,20 @@ function BookingForm({ slot }: { slot: DarshanSlot }) {
         </div>
       )}
       <FormField id="booking-name" label={t('darshan.name')} error={message(errors.devoteeName)}>
-        {(control) => <Input {...control} {...register('devoteeName')} autoComplete="name" className="h-11" />}
+        {(control) => (
+          <Input {...control} {...register('devoteeName')} autoComplete="name" className="h-11" />
+        )}
       </FormField>
       <FormField id="booking-phone" label={t('darshan.phone')} error={message(errors.phone)}>
         {(control) => (
-          <Input {...control} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel-national" className="h-11" />
+          <Input
+            {...control}
+            {...register('phone')}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel-national"
+            className="h-11"
+          />
         )}
       </FormField>
       <FormField
@@ -145,19 +161,30 @@ function BookingSuccess({ onDone }: { onDone: () => void }) {
     <div className="space-y-4 text-center">
       <CheckCircle2 aria-hidden="true" className="mx-auto size-12 text-success" />
       {/* The visible heading is the dialog's title, so it is announced once. */}
-      <DialogTitle ref={headingRef} tabIndex={-1} className="text-2xl font-semibold text-primary outline-none">
+      <DialogTitle
+        ref={headingRef}
+        tabIndex={-1}
+        className="text-2xl font-semibold text-primary outline-none"
+      >
         {t('darshan.successTitle')}
       </DialogTitle>
       <div className="rounded-lg border border-dashed bg-secondary/40 p-4">
         <p className="text-sm text-muted-foreground">{t('darshan.successRef')}</p>
         <p className="font-mono text-3xl font-semibold tracking-wider">{booking.bookingRef}</p>
         <p className="mt-2 text-sm">
-          {t('darshan.successDetails', { tickets: booking.ticketCount, date: date(booking.date), time: time(booking.startsAt) })}
+          {t('darshan.successDetails', {
+            tickets: booking.ticketCount,
+            date: date(booking.date),
+            time: time(booking.startsAt),
+          })}
         </p>
       </div>
       <p className="text-sm text-muted-foreground">{t('darshan.successNote')}</p>
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-        <Link to="/darshan/my-bookings" className={buttonVariants({ variant: 'outline', className: 'h-11 px-4' })}>
+        <Link
+          to="/darshan/my-bookings"
+          className={buttonVariants({ variant: 'outline', className: 'h-11 px-4' })}
+        >
           {t('darshan.viewBookings')}
         </Link>
         <Button className="h-11 px-6" onClick={onDone}>
@@ -204,9 +231,14 @@ export function BookingDialog({ slot, temple, returnFocusTo }: BookingDialogProp
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle className="text-xl">{t('darshan.formTitle', { time: time(slot.startsAt) })}</DialogTitle>
+                <DialogTitle className="text-xl">
+                  {t('darshan.formTitle', { time: time(slot.startsAt) })}
+                </DialogTitle>
                 <DialogDescription>
-                  {t('darshan.formIntro', { temple: temple ? pick(temple.name) : '', date: date(slot.date) })}
+                  {t('darshan.formIntro', {
+                    temple: temple ? pick(temple.name) : '',
+                    date: date(slot.date),
+                  })}
                 </DialogDescription>
               </DialogHeader>
               <BookingForm slot={slot} />

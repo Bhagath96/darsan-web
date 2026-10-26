@@ -6,7 +6,18 @@ import type { Order, Temple } from '@/types'
 export function ordersToCsv(orders: Order[], temples: Temple[]): string {
   const templeName = (id: string) => temples.find((t) => t.id === id)?.name.en ?? id
   return toCsv(
-    ['Order number', 'Temple', 'Devotee', 'Phone', 'Star', 'Offering date', 'Offerings', 'Total (INR)', 'Status', 'Placed at (IST)'],
+    [
+      'Order number',
+      'Temple',
+      'Devotee',
+      'Phone',
+      'Star',
+      'Offering date',
+      'Offerings',
+      'Total (INR)',
+      'Status',
+      'Placed at (IST)',
+    ],
     orders.map((o) => [
       o.orderNumber,
       templeName(o.templeId),

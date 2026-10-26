@@ -48,7 +48,10 @@ function CancelOrderButton({ order }: { order: Order }) {
         </Button>
       }
       title={t('adminOrders.confirmTitle', { number: order.orderNumber })}
-      description={t('adminOrders.confirmText', { name: order.devoteeName, total: formatINR(order.totalAmount) })}
+      description={t('adminOrders.confirmText', {
+        name: order.devoteeName,
+        total: formatINR(order.totalAmount),
+      })}
       confirmLabel={t('adminOrders.confirm')}
       cancelLabel={t('adminOrders.keep')}
       onConfirm={() => dispatch(orderCancelRequested(order.id))}
@@ -94,7 +97,8 @@ export function AdminOrdersPage() {
 
   const exporting = list.export.status === 'loading'
   const hasFilters = Boolean(phone || day || status || templeId)
-  const starName = (id: string) => (lang === 'ml' ? (NAKSHATRAS.find((n) => n.id === id)?.ml ?? id) : id)
+  const starName = (id: string) =>
+    lang === 'ml' ? (NAKSHATRAS.find((n) => n.id === id)?.ml ?? id) : id
 
   return (
     <div className="space-y-6">
@@ -106,7 +110,11 @@ export function AdminOrdersPage() {
           disabled={exporting || !list.data || list.data.total === 0}
           onClick={() => dispatch(ordersExportRequested(filters))}
         >
-          {exporting ? <Loader2 aria-hidden="true" className="animate-spin" /> : <Download aria-hidden="true" />}
+          {exporting ? (
+            <Loader2 aria-hidden="true" className="animate-spin" />
+          ) : (
+            <Download aria-hidden="true" />
+          )}
           {exporting ? t('adminOrders.exporting') : t('adminOrders.export')}
         </Button>
       </div>
@@ -119,7 +127,11 @@ export function AdminOrdersPage() {
       >
         <FormField id="orders-status" label={t('common.status')}>
           {(control) => (
-            <NativeSelect {...control} value={status} onChange={(e) => update({ status: e.target.value }, { resetPage: true })}>
+            <NativeSelect
+              {...control}
+              value={status}
+              onChange={(e) => update({ status: e.target.value }, { resetPage: true })}
+            >
               <option value="">{t('common.anyStatus')}</option>
               {ORDER_STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -145,7 +157,12 @@ export function AdminOrdersPage() {
           value={phone}
           onSearch={(digits) => update({ phone: digits }, { resetPage: true, replace: true })}
         />
-        <TempleScopeField id="orders-temple" value={templeId} allowAll onChange={(id) => update({ temple: id }, { resetPage: true })} />
+        <TempleScopeField
+          id="orders-temple"
+          value={templeId}
+          allowAll
+          onChange={(id) => update({ temple: id }, { resetPage: true })}
+        />
       </form>
 
       {list.status === 'error' && list.error ? (
@@ -157,7 +174,13 @@ export function AdminOrdersPage() {
           title={t('adminOrders.empty')}
           action={
             hasFilters && (
-              <Button variant="outline" className="h-11" onClick={() => update({ phone: null, date: null, status: null, temple: null, page: null })}>
+              <Button
+                variant="outline"
+                className="h-11"
+                onClick={() =>
+                  update({ phone: null, date: null, status: null, temple: null, page: null })
+                }
+              >
                 {t('common.clearFilters')}
               </Button>
             )
@@ -188,14 +211,18 @@ export function AdminOrdersPage() {
                     <RCell label={t('adminOrders.order')}>
                       <span className="text-end md:text-start">
                         <span className="block font-mono font-medium">{o.orderNumber}</span>
-                        {temple && <span className="block text-muted-foreground">{pick(temple.name)}</span>}
+                        {temple && (
+                          <span className="block text-muted-foreground">{pick(temple.name)}</span>
+                        )}
                       </span>
                     </RCell>
                     <RCell label={t('adminOrders.devotee')}>
                       <span className="text-end md:text-start">
                         <span className="block font-medium">{o.devoteeName}</span>
                         <span className="block text-muted-foreground tabular-nums">{o.phone}</span>
-                        <span className="block text-muted-foreground">{t('adminOrders.star', { star: starName(o.star) })}</span>
+                        <span className="block text-muted-foreground">
+                          {t('adminOrders.star', { star: starName(o.star) })}
+                        </span>
                       </span>
                     </RCell>
                     <RCell label={t('adminOrders.offerings')}>
@@ -224,7 +251,12 @@ export function AdminOrdersPage() {
               })}
             </RBody>
           </RTable>
-          <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => update({ page: p })} />
+          <Pagination
+            page={list.data.page}
+            pageSize={list.data.pageSize}
+            total={list.data.total}
+            onPageChange={(p) => update({ page: p })}
+          />
         </div>
       )}
     </div>

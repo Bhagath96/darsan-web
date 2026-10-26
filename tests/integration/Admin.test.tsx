@@ -29,7 +29,9 @@ describe('Admin portal access', () => {
 
   it('sends staff to 403 for admin-only pages', async () => {
     const { router } = renderApp({ url: '/admin/slots', as: 'staff' })
-    expect(await screen.findByRole('heading', { name: 'You do not have access to this page' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { name: 'You do not have access to this page' }),
+    ).toBeInTheDocument()
     expect(currentUrl(router)).toBe('/403')
   })
 })
@@ -42,7 +44,9 @@ describe('Dashboard', () => {
       .reduce((sum, o) => sum + o.totalAmount, 0)
     const hero = await screen.findByRole('region', { name: 'Vazhipadu revenue' })
     expect(within(hero).getByText(formatINR(revenue))).toBeInTheDocument()
-    expect(screen.getByRole('meter', { name: 'Darshan tickets booked, next 7 days' })).toBeInTheDocument()
+    expect(
+      screen.getByRole('meter', { name: 'Darshan tickets booked, next 7 days' }),
+    ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Show as table' }))
     const table = screen.getByRole('table', { name: /revenue, orders and active darshan bookings/ })
@@ -54,7 +58,9 @@ describe('Dashboard', () => {
     await screen.findByRole('region', { name: 'Vazhipadu revenue' })
     await user.selectOptions(screen.getByLabelText('Temple'), 'tm-sastha')
     expect(currentUrl(router)).toBe('/admin/dashboard?temple=tm-sastha')
-    await waitFor(() => expect(screen.getAllByRole('listitem', { name: /from \d+ orders/ })).toHaveLength(1))
+    await waitFor(() =>
+      expect(screen.getAllByRole('listitem', { name: /from \d+ orders/ })).toHaveLength(1),
+    )
   })
 })
 
@@ -72,7 +78,10 @@ describe('Vazhipadu orders', () => {
   })
 
   it('restores filters and page from a link, and pages with Next', async () => {
-    const { user, router } = renderApp({ url: '/admin/orders?status=CONFIRMED&page=1', as: 'admin' })
+    const { user, router } = renderApp({
+      url: '/admin/orders?status=CONFIRMED&page=1',
+      as: 'admin',
+    })
     await screen.findByText(/^\d+ orders$/)
     expect(screen.getByLabelText('Status')).toHaveValue('CONFIRMED')
     await user.click(screen.getByRole('button', { name: /Next/ }))
@@ -96,7 +105,9 @@ describe('Vazhipadu orders', () => {
     expect(within(row).getByText('Cancelled')).toBeInTheDocument()
     expect(getDb().orders.find((o) => o.id === order.id)?.status).toBe('CONFIRMED') // server not done yet
 
-    await waitFor(() => expect(getDb().orders.find((o) => o.id === order.id)?.status).toBe('CANCELLED'))
+    await waitFor(() =>
+      expect(getDb().orders.find((o) => o.id === order.id)?.status).toBe('CANCELLED'),
+    )
     expect(await screen.findByText(`Order ${order.orderNumber} cancelled.`)).toBeInTheDocument()
   })
 
@@ -148,12 +159,16 @@ describe('Darshan bookings', () => {
   })
 
   it('cancels an upcoming booking and releases its tickets', async () => {
-    const booking = getDb().bookings.find((b) => b.phone === '9847012345' && b.date > '2026-10-26' && b.status === 'BOOKED')!
+    const booking = getDb().bookings.find(
+      (b) => b.phone === '9847012345' && b.date > '2026-10-26' && b.status === 'BOOKED',
+    )!
     const slot = getDb().slots.find((s) => s.id === booking.slotId)!
     const before = slot.remainingTickets
     const { user } = renderApp({ url: '/admin/bookings?phone=9847012345', as: 'admin' })
 
-    await user.click(await screen.findByRole('button', { name: `Cancel booking ${booking.bookingRef}` }))
+    await user.click(
+      await screen.findByRole('button', { name: `Cancel booking ${booking.bookingRef}` }),
+    )
     await user.click(await screen.findByRole('button', { name: 'Yes, cancel booking' }))
     expect(await screen.findByText(`Booking ${booking.bookingRef} cancelled.`)).toBeInTheDocument()
     expect(slot.remainingTickets).toBe(before + booking.ticketCount)
@@ -161,7 +176,9 @@ describe('Darshan bookings', () => {
 
   it('explains why a started darshan cannot be cancelled', async () => {
     renderApp({ url: '/admin/bookings?phone=9847012345&date=2026-10-26', as: 'admin' })
-    expect(await screen.findByText('Darshan has started, so it can no longer be cancelled.')).toBeInTheDocument()
+    expect(
+      await screen.findByText('Darshan has started, so it can no longer be cancelled.'),
+    ).toBeInTheDocument()
   })
 })
 
@@ -192,9 +209,17 @@ describe('Darshan slots', () => {
 
   it('closes a slot for booking', async () => {
     const { user } = renderApp({ url, as: 'admin' })
-    await user.click(await screen.findByRole('button', { name: 'Close the 8:00 am slot for booking' }))
-    expect(await screen.findByRole('button', { name: 'Open the 8:00 am slot for booking' })).toBeInTheDocument()
-    await waitFor(() => expect(getDb().slots.find((s) => s.id === `sl-tm-krishna-${TOMORROW}-0800`)?.isBlocked).toBe(true))
+    await user.click(
+      await screen.findByRole('button', { name: 'Close the 8:00 am slot for booking' }),
+    )
+    expect(
+      await screen.findByRole('button', { name: 'Open the 8:00 am slot for booking' }),
+    ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(getDb().slots.find((s) => s.id === `sl-tm-krishna-${TOMORROW}-0800`)?.isBlocked).toBe(
+        true,
+      ),
+    )
   })
 })
 
@@ -211,7 +236,9 @@ describe('Offering rates', () => {
     const available = screen.getByRole('switch', { name: 'Archana can be booked by devotees' })
     expect(available).toBeChecked()
     await user.click(available)
-    await waitFor(() => expect(getDb().offerings.find((o) => o.id === 'tm-krishna--archana')?.isActive).toBe(false))
+    await waitFor(() =>
+      expect(getDb().offerings.find((o) => o.id === 'tm-krishna--archana')?.isActive).toBe(false),
+    )
   })
 })
 
@@ -230,7 +257,9 @@ describe('Notices', () => {
     expect(screen.getByLabelText('Title (English)')).toHaveValue('')
     await router.navigate('/notifications')
     // A text query: role queries over this long page are slow.
-    expect(await screen.findByText('Nada closed for eclipse', {}, { timeout: 3000 })).toBeInTheDocument()
+    expect(
+      await screen.findByText('Nada closed for eclipse', {}, { timeout: 3000 }),
+    ).toBeInTheDocument()
   })
 
   it('shows a message for each missing field', async () => {

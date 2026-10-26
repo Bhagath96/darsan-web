@@ -23,8 +23,14 @@ export function SlotCard({ slot, availability, onBook }: SlotCardProps) {
     started: t('darshan.startedReason'),
     closed: t('darshan.closedReason'),
   }[availability]
-  const badge = { open: null, full: t('darshan.full'), started: t('darshan.started'), closed: t('darshan.closed') }[availability]
-  const fill = slot.totalCapacity > 0 ? (slot.totalCapacity - slot.remainingTickets) / slot.totalCapacity : 1
+  const badge = {
+    open: null,
+    full: t('darshan.full'),
+    started: t('darshan.started'),
+    closed: t('darshan.closed'),
+  }[availability]
+  const fill =
+    slot.totalCapacity > 0 ? (slot.totalCapacity - slot.remainingTickets) / slot.totalCapacity : 1
 
   return (
     <article
@@ -45,9 +51,17 @@ export function SlotCard({ slot, availability, onBook }: SlotCardProps) {
         )}
       </div>
       <div className="space-y-1.5">
-        <p className="text-sm">{t('darshan.ticketsLeft', { remaining: slot.remainingTickets, capacity: slot.totalCapacity })}</p>
+        <p className="text-sm">
+          {t('darshan.ticketsLeft', {
+            remaining: slot.remainingTickets,
+            capacity: slot.totalCapacity,
+          })}
+        </p>
         <div className="h-1.5 overflow-hidden rounded-full bg-chart-track" aria-hidden="true">
-          <div className="h-full rounded-full bg-chart-bar" style={{ width: `${Math.round(fill * 100)}%` }} />
+          <div
+            className="h-full rounded-full bg-chart-bar"
+            style={{ width: `${Math.round(fill * 100)}%` }}
+          />
         </div>
       </div>
       {reason && (

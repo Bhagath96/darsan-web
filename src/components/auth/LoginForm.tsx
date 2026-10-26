@@ -15,7 +15,10 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import type { LoginPortal } from '@/types'
 
 const loginSchema = z.object({
-  username: z.string().trim().min(1, 'login.usernameRequired' satisfies MessageKey),
+  username: z
+    .string()
+    .trim()
+    .min(1, 'login.usernameRequired' satisfies MessageKey),
   password: z.string().min(1, 'login.passwordRequired' satisfies MessageKey),
 })
 type LoginValues = z.infer<typeof loginSchema>
@@ -42,7 +45,10 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
     setValue,
     setFocus,
     formState: { errors },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), defaultValues: { username: '', password: '' } })
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { username: '', password: '' },
+  })
 
   // Leaving the page with an old error shouldn't show it next time.
   useEffect(() => () => void dispatch(loginErrorCleared()), [dispatch])
@@ -64,7 +70,9 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
   const loginError =
     auth.error && (auth.error.code === 'UNAUTHORIZED' ? t('login.failed') : err(auth.error))
   const wrongPortal = auth.error?.code === 'FORBIDDEN'
-  const accounts = DEMO_ACCOUNTS.filter((a) => (portal === 'staff' ? a.role !== 'DEVOTEE' : a.role === 'DEVOTEE'))
+  const accounts = DEMO_ACCOUNTS.filter((a) =>
+    portal === 'staff' ? a.role !== 'DEVOTEE' : a.role === 'DEVOTEE',
+  )
   const fieldError = (key: keyof LoginValues) => errors[key] && t(errors[key].message as MessageKey)
 
   return (
@@ -81,7 +89,10 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
             <span>
               {loginError}{' '}
               {wrongPortal && (
-                <Link to={PORTAL_LOGIN_PATH[other] + redirectQuery} className="underline underline-offset-2">
+                <Link
+                  to={PORTAL_LOGIN_PATH[other] + redirectQuery}
+                  className="underline underline-offset-2"
+                >
                   {t('login.switchPortal')}
                 </Link>
               )}
@@ -89,8 +100,16 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
           </div>
         )}
 
-        <form noValidate onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-5 shadow-sm">
-          <FormField id={`${portal}-username`} label={t('login.username')} error={fieldError('username')}>
+        <form
+          noValidate
+          onSubmit={onSubmit}
+          className="space-y-4 rounded-xl border bg-card p-5 shadow-sm"
+        >
+          <FormField
+            id={`${portal}-username`}
+            label={t('login.username')}
+            error={fieldError('username')}
+          >
             {(control) => (
               <Input
                 {...control}
@@ -103,7 +122,11 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
             )}
           </FormField>
 
-          <FormField id={`${portal}-password`} label={t('login.password')} error={fieldError('password')}>
+          <FormField
+            id={`${portal}-password`}
+            label={t('login.password')}
+            error={fieldError('password')}
+          >
             {(control) => (
               <div className="relative">
                 <Input
@@ -138,27 +161,39 @@ export function LoginForm({ portal, redirectQuery }: LoginFormProps) {
           {portal === 'devotee' && (
             <p>
               {t('login.noAccount')}{' '}
-              <Link to={`/register${redirectQuery}`} className="font-medium text-primary underline underline-offset-4">
+              <Link
+                to={`/register${redirectQuery}`}
+                className="font-medium text-primary underline underline-offset-4"
+              >
                 {t('login.createAccount')}
               </Link>
             </p>
           )}
           <p>
-            <Link to={PORTAL_LOGIN_PATH[other] + redirectQuery} className="inline-flex min-h-11 items-center text-primary underline underline-offset-4">
+            <Link
+              to={PORTAL_LOGIN_PATH[other] + redirectQuery}
+              className="inline-flex min-h-11 items-center text-primary underline underline-offset-4"
+            >
               {portal === 'devotee' ? t('login.staffLink') : t('login.devoteeLink')}
             </Link>
           </p>
         </div>
       </div>
 
-      <aside aria-labelledby={`${portal}-demo`} className="space-y-3 self-start rounded-xl border border-dashed bg-secondary/40 p-4 text-sm">
+      <aside
+        aria-labelledby={`${portal}-demo`}
+        className="space-y-3 self-start rounded-xl border border-dashed bg-secondary/40 p-4 text-sm"
+      >
         <h2 id={`${portal}-demo`} className="text-lg font-semibold text-primary">
           {t('login.demoTitle')}
         </h2>
         <p className="text-muted-foreground">{t('login.demoText')}</p>
         <ul className="space-y-2">
           {accounts.map((account) => (
-            <li key={account.username} className="flex items-center justify-between gap-2 rounded-lg bg-card p-2">
+            <li
+              key={account.username}
+              className="flex items-center justify-between gap-2 rounded-lg bg-card p-2"
+            >
               <span className="min-w-0">
                 <span className="block font-mono font-medium break-all">
                   {account.username} / {account.password}

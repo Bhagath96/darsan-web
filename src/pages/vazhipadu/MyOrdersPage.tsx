@@ -62,7 +62,10 @@ function OrderCard({ order }: { order: Order }) {
               </Button>
             }
             title={t('adminOrders.confirmTitle', { number: order.orderNumber })}
-            description={t('adminOrders.confirmText', { name: order.devoteeName, total: formatINR(order.totalAmount) })}
+            description={t('adminOrders.confirmText', {
+              name: order.devoteeName,
+              total: formatINR(order.totalAmount),
+            })}
             confirmLabel={t('adminOrders.confirm')}
             cancelLabel={t('adminOrders.keep')}
             onConfirm={() => dispatch(orderCancelRequested(order.id))}
@@ -113,7 +116,12 @@ export function MyOrdersPage() {
               </li>
             ))}
           </ul>
-          <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => update({ page: p })} />
+          <Pagination
+            page={list.data.page}
+            pageSize={list.data.pageSize}
+            total={list.data.total}
+            onPageChange={(p) => update({ page: p })}
+          />
         </div>
       )}
     </div>

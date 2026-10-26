@@ -14,7 +14,11 @@ export function toCsv(header: string[], rows: Array<Array<string | number>>): st
 }
 
 /** Saves text as a file through the browser's normal download. */
-export function downloadFile(filename: string, text: string, type = 'text/csv;charset=utf-8'): void {
+export function downloadFile(
+  filename: string,
+  text: string,
+  type = 'text/csv;charset=utf-8',
+): void {
   const url = URL.createObjectURL(new Blob([text], { type }))
   const link = document.createElement('a')
   link.href = url

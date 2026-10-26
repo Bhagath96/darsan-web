@@ -15,14 +15,15 @@ v2 merged the TDB Portal architecture document into the first plan. Where the do
 
 One lightweight, accessible portal that joins **Darshan** (slot tickets) and **Vazhipadu** (temple offerings) in a single repo for several user roles:
 
-| Role | Can do |
-|---|---|
-| **Guest** (not logged in) | Home, browse temples, view Darshan slots and offerings. Booking redirects to login. |
-| **Devotee** | Book Darshan slots, My Bookings + cancel, Vazhipadu cart and orders, own profile (name/phone prefilled), switch EN/ML |
-| **Staff** | Everything a devotee sees, plus the bookings and orders lists for their temple (filter, search, paging, cancel) |
-| **Admin** | All temples, dashboard metrics, slot management (capacity, block), offering rates and active flag, CSV export |
+| Role                      | Can do                                                                                                                |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Guest** (not logged in) | Home, browse temples, view Darshan slots and offerings. Booking redirects to login.                                   |
+| **Devotee**               | Book Darshan slots, My Bookings + cancel, Vazhipadu cart and orders, own profile (name/phone prefilled), switch EN/ML |
+| **Staff**                 | Everything a devotee sees, plus the bookings and orders lists for their temple (filter, search, paging, cancel)       |
+| **Admin**                 | All temples, dashboard metrics, slot management (capacity, block), offering rates and active flag, CSV export         |
 
 ### Authentication & roles (mock)
+
 - `src/api/data/users.json` holds demo users: `{ id, username, password, name, phone, role, templeId? }`, e.g. `devotee / devotee123`, `staff / staff123` (one temple), `admin / admin123`. The demo credentials are shown on the login page. Plain-text passwords are acceptable **only** because this is a mock.
 - Static catalogue data is also JSON: `temples.json`, `offerings.json`. Time-relative data (slots, orders, bookings) is generated in code from "now".
 - `authApi.login({ username, password })` → `{ token, user }` (same latency/failure engine). `authApi.me(token)` restores the session on reload. `authApi.logout()`.
@@ -146,47 +147,133 @@ Tailwind v4 is configured in CSS (`@theme` in `src/index.css`), so there is no `
 The document's models are kept, with the fixes noted inline.
 
 ```ts
-export type UserRole = 'DEVOTEE' | 'STAFF' | 'ADMIN';
-export type Language = 'en' | 'ml';
-export type Localized = { en: string; ml: string };
+export type UserRole = 'DEVOTEE' | 'STAFF' | 'ADMIN'
+export type Language = 'en' | 'ml'
+export type Localized = { en: string; ml: string }
 
-export const NAKSHATRAS = ['Aswathy','Bharani','Karthika','Rohini','Makayiram','Thiruvathira',
-  'Punartham','Pooyam','Ayilyam','Makam','Pooram','Uthram','Atham','Chithira','Chothi',
-  'Vishakam','Anizham','Thrikketta','Moolam','Pooradam','Uthradam','Thiruvonam','Avittam',
-  'Chathayam','Puruttathi','Uthrittathi','Revathi'] as const;           // single source of truth
-export type Nakshatra = (typeof NAKSHATRAS)[number];                   // + ml labels in i18n
+export const NAKSHATRAS = [
+  'Aswathy',
+  'Bharani',
+  'Karthika',
+  'Rohini',
+  'Makayiram',
+  'Thiruvathira',
+  'Punartham',
+  'Pooyam',
+  'Ayilyam',
+  'Makam',
+  'Pooram',
+  'Uthram',
+  'Atham',
+  'Chithira',
+  'Chothi',
+  'Vishakam',
+  'Anizham',
+  'Thrikketta',
+  'Moolam',
+  'Pooradam',
+  'Uthradam',
+  'Thiruvonam',
+  'Avittam',
+  'Chathayam',
+  'Puruttathi',
+  'Uthrittathi',
+  'Revathi',
+] as const // single source of truth
+export type Nakshatra = (typeof NAKSHATRAS)[number] // + ml labels in i18n
 
-export type OfferingCategory = 'POOJA' | 'ABHISHEKAM' | 'NIVEDYAM' | 'SPECIAL';
+export type OfferingCategory = 'POOJA' | 'ABHISHEKAM' | 'NIVEDYAM' | 'SPECIAL'
 
-export interface Temple   { id: string; name: Localized; location: Localized; deity: Localized;
-                            image: string; timings: string }
-export interface Offering { id: string; templeId: string; name: Localized; price: number /* whole ₹ */;
-                            isActive: boolean; category: OfferingCategory; image?: string }
+export interface Temple {
+  id: string
+  name: Localized
+  location: Localized
+  deity: Localized
+  image: string
+  timings: string
+}
+export interface Offering {
+  id: string
+  templeId: string
+  name: Localized
+  price: number /* whole ₹ */
+  isActive: boolean
+  category: OfferingCategory
+  image?: string
+}
 
-export interface CartItem { offeringId: string; templeId: string; name: Localized;
-                            unitPrice: number; quantity: number }   // devotee details live on the order
+export interface CartItem {
+  offeringId: string
+  templeId: string
+  name: Localized
+  unitPrice: number
+  quantity: number
+} // devotee details live on the order
 
-export interface DevoteeDetails { devoteeName: string; phone: string; star: Nakshatra;
-                                  offeringDate: string /* YYYY-MM-DD, IST */ }
+export interface DevoteeDetails {
+  devoteeName: string
+  phone: string
+  star: Nakshatra
+  offeringDate: string /* YYYY-MM-DD, IST */
+}
 
-export type OrderStatus = 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
-export interface OrderLine { offeringId: string; offeringName: Localized; quantity: number; unitPrice: number }
+export type OrderStatus = 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
+export interface OrderLine {
+  offeringId: string
+  offeringName: Localized
+  quantity: number
+  unitPrice: number
+}
 export interface Order extends DevoteeDetails {
-  id: string; orderNumber: string; templeId: string; items: OrderLine[];
-  totalAmount: number; status: OrderStatus; createdAt: string /* ISO UTC */ }
+  id: string
+  orderNumber: string
+  templeId: string
+  items: OrderLine[]
+  totalAmount: number
+  status: OrderStatus
+  createdAt: string /* ISO UTC */
+}
 
-export interface DarshanSlot { id: string; templeId: string; date: string;
-  startsAt: string; endsAt: string;          // ISO UTC instants, shown in IST
-  totalCapacity: number; remainingTickets: number; isBlocked: boolean }
+export interface DarshanSlot {
+  id: string
+  templeId: string
+  date: string
+  startsAt: string
+  endsAt: string // ISO UTC instants, shown in IST
+  totalCapacity: number
+  remainingTickets: number
+  isBlocked: boolean
+}
 
-export type BookingStatus = 'BOOKED' | 'CANCELLED';
-export interface Booking { id: string; bookingRef: string; templeId: string; slotId: string;
-  startsAt: string; date: string; devoteeName: string; phone: string;
-  ticketCount: number; status: BookingStatus; createdAt: string }
+export type BookingStatus = 'BOOKED' | 'CANCELLED'
+export interface Booking {
+  id: string
+  bookingRef: string
+  templeId: string
+  slotId: string
+  startsAt: string
+  date: string
+  devoteeName: string
+  phone: string
+  ticketCount: number
+  status: BookingStatus
+  createdAt: string
+}
 
-export interface Paged<T> { items: T[]; total: number; page: number; pageSize: number }
-export interface OrderQuery { status?: OrderStatus; date?: string; phone?: string; templeId?: string;
-                              page: number; pageSize: number }
+export interface Paged<T> {
+  items: T[]
+  total: number
+  page: number
+  pageSize: number
+}
+export interface OrderQuery {
+  status?: OrderStatus
+  date?: string
+  phone?: string
+  templeId?: string
+  page: number
+  pageSize: number
+}
 ```
 
 ---
@@ -194,30 +281,51 @@ export interface OrderQuery { status?: OrderStatus; date?: string; phone?: strin
 ## 5. Mock API engine (`src/api/mockClient.ts`)
 
 ```ts
-export interface MockConfig { minDelay: number; maxDelay: number; failureRate: number; random: () => number }
+export interface MockConfig {
+  minDelay: number
+  maxDelay: number
+  failureRate: number
+  random: () => number
+}
 
-export const vazhipaduConfig: MockConfig = { minDelay: 200, maxDelay: 1000, failureRate: 0.10, random: Math.random };
-export const darshanConfig:   MockConfig = { minDelay: 200, maxDelay: 1500, failureRate: 0.20, random: Math.random };
+export const vazhipaduConfig: MockConfig = {
+  minDelay: 200,
+  maxDelay: 1000,
+  failureRate: 0.1,
+  random: Math.random,
+}
+export const darshanConfig: MockConfig = {
+  minDelay: 200,
+  maxDelay: 1500,
+  failureRate: 0.2,
+  random: Math.random,
+}
 
-const idempotencyStore = new Map<string, unknown>();   // key → original result
+const idempotencyStore = new Map<string, unknown>() // key → original result
 
-export async function simulate<T>(cfg: MockConfig, action: () => T,
-                                  opts?: { idempotencyKey?: string }): Promise<T> {
-  await sleep(cfg.minDelay + Math.floor(cfg.random() * (cfg.maxDelay - cfg.minDelay + 1)));
+export async function simulate<T>(
+  cfg: MockConfig,
+  action: () => T,
+  opts?: { idempotencyKey?: string },
+): Promise<T> {
+  await sleep(cfg.minDelay + Math.floor(cfg.random() * (cfg.maxDelay - cfg.minDelay + 1)))
 
   // Failure before the server is reached
-  if (cfg.random() < cfg.failureRate / 2) throw new ApiError('NETWORK', 'Network error. Please try again.');
+  if (cfg.random() < cfg.failureRate / 2)
+    throw new ApiError('NETWORK', 'Network error. Please try again.')
 
-  const key = opts?.idempotencyKey;
-  const result = key && idempotencyStore.has(key)
-    ? (idempotencyStore.get(key) as T)           // replay: return the SAME order/booking
-    : action();
-  if (key) idempotencyStore.set(key, result);
+  const key = opts?.idempotencyKey
+  const result =
+    key && idempotencyStore.has(key)
+      ? (idempotencyStore.get(key) as T) // replay: return the SAME order/booking
+      : action()
+  if (key) idempotencyStore.set(key, result)
 
   // Failure after the server committed ("response lost") — the retry must not duplicate
-  if (cfg.random() < cfg.failureRate / 2) throw new ApiError('TIMEOUT', 'No response from server. Please try again.');
+  if (cfg.random() < cfg.failureRate / 2)
+    throw new ApiError('TIMEOUT', 'No response from server. Please try again.')
 
-  return structuredClone(result);
+  return structuredClone(result)
 }
 ```
 
@@ -233,15 +341,15 @@ export async function simulate<T>(cfg: MockConfig, action: () => T,
 
 Every async slice has the same shape: `{ data, status: 'idle'|'loading'|'success'|'error', error?: string }`.
 
-| Concern | Saga technique |
-|---|---|
-| Fetch temples / offerings / slots / orders | `takeLatest` → `call` → `put`. **Try again** re-dispatches the same action. |
-| Stale response after a fast temple/date switch | `takeLatest` cancels the old task. The reducer also ignores results whose `requestId` ≠ the current one. |
-| Double-click / double-tap submit | `takeLeading(submitOrder)` + button disabled while submitting + one idempotency key per checkout attempt (new key only after success or after the cart/form changes). |
-| Failure keeps cart + form | The cart is cleared only on success. Form values stay in react-hook-form and are not reset on error. |
-| Optimistic cancel (staff order + devotee booking) | Snapshot → `put(markCancelled)` → `call(api)` → success: keep **CANCELLED**; error: `put(revert(snapshot))` + toast + live announcement. |
-| Cart / language / role persistence | A saga watches the matching actions → `localStorage` (versioned keys `darsan:cart:v1`, `darsan:lang`, `darsan:session:v1`); hydrated through `preloadedState`, with bad JSON ignored. |
-| Admin catalog edits | `takeEvery(updateOffering)` with optimistic update + rollback. Customer views refetch on their next visit. |
+| Concern                                           | Saga technique                                                                                                                                                                        |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fetch temples / offerings / slots / orders        | `takeLatest` → `call` → `put`. **Try again** re-dispatches the same action.                                                                                                           |
+| Stale response after a fast temple/date switch    | `takeLatest` cancels the old task. The reducer also ignores results whose `requestId` ≠ the current one.                                                                              |
+| Double-click / double-tap submit                  | `takeLeading(submitOrder)` + button disabled while submitting + one idempotency key per checkout attempt (new key only after success or after the cart/form changes).                 |
+| Failure keeps cart + form                         | The cart is cleared only on success. Form values stay in react-hook-form and are not reset on error.                                                                                  |
+| Optimistic cancel (staff order + devotee booking) | Snapshot → `put(markCancelled)` → `call(api)` → success: keep **CANCELLED**; error: `put(revert(snapshot))` + toast + live announcement.                                              |
+| Cart / language / role persistence                | A saga watches the matching actions → `localStorage` (versioned keys `darsan:cart:v1`, `darsan:lang`, `darsan:session:v1`); hydrated through `preloadedState`, with bad JSON ignored. |
+| Admin catalog edits                               | `takeEvery(updateOffering)` with optimistic update + rollback. Customer views refetch on their next visit.                                                                            |
 
 ---
 
@@ -250,11 +358,13 @@ Every async slice has the same shape: `{ data, status: 'idle'|'loading'|'success
 Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extras.**
 
 ### A0 – Login & roles (`feature/auth-login`)
+
 - Login page (username, password, show/hide password), validation, error on bad credentials, loading state, `?redirect=` back to where the user was.
 - Session restore on refresh, logout, role-aware header navigation, `RequireAuth` / `RequireRole`, 403 page.
 - Tests: wrong password shows an error; devotee is redirected away from admin routes; refresh keeps the session.
 
 ### Darshan P1–P5 (Grade I brief)
+
 - **P1** `feature/p1-slot-list-booking`: temple + date pickers, that day's slots with IST start time and remaining tickets, Full/Started badges, booking form (name, phone, tickets ≤ remaining; prefilled from the profile). Booking 3 of 10 shows 7 remaining. Loading/empty/error states. Tests.
 - **P2** `feature/p2-shareable-filters`: `?temple=&date=` in the URL (shareable, survives refresh), Back returns to the previous selection, `takeLatest` + request-id guard so stale responses are ignored. Race test with deferred promises resolved out of order.
 - **P3** `feature/p3-safe-submit`: `takeLeading` + disabled button + idempotency key; failure keeps form values; mock fails after commit sometimes, and a retry with the same key returns the original booking. Tests: double-click → one booking; lost-response retry → no duplicate.
@@ -264,6 +374,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 ### Vazhipadu V1–V5 (Grade II brief) — sections below, branches renamed `feature/v1-…` to `feature/v5-…`
 
 ### V1 – Offerings list (`feature/v1-offerings-list`)
+
 - Temple select (in the URL: `?temple=`), offerings grid with photo, name (EN/ML), category and ₹ price.
 - Search box (label "Search offerings"), case-insensitive "contains" on the EN + ML name, 200ms debounce, `?q=` in the URL.
 - Category tabs (All / Pooja / Abhishekam / Nivedyam / Special).
@@ -272,6 +383,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 - Tests: "push" shows only Pushpanjali; failure → retry → list.
 
 ### V2 – Cart & order form (`feature/v2-cart-and-form`)
+
 - Add, change quantity (1–10 stepper) and remove lines. Line totals + grand total in ₹ (`en-IN`).
 - Cart drawer (Sheet) on mobile with a sticky bottom total bar; sticky side column on desktop.
 - One temple per cart: adding from another temple asks to replace the cart.
@@ -280,6 +392,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 - Tests: 2×₹30 + 1×₹50 = ₹110; each invalid field shows its message; past date rejected; cart restored from storage.
 
 ### V3 – Order confirmation (`feature/v3-order-confirmation`)
+
 - "Place order" → `createOrder({ ...details, templeId, items, idempotencyKey })`.
 - Disabled + spinner + "Placing order…" while submitting; `takeLeading` + idempotency key guard against double taps.
 - On failure: inline alert with **Try again**; cart and form unchanged.
@@ -287,6 +400,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 - Tests: `dblClick` → exactly one order in the DB; fail once → values intact → retry succeeds (and produces no duplicate after a "lost response").
 
 ### V4 – Staff orders (`feature/v4-orders-list-staff`)
+
 - Uses the login roles from A0: `RequireRole(['STAFF','ADMIN'])`; staff see only their temple's orders.
 - `/admin/orders?status=&date=&phone=&page=`: the URL is the source of truth, so filters survive refresh and Back works. Any filter change resets `page=1`.
 - Table columns: Order # · Devotee & phone · Offerings · Offering date · Total · Status badge · Actions. Becomes cards below `md`.
@@ -297,6 +411,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 - Tests: status filter shows only matches and resets to page 1; initial URL restores filters + page; cancel shows CANCELLED without refetch; failed cancel reverts.
 
 ### V5 – Mobile, accessibility & i18n (`feature/v5-mobile-and-a11y`)
+
 - 360px audit for every page: no fixed widths, `min-w-0` on flex children, long names wrap, tables become cards. Fixed at the layout, not hidden with `overflow-x-hidden`.
 - Keyboard: skip link, logical tab order, visible focus ring (`ring-2 ring-offset-2`), Radix focus traps in dialogs/sheets, Esc closes, focus returns to the trigger.
 - Forms: every field has a `<label>`; errors use `aria-invalid` + `aria-describedby`; an error summary with `role="alert"` gets focus on a failed submit.
@@ -306,6 +421,7 @@ Build order: **A0 login → Darshan P1–P5 → Vazhipadu V1–V5 → admin extr
 - Tests: fields found with `getByLabelText`; full keyboard-only booking flow with `user.tab()` / `user.keyboard()`; Malayalam switch changes labels + dates. The PR also has a written keyboard walkthrough.
 
 ### Admin extras (after the core is done)
+
 - `feature/admin-slots`: change capacity, block/unblock slots.
 - `feature/admin-rates`: edit price, toggle active.
 
@@ -333,18 +449,18 @@ Inspired by the Guruvayur Devaswom and Sree Tali Maha Kshethram portals: calm, t
 
 ## 9. Testing strategy
 
-| Test file | Covers |
-|---|---|
-| `tests/api/mockClient.test.ts` | latency bounds, failure rate, idempotent replay, post-commit failure |
-| `tests/api/orderApi.test.ts` | filters, paging, cancel rules |
-| `tests/store/cart.test.ts` | totals (₹110), quantity bounds, one-temple rule, persistence |
-| `tests/store/sagas.test.ts` | takeLatest cancel, takeLeading, optimistic rollback |
-| `tests/integration/OfferingsList.test.tsx` | P1 search "push", empty state, error + retry |
-| `tests/integration/CartAndForm.test.tsx` | P2 total, per-field errors, past date, refresh keeps cart |
-| `tests/integration/SafeSubmit.test.tsx` | P3 double-click → one order, failure keeps values, retry |
-| `tests/integration/AdminOrders.test.tsx` | P4 filter → page 1, URL restore, cancel, revert |
-| `tests/integration/Accessibility.test.tsx` | P5 label queries, keyboard-only flow, EN→ML labels + dates |
-| `tests/integration/Darshan*.test.tsx` | 10→7 remaining, stale response, lost-response retry, IST, optimistic cancel |
+| Test file                                  | Covers                                                                      |
+| ------------------------------------------ | --------------------------------------------------------------------------- |
+| `tests/api/mockClient.test.ts`             | latency bounds, failure rate, idempotent replay, post-commit failure        |
+| `tests/api/orderApi.test.ts`               | filters, paging, cancel rules                                               |
+| `tests/store/cart.test.ts`                 | totals (₹110), quantity bounds, one-temple rule, persistence                |
+| `tests/store/sagas.test.ts`                | takeLatest cancel, takeLeading, optimistic rollback                         |
+| `tests/integration/OfferingsList.test.tsx` | P1 search "push", empty state, error + retry                                |
+| `tests/integration/CartAndForm.test.tsx`   | P2 total, per-field errors, past date, refresh keeps cart                   |
+| `tests/integration/SafeSubmit.test.tsx`    | P3 double-click → one order, failure keeps values, retry                    |
+| `tests/integration/AdminOrders.test.tsx`   | P4 filter → page 1, URL restore, cancel, revert                             |
+| `tests/integration/Accessibility.test.tsx` | P5 label queries, keyboard-only flow, EN→ML labels + dates                  |
+| `tests/integration/Darshan*.test.tsx`      | 10→7 remaining, stale response, lost-response retry, IST, optimistic cancel |
 
 Optional: `vitest-axe` for automated a11y checks on each page.
 Scripts: `dev`, `build` (`tsc -b && vite build`), `test`, `test:watch`, `coverage`, `lint`, `typecheck`.
@@ -353,15 +469,15 @@ Scripts: `dev`, `build` (`tsc -b && vite build`), `test`, `test:watch`, `coverag
 
 ## 10. Execution plan
 
-| Step | Branch | Scope | Time budget |
-|---|---|---|---|
-| Setup | `main` | Vite react-ts, strict TS, Tailwind v4, shadcn + theme, RTK + saga store, router + layout, Vitest/RTL, mock API + JSON seed (users, temples, offerings), PR template, README | — |
-| PR A0 | `feature/auth-login` | Login, session restore, logout, roles + permissions, guards | — |
-| PR 1–5 | `feature/p1…p5` | Darshan: slots + booking, shareable filters, safe submit, my bookings, a11y + Malayalam | — |
-| **Stop for review** | | | |
-| PR V1–V5 | `feature/v1…v5` | Vazhipadu: offerings, cart + form, confirmation, staff orders, mobile/a11y | — |
-| Then | `feature/admin-*` | Dashboard, slot and rate management | — |
-| Final | — | README with all PR links, build + tests green | — |
+| Step                | Branch               | Scope                                                                                                                                                                       | Time budget |
+| ------------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| Setup               | `main`               | Vite react-ts, strict TS, Tailwind v4, shadcn + theme, RTK + saga store, router + layout, Vitest/RTL, mock API + JSON seed (users, temples, offerings), PR template, README | —           |
+| PR A0               | `feature/auth-login` | Login, session restore, logout, roles + permissions, guards                                                                                                                 | —           |
+| PR 1–5              | `feature/p1…p5`      | Darshan: slots + booking, shareable filters, safe submit, my bookings, a11y + Malayalam                                                                                     | —           |
+| **Stop for review** |                      |                                                                                                                                                                             |             |
+| PR V1–V5            | `feature/v1…v5`      | Vazhipadu: offerings, cart + form, confirmation, staff orders, mobile/a11y                                                                                                  | —           |
+| Then                | `feature/admin-*`    | Dashboard, slot and rate management                                                                                                                                         | —           |
+| Final               | —                    | README with all PR links, build + tests green                                                                                                                               | —           |
 
 Per PR: small descriptive commits → `npm run build && npm test` → `gh pr create` with the template (Problem / Assumptions / Decisions & trade-offs / How to test) → at least one line review comment (own or `/code-review`) addressed by a commit or reply → merge → `git pull` on `main`.
 
@@ -371,21 +487,21 @@ The time budgets apply to the timed assessment. For this full-scale build, the t
 
 ## 11. Corrections to the architecture document
 
-| # | In the document | Change | Reason |
-|---|---|---|---|
-| 1 | A repeat idempotency key **throws** `DUPLICATE_SUBMISSION_DETECTED` | Return the **original result** | A retry after a lost response must show the booking that was made, not an error. |
-| 2 | The key is saved only after a success that happens before any failure check | Add a failure **after** commit | Without it, the "request reached the server" case never happens, so the retry requirement is untested. |
-| 3 | One global `MOCK_CONFIG` with `maxDelay: 1000`, while the text says 200–1500 | Per-domain configs (Vazhipadu 200–1000 / 10%, Darshan 200–1500 / 20%), injectable | Matches both briefs and makes tests fast and deterministic. |
-| 4 | Optimistic cancel: "if API succeeds, state stays **confirmed**" | Stays **CANCELLED** on success, reverts on failure | Typo in the document; as written it would be a logic bug. |
-| 5 | `CartItem` carries devoteeName / star / date per item | Devotee details are on the **order** | The brief has one order form; per-line details would need a different form. |
-| 6 | Contexts (Auth / Cart / Language) + `useMockQuery` | RTK slices + sagas | The chosen stack is redux-saga; one state system, not two. |
-| 7 | `overflow-x-hidden` to stop horizontal scroll | Fix the layout | Hiding overflow hides cut-off content, and the 360px check must pass for real. |
-| 8 | Translations as JSON in `public/locales` (fetched at runtime) | Typed TS dictionaries in `src/i18n` | Missing keys become type errors, there is no extra network call, and nothing flashes untranslated. |
-| 9 | `startTime: 'HH:mm IST'` strings | ISO instants, formatted in IST | "Slot has started" needs a real time comparison on any device time zone. |
-| 10 | `isSubmitting` local state as the double-submit guard | Button disable + `takeLeading` + idempotency key | React state updates are async, so two fast clicks can both pass a state check. |
-| 11 | `tailwind.config.js` | CSS-first `@theme` (Tailwind v4) | Current Tailwind/shadcn setup. |
-| 12 | Category "Feeds" / "Prasad" mismatch | `POOJA / ABHISHEKAM / NIVEDYAM / SPECIAL` | One consistent list. |
-| 13 | Multi-day bookings in scope | Deferred to a follow-up | Not in either brief; it would change the order model. |
+| #   | In the document                                                              | Change                                                                            | Reason                                                                                                 |
+| --- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 1   | A repeat idempotency key **throws** `DUPLICATE_SUBMISSION_DETECTED`          | Return the **original result**                                                    | A retry after a lost response must show the booking that was made, not an error.                       |
+| 2   | The key is saved only after a success that happens before any failure check  | Add a failure **after** commit                                                    | Without it, the "request reached the server" case never happens, so the retry requirement is untested. |
+| 3   | One global `MOCK_CONFIG` with `maxDelay: 1000`, while the text says 200–1500 | Per-domain configs (Vazhipadu 200–1000 / 10%, Darshan 200–1500 / 20%), injectable | Matches both briefs and makes tests fast and deterministic.                                            |
+| 4   | Optimistic cancel: "if API succeeds, state stays **confirmed**"              | Stays **CANCELLED** on success, reverts on failure                                | Typo in the document; as written it would be a logic bug.                                              |
+| 5   | `CartItem` carries devoteeName / star / date per item                        | Devotee details are on the **order**                                              | The brief has one order form; per-line details would need a different form.                            |
+| 6   | Contexts (Auth / Cart / Language) + `useMockQuery`                           | RTK slices + sagas                                                                | The chosen stack is redux-saga; one state system, not two.                                             |
+| 7   | `overflow-x-hidden` to stop horizontal scroll                                | Fix the layout                                                                    | Hiding overflow hides cut-off content, and the 360px check must pass for real.                         |
+| 8   | Translations as JSON in `public/locales` (fetched at runtime)                | Typed TS dictionaries in `src/i18n`                                               | Missing keys become type errors, there is no extra network call, and nothing flashes untranslated.     |
+| 9   | `startTime: 'HH:mm IST'` strings                                             | ISO instants, formatted in IST                                                    | "Slot has started" needs a real time comparison on any device time zone.                               |
+| 10  | `isSubmitting` local state as the double-submit guard                        | Button disable + `takeLeading` + idempotency key                                  | React state updates are async, so two fast clicks can both pass a state check.                         |
+| 11  | `tailwind.config.js`                                                         | CSS-first `@theme` (Tailwind v4)                                                  | Current Tailwind/shadcn setup.                                                                         |
+| 12  | Category "Feeds" / "Prasad" mismatch                                         | `POOJA / ABHISHEKAM / NIVEDYAM / SPECIAL`                                         | One consistent list.                                                                                   |
+| 13  | Multi-day bookings in scope                                                  | Deferred to a follow-up                                                           | Not in either brief; it would change the order model.                                                  |
 
 ---
 

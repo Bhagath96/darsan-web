@@ -136,10 +136,18 @@ function NewNoticeForm() {
             </NativeSelect>
           )}
         </FormField>
-        <FormField id="notice-title-en" label={t('adminNotices.titleEn')} error={message('titleEn')}>
+        <FormField
+          id="notice-title-en"
+          label={t('adminNotices.titleEn')}
+          error={message('titleEn')}
+        >
           {(control) => <Input {...control} {...register('titleEn')} lang="en" className="h-11" />}
         </FormField>
-        <FormField id="notice-title-ml" label={t('adminNotices.titleMl')} error={message('titleMl')}>
+        <FormField
+          id="notice-title-ml"
+          label={t('adminNotices.titleMl')}
+          error={message('titleMl')}
+        >
           {(control) => <Input {...control} {...register('titleMl')} lang="ml" className="h-11" />}
         </FormField>
         <FormField id="notice-body-en" label={t('adminNotices.bodyEn')} error={message('bodyEn')}>
@@ -149,7 +157,9 @@ function NewNoticeForm() {
           {(control) => <Textarea {...control} {...register('bodyMl')} lang="ml" rows={4} />}
         </FormField>
         <FormField id="notice-date" label={t('adminNotices.eventDate')}>
-          {(control) => <Input {...control} {...register('eventDate')} type="date" className="h-11" />}
+          {(control) => (
+            <Input {...control} {...register('eventDate')} type="date" className="h-11" />
+          )}
         </FormField>
         <div className="flex items-start gap-3 self-end pb-2">
           <input
@@ -196,7 +206,11 @@ function NoticeRow({ notice }: { notice: Notice }) {
       </div>
       <ConfirmDialog
         trigger={
-          <Button variant="destructive" className="h-11 shrink-0 px-3" aria-label={t('adminNotices.deleteOf', { title: noticeTitle })}>
+          <Button
+            variant="destructive"
+            className="h-11 shrink-0 px-3"
+            aria-label={t('adminNotices.deleteOf', { title: noticeTitle })}
+          >
             <Trash2 aria-hidden="true" />
             {t('adminNotices.delete')}
           </Button>

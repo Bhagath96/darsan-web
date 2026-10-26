@@ -14,7 +14,10 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     announce: {
-      reducer(state, action: PayloadAction<{ message: string; politeness: 'polite' | 'assertive' }>) {
+      reducer(
+        state,
+        action: PayloadAction<{ message: string; politeness: 'polite' | 'assertive' }>,
+      ) {
         state.announcement = { id: state.announcement.id + 1, ...action.payload }
       },
       prepare(message: string, politeness: 'polite' | 'assertive' = 'polite') {

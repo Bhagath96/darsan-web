@@ -34,7 +34,10 @@ function orderSchema(today: string) {
     star: z.string().refine(isNakshatra, 'validation.starRequired' satisfies MessageKey),
     offeringDate: z
       .string()
-      .refine((v) => isValidIsoDate(v) && v >= today && v <= last, 'validation.dateRange' satisfies MessageKey),
+      .refine(
+        (v) => isValidIsoDate(v) && v >= today && v <= last,
+        'validation.dateRange' satisfies MessageKey,
+      ),
   })
 }
 type OrderInput = z.input<ReturnType<typeof orderSchema>>
@@ -67,7 +70,12 @@ export function CheckoutPage() {
     formState: { errors, submitCount },
   } = useForm<OrderInput, unknown, OrderValues>({
     resolver: zodResolver(orderSchema(today)),
-    defaultValues: { devoteeName: user?.name ?? '', phone: user?.phone ?? '', star: '', offeringDate: today },
+    defaultValues: {
+      devoteeName: user?.name ?? '',
+      phone: user?.phone ?? '',
+      star: '',
+      offeringDate: today,
+    },
   })
 
   useEffect(() => {
@@ -77,7 +85,10 @@ export function CheckoutPage() {
   // Placed: go to the receipt (the cart has been emptied by then).
   useEffect(() => {
     if (submittedHere && checkout.status === 'success' && checkout.lastOrder) {
-      navigate(`/vazhipadu/orders/${checkout.lastOrder.orderNumber}`, { replace: true, state: { justPlaced: true } })
+      navigate(`/vazhipadu/orders/${checkout.lastOrder.orderNumber}`, {
+        replace: true,
+        state: { justPlaced: true },
+      })
     }
   }, [submittedHere, checkout.status, checkout.lastOrder, navigate])
 
@@ -87,7 +98,14 @@ export function CheckoutPage() {
 
   if (cart.items.length === 0 || !cart.templeId) {
     // Just placed: the effect above is moving to the receipt.
-    if (submittedHere && checkout.lastOrder) return <Navigate to={`/vazhipadu/orders/${checkout.lastOrder.orderNumber}`} replace state={{ justPlaced: true }} />
+    if (submittedHere && checkout.lastOrder)
+      return (
+        <Navigate
+          to={`/vazhipadu/orders/${checkout.lastOrder.orderNumber}`}
+          replace
+          state={{ justPlaced: true }}
+        />
+      )
     return (
       <div className="space-y-6">
         <PageHeading title={t('checkout.title')} />
@@ -150,19 +168,48 @@ export function CheckoutPage() {
               <p>{err(checkout.error)}</p>
               <p className="text-muted-foreground">{t('checkout.failedKept')}</p>
               {checkout.error.retryable && (
-                <Button type="button" variant="outline" className="h-11" disabled={submitting} onClick={() => void handleSubmit(send)()}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-11"
+                  disabled={submitting}
+                  onClick={() => void handleSubmit(send)()}
+                >
                   {t('common.tryAgain')}
                 </Button>
               )}
             </div>
           )}
-          <form noValidate onSubmit={handleSubmit(send)} className="space-y-4 rounded-xl border bg-card p-5" aria-busy={submitting}>
-            <FormField id={fieldId('devoteeName')} label={t('checkout.devoteeName')} error={message('devoteeName')}>
-              {(control) => <Input {...control} {...register('devoteeName')} autoComplete="name" className="h-11" />}
+          <form
+            noValidate
+            onSubmit={handleSubmit(send)}
+            className="space-y-4 rounded-xl border bg-card p-5"
+            aria-busy={submitting}
+          >
+            <FormField
+              id={fieldId('devoteeName')}
+              label={t('checkout.devoteeName')}
+              error={message('devoteeName')}
+            >
+              {(control) => (
+                <Input
+                  {...control}
+                  {...register('devoteeName')}
+                  autoComplete="name"
+                  className="h-11"
+                />
+              )}
             </FormField>
             <FormField id={fieldId('phone')} label={t('checkout.phone')} error={message('phone')}>
               {(control) => (
-                <Input {...control} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel-national" className="h-11" />
+                <Input
+                  {...control}
+                  {...register('phone')}
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel-national"
+                  className="h-11"
+                />
               )}
             </FormField>
             <FormField id={fieldId('star')} label={t('checkout.star')} error={message('star')}>
@@ -196,17 +243,25 @@ export function CheckoutPage() {
             </FormField>
             <Button type="submit" className="h-11 w-full text-base" disabled={submitting}>
               {submitting && <Loader2 aria-hidden="true" className="animate-spin" />}
-              {submitting ? t('checkout.placing') : t('checkout.place', { total: formatINR(total) })}
+              {submitting
+                ? t('checkout.placing')
+                : t('checkout.place', { total: formatINR(total) })}
             </Button>
           </form>
         </section>
 
-        <aside aria-labelledby="checkout-summary" className="min-w-0 space-y-3 self-start rounded-xl border bg-card p-4 lg:sticky lg:top-24">
+        <aside
+          aria-labelledby="checkout-summary"
+          className="min-w-0 space-y-3 self-start rounded-xl border bg-card p-4 lg:sticky lg:top-24"
+        >
           <h2 id="checkout-summary" className="text-xl font-semibold text-primary">
             {t('checkout.summary')}
           </h2>
           <CartPanel idPrefix="checkout" hideCheckout />
-          <Link to={`/vazhipadu?temple=${templeId}`} className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4">
+          <Link
+            to={`/vazhipadu?temple=${templeId}`}
+            className="inline-flex min-h-11 items-center text-sm text-primary underline underline-offset-4"
+          >
             {t('checkout.editCart')}
           </Link>
         </aside>

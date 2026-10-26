@@ -66,9 +66,19 @@ function ProfileForm({ user }: { user: AuthUser }) {
       <h2 id="account-profile" className="text-xl font-semibold text-primary">
         {t('account.profile')}
       </h2>
-      <form noValidate className="space-y-4" onSubmit={handleSubmit((values) => dispatch(profileUpdateRequested(values)))}>
-        <FormField id="account-name" label={t('register.name')} error={errors.name && t(errors.name.message as MessageKey)}>
-          {(control) => <Input {...control} {...register('name')} autoComplete="name" className="h-11" />}
+      <form
+        noValidate
+        className="space-y-4"
+        onSubmit={handleSubmit((values) => dispatch(profileUpdateRequested(values)))}
+      >
+        <FormField
+          id="account-name"
+          label={t('register.name')}
+          error={errors.name && t(errors.name.message as MessageKey)}
+        >
+          {(control) => (
+            <Input {...control} {...register('name')} autoComplete="name" className="h-11" />
+          )}
         </FormField>
         <FormField
           id="account-phone"
@@ -77,7 +87,14 @@ function ProfileForm({ user }: { user: AuthUser }) {
           error={errors.phone && t(errors.phone.message as MessageKey)}
         >
           {(control) => (
-            <Input {...control} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel-national" className="h-11" />
+            <Input
+              {...control}
+              {...register('phone')}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel-national"
+              className="h-11"
+            />
           )}
         </FormField>
         <div className="flex flex-wrap items-center gap-3">
@@ -93,7 +110,11 @@ function ProfileForm({ user }: { user: AuthUser }) {
 }
 
 const passwordSchema = z
-  .object({ currentPassword: requiredSchema, newPassword: newPasswordSchema, confirmPassword: requiredSchema })
+  .object({
+    currentPassword: requiredSchema,
+    newPassword: newPasswordSchema,
+    confirmPassword: requiredSchema,
+  })
   .refine((v) => v.newPassword === v.confirmPassword, {
     path: ['confirmPassword'],
     message: 'validation.passwordMismatch' satisfies MessageKey,
@@ -138,9 +159,19 @@ function PasswordForm() {
           dispatch(passwordChangeRequested({ currentPassword, newPassword })),
         )}
       >
-        <FormField id="account-current-password" label={t('account.currentPassword')} error={message('currentPassword')}>
+        <FormField
+          id="account-current-password"
+          label={t('account.currentPassword')}
+          error={message('currentPassword')}
+        >
           {(control) => (
-            <Input {...control} {...register('currentPassword')} type="password" autoComplete="current-password" className="h-11" />
+            <Input
+              {...control}
+              {...register('currentPassword')}
+              type="password"
+              autoComplete="current-password"
+              className="h-11"
+            />
           )}
         </FormField>
         <FormField
@@ -150,12 +181,28 @@ function PasswordForm() {
           error={message('newPassword')}
         >
           {(control) => (
-            <Input {...control} {...register('newPassword')} type="password" autoComplete="new-password" className="h-11" />
+            <Input
+              {...control}
+              {...register('newPassword')}
+              type="password"
+              autoComplete="new-password"
+              className="h-11"
+            />
           )}
         </FormField>
-        <FormField id="account-confirm-password" label={t('account.confirmNewPassword')} error={message('confirmPassword')}>
+        <FormField
+          id="account-confirm-password"
+          label={t('account.confirmNewPassword')}
+          error={message('confirmPassword')}
+        >
           {(control) => (
-            <Input {...control} {...register('confirmPassword')} type="password" autoComplete="new-password" className="h-11" />
+            <Input
+              {...control}
+              {...register('confirmPassword')}
+              type="password"
+              autoComplete="new-password"
+              className="h-11"
+            />
           )}
         </FormField>
         <div className="flex flex-wrap items-center gap-3">
@@ -205,7 +252,9 @@ export function AccountPage() {
           {user.role !== 'DEVOTEE' && (
             <div>
               <dt className="text-muted-foreground">{t('account.temple')}</dt>
-              <dd className="font-medium">{temple ? pick(temple.name) : t('account.allTemples')}</dd>
+              <dd className="font-medium">
+                {temple ? pick(temple.name) : t('account.allTemples')}
+              </dd>
             </div>
           )}
         </dl>

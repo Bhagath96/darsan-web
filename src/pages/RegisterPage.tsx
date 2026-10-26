@@ -11,7 +11,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useT, type MessageKey } from '@/i18n'
 import { safeRedirect } from '@/lib/redirect'
-import { nameSchema, newPasswordSchema, phoneSchema, requiredSchema, usernameSchema } from '@/lib/schemas'
+import {
+  nameSchema,
+  newPasswordSchema,
+  phoneSchema,
+  requiredSchema,
+  usernameSchema,
+} from '@/lib/schemas'
 import { loginErrorCleared, registerRequested, selectAuth } from '@/store/auth/authSlice'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 
@@ -65,9 +71,12 @@ export function RegisterPage() {
 
   if (auth.user) return <Navigate to={safeRedirect(params.get('redirect'))} replace />
 
-  const onSubmit = handleSubmit(({ confirmPassword: _confirm, ...values }) => dispatch(registerRequested(values)))
+  const onSubmit = handleSubmit(({ confirmPassword: _confirm, ...values }) =>
+    dispatch(registerRequested(values)),
+  )
 
-  const message = (e: FieldErrors<RegisterInput>[keyof RegisterInput]) => e && t(e.message as MessageKey)
+  const message = (e: FieldErrors<RegisterInput>[keyof RegisterInput]) =>
+    e && t(e.message as MessageKey)
   const summary = FIELDS.flatMap((name) => {
     const text = message(errors[name])
     return text ? [{ fieldId: fieldId(name), label: t(LABELS[name]), message: text }] : []
@@ -92,9 +101,15 @@ export function RegisterPage() {
         </div>
       )}
 
-      <form noValidate onSubmit={onSubmit} className="space-y-4 rounded-xl border bg-card p-5 shadow-sm">
+      <form
+        noValidate
+        onSubmit={onSubmit}
+        className="space-y-4 rounded-xl border bg-card p-5 shadow-sm"
+      >
         <FormField id={fieldId('name')} label={t('register.name')} error={message(errors.name)}>
-          {(control) => <Input {...control} {...register('name')} autoComplete="name" className="h-11" />}
+          {(control) => (
+            <Input {...control} {...register('name')} autoComplete="name" className="h-11" />
+          )}
         </FormField>
         <FormField
           id={fieldId('phone')}
@@ -103,7 +118,14 @@ export function RegisterPage() {
           error={message(errors.phone)}
         >
           {(control) => (
-            <Input {...control} {...register('phone')} type="tel" inputMode="tel" autoComplete="tel-national" className="h-11" />
+            <Input
+              {...control}
+              {...register('phone')}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel-national"
+              className="h-11"
+            />
           )}
         </FormField>
         <FormField
@@ -130,12 +152,28 @@ export function RegisterPage() {
           error={message(errors.password)}
         >
           {(control) => (
-            <Input {...control} {...register('password')} type="password" autoComplete="new-password" className="h-11" />
+            <Input
+              {...control}
+              {...register('password')}
+              type="password"
+              autoComplete="new-password"
+              className="h-11"
+            />
           )}
         </FormField>
-        <FormField id={fieldId('confirmPassword')} label={t('register.confirmPassword')} error={message(errors.confirmPassword)}>
+        <FormField
+          id={fieldId('confirmPassword')}
+          label={t('register.confirmPassword')}
+          error={message(errors.confirmPassword)}
+        >
           {(control) => (
-            <Input {...control} {...register('confirmPassword')} type="password" autoComplete="new-password" className="h-11" />
+            <Input
+              {...control}
+              {...register('confirmPassword')}
+              type="password"
+              autoComplete="new-password"
+              className="h-11"
+            />
           )}
         </FormField>
 

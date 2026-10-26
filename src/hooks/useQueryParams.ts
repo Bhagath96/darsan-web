@@ -18,7 +18,10 @@ export function useQueryParams() {
   const get = useCallback((key: string) => params.get(key) ?? '', [params])
 
   const update = useCallback(
-    (patch: Record<string, string | number | null | undefined>, { resetPage = false, replace = false }: UpdateOptions = {}) => {
+    (
+      patch: Record<string, string | number | null | undefined>,
+      { resetPage = false, replace = false }: UpdateOptions = {},
+    ) => {
       setParams(
         (current) => {
           const next = new URLSearchParams(current)

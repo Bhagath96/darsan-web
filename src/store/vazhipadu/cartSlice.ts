@@ -78,7 +78,8 @@ const cartSlice = createSlice({
     },
     quantitySet(state, action: PayloadAction<{ offeringId: string; quantity: number }>) {
       const line = state.items.find((i) => i.offeringId === action.payload.offeringId)
-      if (line && Number.isFinite(action.payload.quantity)) line.quantity = clamp(action.payload.quantity)
+      if (line && Number.isFinite(action.payload.quantity))
+        line.quantity = clamp(action.payload.quantity)
     },
     itemRemoved(state, action: PayloadAction<string>) {
       state.items = state.items.filter((i) => i.offeringId !== action.payload)
@@ -105,10 +106,12 @@ const cartSlice = createSlice({
   },
 })
 
-export const { itemAdded, cartReplacedWith, quantitySet, itemRemoved, cartCleared } = cartSlice.actions
+export const { itemAdded, cartReplacedWith, quantitySet, itemRemoved, cartCleared } =
+  cartSlice.actions
 export default cartSlice.reducer
 
 export const selectCart = (state: RootState) => state.cart
-export const selectCartCount = (state: RootState) => state.cart.items.reduce((n, i) => n + i.quantity, 0)
+export const selectCartCount = (state: RootState) =>
+  state.cart.items.reduce((n, i) => n + i.quantity, 0)
 export const selectCartTotal = (state: RootState) =>
   state.cart.items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)

@@ -30,8 +30,14 @@ function Receipt({ order, justPlaced }: { order: Order; justPlaced: boolean }) {
     <article className="mx-auto max-w-2xl space-y-6">
       <PageTitle title={t('receipt.heading', { number: order.orderNumber })} />
       <header className="space-y-2 text-center">
-        {justPlaced && <CheckCircle2 aria-hidden="true" className="mx-auto size-12 text-success print:hidden" />}
-        <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-semibold text-primary outline-none">
+        {justPlaced && (
+          <CheckCircle2 aria-hidden="true" className="mx-auto size-12 text-success print:hidden" />
+        )}
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-3xl font-semibold text-primary outline-none"
+        >
           {justPlaced ? t('receipt.title') : t('receipt.heading', { number: order.orderNumber })}
         </h1>
         {justPlaced && <p className="text-muted-foreground">{t('receipt.intro')}</p>}
@@ -125,10 +131,16 @@ function Receipt({ order, justPlaced }: { order: Order; justPlaced: boolean }) {
           <Printer aria-hidden="true" />
           {t('receipt.print')}
         </Button>
-        <Link to="/vazhipadu/my-orders" className={buttonVariants({ variant: 'outline', className: 'h-11 px-4' })}>
+        <Link
+          to="/vazhipadu/my-orders"
+          className={buttonVariants({ variant: 'outline', className: 'h-11 px-4' })}
+        >
           {t('receipt.myOrders')}
         </Link>
-        <Link to={`/vazhipadu?temple=${order.templeId}`} className={buttonVariants({ className: 'h-11 px-4' })}>
+        <Link
+          to={`/vazhipadu?temple=${order.templeId}`}
+          className={buttonVariants({ className: 'h-11 px-4' })}
+        >
           {t('receipt.more')}
         </Link>
       </div>
@@ -150,7 +162,8 @@ export function ReceiptPage() {
     if (!known) dispatch(receiptRequested(orderNumber))
   }, [dispatch, known, orderNumber])
 
-  if (known && checkout.lastOrder) return <Receipt order={checkout.lastOrder} justPlaced={fromCheckout} />
+  if (known && checkout.lastOrder)
+    return <Receipt order={checkout.lastOrder} justPlaced={fromCheckout} />
 
   const { receipt } = checkout
   if (receipt.status === 'error' && receipt.error) {
@@ -161,7 +174,10 @@ export function ReceiptPage() {
         <EmptyState title={receipt.error.message} />
       </div>
     ) : (
-      <ErrorState message={err(receipt.error)} onRetry={() => dispatch(receiptRequested(orderNumber))} />
+      <ErrorState
+        message={err(receipt.error)}
+        onRetry={() => dispatch(receiptRequested(orderNumber))}
+      />
     )
   }
   if (receipt.data?.orderNumber !== orderNumber) return <LoadingState rows={4} />

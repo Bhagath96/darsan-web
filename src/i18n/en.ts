@@ -34,7 +34,8 @@ export const en = {
   'errors.UNKNOWN': 'Something went wrong. Please try again.',
 
   'home.heroTitle': 'Book darshan and offerings at Kerala temples',
-  'home.heroText': 'Choose a temple, pick a darshan slot or an offering, and get a confirmation in minutes.',
+  'home.heroText':
+    'Choose a temple, pick a darshan slot or an offering, and get a confirmation in minutes.',
   'home.ctaTemples': 'Explore temples',
   'home.ctaNotices': 'Latest notices',
   'home.templesTitle': 'Our temples',
@@ -161,7 +162,8 @@ export const en = {
   'account.passwordChanged': 'Your password has been changed.',
 
   'forbidden.title': 'You do not have access to this page',
-  'forbidden.text': 'Your account ({role}) cannot open this page. If you think this is wrong, contact the temple office.',
+  'forbidden.text':
+    'Your account ({role}) cannot open this page. If you think this is wrong, contact the temple office.',
   'forbidden.home': 'Go to home',
 
   'session.expired': 'Your session has expired. Please log in again.',
@@ -245,7 +247,8 @@ export const en = {
   'dashboard.barTooltip': '{revenue} from {orders} orders',
 
   'adminBookings.title': 'Darshan bookings',
-  'adminBookings.intro': 'Find bookings by mobile number, date or status, and cancel them for devotees.',
+  'adminBookings.intro':
+    'Find bookings by mobile number, date or status, and cancel them for devotees.',
   'adminBookings.ref': 'Booking',
   'adminBookings.devotee': 'Devotee',
   'adminBookings.darshan': 'Darshan',
@@ -254,7 +257,8 @@ export const en = {
   'adminBookings.cancel': 'Cancel',
   'adminBookings.cancelOf': 'Cancel booking {ref}',
   'adminBookings.confirmTitle': 'Cancel booking {ref}?',
-  'adminBookings.confirmText': '{tickets} tickets for {name} on {date} at {time} will be released for others to book.',
+  'adminBookings.confirmText':
+    '{tickets} tickets for {name} on {date} at {time} will be released for others to book.',
   'adminBookings.confirm': 'Yes, cancel booking',
   'adminBookings.keep': 'Keep booking',
   'adminBookings.started': 'Darshan has started, so it can no longer be cancelled.',
@@ -273,7 +277,8 @@ export const en = {
   'adminOrders.cancel': 'Cancel',
   'adminOrders.cancelOf': 'Cancel order {number}',
   'adminOrders.confirmTitle': 'Cancel order {number}?',
-  'adminOrders.confirmText': 'The order for {name} ({total}) will be cancelled. This cannot be undone.',
+  'adminOrders.confirmText':
+    'The order for {name} ({total}) will be cancelled. This cannot be undone.',
   'adminOrders.confirm': 'Yes, cancel order',
   'adminOrders.keep': 'Keep order',
   'adminOrders.cancelled': 'Order {number} cancelled.',
@@ -305,7 +310,8 @@ export const en = {
   'adminSlots.capacityInvalid': 'Enter a whole number from {min} to {max}.',
 
   'adminRates.title': 'Offering rates',
-  'adminRates.intro': 'Set prices and choose which offerings devotees can book. Placed orders keep their price.',
+  'adminRates.intro':
+    'Set prices and choose which offerings devotees can book. Placed orders keep their price.',
   'adminRates.offering': 'Offering',
   'adminRates.category': 'Category',
   'adminRates.price': 'Price (₹)',
@@ -358,19 +364,22 @@ export const en = {
   'home.darshanTitle': 'Book darshan',
   'home.darshanText': 'Pick a temple, a day and a time slot. Up to 10 tickets in one booking.',
   'home.vazhipaduTitle': 'Offer vazhipadu',
-  'home.vazhipaduText': 'Pushpanjali, archana, payasam and more, in the name and birth star of your family.',
+  'home.vazhipaduText':
+    'Pushpanjali, archana, payasam and more, in the name and birth star of your family.',
   'temple.bookDarshan': 'Book darshan',
   'temple.offerVazhipadu': 'Offer vazhipadu',
 
   'darshan.title': 'Book darshan',
-  'darshan.intro': 'Choose a temple and a day, then pick a time slot. All times are Indian Standard Time (IST).',
+  'darshan.intro':
+    'Choose a temple and a day, then pick a time slot. All times are Indian Standard Time (IST).',
   'darshan.temple': 'Temple',
   'darshan.day': 'Day',
   'darshan.slotsFor': 'Slots on {date}',
   'darshan.copyLink': 'Copy link',
   'darshan.linkCopied': 'Link copied.',
   'darshan.copyFallback': 'Copy this link to share it:',
-  'darshan.badLink': 'That link had an unknown temple or a day outside the next 7 days, so it was reset.',
+  'darshan.badLink':
+    'That link had an unknown temple or a day outside the next 7 days, so it was reset.',
   'darshan.empty': 'No darshan slots on this day.',
   'darshan.ticketsLeft': '{remaining} of {capacity} tickets left',
   'darshan.full': 'Full',
@@ -420,7 +429,8 @@ export const en = {
   'myBookings.started': 'Darshan has started — it can no longer be cancelled.',
 
   'vazhipadu.title': 'Vazhipadu',
-  'vazhipadu.intro': 'Choose offerings for a temple, then give the devotee’s name, birth star and the offering date.',
+  'vazhipadu.intro':
+    'Choose offerings for a temple, then give the devotee’s name, birth star and the offering date.',
   'vazhipadu.temple': 'Temple',
   'vazhipadu.search': 'Search offerings',
   'vazhipadu.categories': 'Offering categories',
@@ -435,7 +445,8 @@ export const en = {
   'vazhipadu.inCart': '{count} in cart',
   'vazhipadu.added': '{name} added to cart.',
   'vazhipadu.replaceTitle': 'Start a new cart?',
-  'vazhipadu.replaceText': 'Your cart has offerings for {temple}. An order can only be for one temple. Empty the cart and add {name}?',
+  'vazhipadu.replaceText':
+    'Your cart has offerings for {temple}. An order can only be for one temple. Empty the cart and add {name}?',
   'vazhipadu.replaceConfirm': 'Empty cart and add',
   'vazhipadu.replaceKeep': 'Keep my cart',
   'vazhipadu.badLink': 'That link had an unknown temple or category, so it was reset.',
@@ -457,7 +468,8 @@ export const en = {
   'cart.removed': '{name} removed from cart.',
 
   'checkout.title': 'Offering details',
-  'checkout.intro': 'Who is the vazhipadu for, and on which day? Check the details before you place the order.',
+  'checkout.intro':
+    'Who is the vazhipadu for, and on which day? Check the details before you place the order.',
   'checkout.summary': 'Your offerings',
   'checkout.details': 'Devotee details',
   'checkout.devoteeName': 'Devotee name',

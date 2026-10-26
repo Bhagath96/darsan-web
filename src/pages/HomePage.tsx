@@ -29,10 +29,18 @@ function ServicesSection() {
         {SERVICES.map((s) => (
           <li key={s.to}>
             <article className="group relative flex h-full flex-col overflow-hidden rounded-xl border bg-card shadow-sm transition focus-within:ring-2 focus-within:ring-ring hover:shadow-md sm:flex-row">
-              <img src={imageFor(s.image)} alt="" loading="lazy" className="aspect-[16/9] w-full object-cover sm:aspect-auto sm:w-40" />
+              <img
+                src={imageFor(s.image)}
+                alt=""
+                loading="lazy"
+                className="aspect-[16/9] w-full object-cover sm:aspect-auto sm:w-40"
+              />
               <div className="space-y-1 p-4">
                 <h3 className="text-xl font-semibold text-primary">
-                  <Link to={s.to} className="outline-none after:absolute after:inset-0 group-hover:underline focus-visible:underline">
+                  <Link
+                    to={s.to}
+                    className="outline-none after:absolute after:inset-0 group-hover:underline focus-visible:underline"
+                  >
                     {t(s.title)}
                   </Link>
                 </h3>
@@ -55,7 +63,10 @@ function TemplesSection() {
         <h2 id="home-temples" className="text-2xl font-semibold text-primary">
           {t('home.templesTitle')}
         </h2>
-        <Link to="/temples" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          to="/temples"
+          className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
           {t('home.allTemples')}
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
@@ -82,7 +93,9 @@ function NoticesSection() {
   const notices = useLatestNotices()
   const temples = useTemples()
   // Important notices first, then newest.
-  const top = [...notices.data].sort((a, b) => Number(b.important) - Number(a.important)).slice(0, HOME_NOTICE_COUNT)
+  const top = [...notices.data]
+    .sort((a, b) => Number(b.important) - Number(a.important))
+    .slice(0, HOME_NOTICE_COUNT)
 
   return (
     <section id="latest-notices" aria-labelledby="home-notices" className="scroll-mt-20 space-y-4">
@@ -90,7 +103,10 @@ function NoticesSection() {
         <h2 id="home-notices" className="text-2xl font-semibold text-primary">
           {t('home.noticesTitle')}
         </h2>
-        <Link to="/notifications" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          to="/notifications"
+          className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
           {t('home.allNotices')}
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
@@ -105,7 +121,10 @@ function NoticesSection() {
         <ul className="grid gap-3 lg:grid-cols-3">
           {top.map((notice) => (
             <li key={notice.id}>
-              <NoticeCard notice={notice} temple={temples.data.find((x) => x.id === notice.templeId)} />
+              <NoticeCard
+                notice={notice}
+                temple={temples.data.find((x) => x.id === notice.templeId)}
+              />
             </li>
           ))}
         </ul>
@@ -130,10 +149,16 @@ export function HomePage() {
           <h1 className="text-3xl font-semibold sm:text-4xl">{t('home.heroTitle')}</h1>
           <p className="text-base sm:text-lg">{t('home.heroText')}</p>
           <div className="flex flex-wrap gap-3 pt-2">
-            <Link to="/darshan" className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}>
+            <Link
+              to="/darshan"
+              className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}
+            >
               {t('home.darshanTitle')}
             </Link>
-            <Link to="/vazhipadu" className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}>
+            <Link
+              to="/vazhipadu"
+              className={cn(buttonVariants({ variant: 'secondary' }), 'h-11 px-5 text-base')}
+            >
               {t('home.vazhipaduTitle')}
             </Link>
             <Link

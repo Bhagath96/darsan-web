@@ -14,7 +14,13 @@ export interface SummaryError {
  * says how many fields need fixing, and links to each one.
  * `submitCount` re-focuses the summary on every failed attempt.
  */
-export function ErrorSummary({ errors, submitCount }: { errors: SummaryError[]; submitCount: number }) {
+export function ErrorSummary({
+  errors,
+  submitCount,
+}: {
+  errors: SummaryError[]
+  submitCount: number
+}) {
   const { t } = useT()
   const ref = useRef<HTMLDivElement>(null)
 
@@ -35,7 +41,9 @@ export function ErrorSummary({ errors, submitCount }: { errors: SummaryError[]; 
     >
       <p className="flex items-center gap-2 font-medium text-destructive">
         <AlertTriangle aria-hidden="true" className="size-4 shrink-0" />
-        {errors.length === 1 ? t('register.errorSummaryOne') : t('register.errorSummary', { count: errors.length })}
+        {errors.length === 1
+          ? t('register.errorSummaryOne')
+          : t('register.errorSummary', { count: errors.length })}
       </p>
       <ul className="list-disc space-y-1 ps-6">
         {errors.map((e) => (

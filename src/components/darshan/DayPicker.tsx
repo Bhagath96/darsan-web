@@ -16,8 +16,13 @@ function useDayParts() {
   const locale = lang === 'ml' ? 'ml-IN' : 'en-IN'
   return (day: IsoDate) => {
     const d = new Date(`${day}T00:00:00Z`)
-    const fmt = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(locale, { ...o, timeZone: 'UTC' }).format(d)
-    return { weekday: fmt({ weekday: 'short' }), day: fmt({ day: 'numeric' }), month: fmt({ month: 'short' }) }
+    const fmt = (o: Intl.DateTimeFormatOptions) =>
+      new Intl.DateTimeFormat(locale, { ...o, timeZone: 'UTC' }).format(d)
+    return {
+      weekday: fmt({ weekday: 'short' }),
+      day: fmt({ day: 'numeric' }),
+      month: fmt({ month: 'short' }),
+    }
   }
 }
 
@@ -55,7 +60,12 @@ export function DayPicker({ days, value, onChange, labelId }: DayPickerProps) {
   }
 
   return (
-    <div role="radiogroup" aria-labelledby={labelId} onKeyDown={onKeyDown} className="grid grid-cols-4 gap-2 sm:grid-cols-7">
+    <div
+      role="radiogroup"
+      aria-labelledby={labelId}
+      onKeyDown={onKeyDown}
+      className="grid grid-cols-4 gap-2 sm:grid-cols-7"
+    >
       {days.map((day, i) => {
         const selected = day === value
         const p = parts(day)

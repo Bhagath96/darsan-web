@@ -19,14 +19,20 @@ import { useT } from '@/i18n'
 import { OFFERING_CATEGORIES } from '@/lib/constants'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { announce } from '@/store/ui/uiSlice'
-import { itemAdded, selectCart, selectCartCount, selectCartTotal } from '@/store/vazhipadu/cartSlice'
+import {
+  itemAdded,
+  selectCart,
+  selectCartCount,
+  selectCartTotal,
+} from '@/store/vazhipadu/cartSlice'
 import { offeringsRequested, selectOfferings } from '@/store/vazhipadu/offeringsSlice'
 import type { Offering, OfferingCategory } from '@/types'
 
 const ALL = 'ALL' as const
 type CategoryTab = OfferingCategory | typeof ALL
 const TABS: readonly CategoryTab[] = [ALL, ...OFFERING_CATEGORIES]
-const isCategory = (v: string): v is OfferingCategory => (OFFERING_CATEGORIES as readonly string[]).includes(v)
+const isCategory = (v: string): v is OfferingCategory =>
+  (OFFERING_CATEGORIES as readonly string[]).includes(v)
 
 interface FixedLinkState {
   badLink: true
@@ -59,11 +65,24 @@ function OfferingSearch({ value, onSearch }: { value: string; onSearch: (q: stri
   }, [debounced])
 
   return (
-    <FormField id="offering-search" label={t('vazhipadu.search')} className="min-w-0 flex-1 basis-56">
+    <FormField
+      id="offering-search"
+      label={t('vazhipadu.search')}
+      className="min-w-0 flex-1 basis-56"
+    >
       {(control) => (
         <div className="relative">
-          <Search aria-hidden="true" className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input {...control} type="search" value={text} onChange={(e) => setText(e.target.value)} className="h-11 ps-9" />
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            {...control}
+            type="search"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="h-11 ps-9"
+          />
         </div>
       )}
     </FormField>
@@ -91,7 +110,11 @@ function MobileCartBar() {
               {t('cart.view')}
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" closeLabel={t('common.close')} className="max-h-[85dvh] overflow-y-auto px-4 pb-6">
+          <SheetContent
+            side="bottom"
+            closeLabel={t('common.close')}
+            className="max-h-[85dvh] overflow-y-auto px-4 pb-6"
+          >
             <SheetHeader className="px-0">
               <SheetTitle>{t('cart.title')}</SheetTitle>
             </SheetHeader>
@@ -132,8 +155,20 @@ export function VazhipaduPage() {
     next.set('temple', validTemple ? templeParam : fallback)
     if (badCategory) next.delete('category')
     const bad = (templeParam !== '' && !validTemple) || badCategory
-    setParams(next, { replace: true, state: bad ? ({ badLink: true } satisfies FixedLinkState) : null })
-  }, [ready, validTemple, templeParam, categoryParam, cart.templeId, temples.data, params, setParams])
+    setParams(next, {
+      replace: true,
+      state: bad ? ({ badLink: true } satisfies FixedLinkState) : null,
+    })
+  }, [
+    ready,
+    validTemple,
+    templeParam,
+    categoryParam,
+    cart.templeId,
+    temples.data,
+    params,
+    setParams,
+  ])
 
   useEffect(() => {
     if (validTemple) dispatch(offeringsRequested(templeParam))
@@ -164,7 +199,10 @@ export function VazhipaduPage() {
 
   const results =
     offerings.status === 'error' && offerings.error ? (
-      <ErrorState message={err(offerings.error)} onRetry={() => dispatch(offeringsRequested(templeParam))} />
+      <ErrorState
+        message={err(offerings.error)}
+        onRetry={() => dispatch(offeringsRequested(templeParam))}
+      />
     ) : offerings.status !== 'success' && offerings.data.length === 0 ? (
       <LoadingState rows={3} />
     ) : visible.length === 0 ? (
@@ -183,7 +221,9 @@ export function VazhipaduPage() {
     ) : (
       <div className="space-y-3">
         <p role="status" className="text-sm text-muted-foreground">
-          {visible.length === 1 ? t('vazhipadu.resultsOne') : t('vazhipadu.results', { count: visible.length })}
+          {visible.length === 1
+            ? t('vazhipadu.resultsOne')
+            : t('vazhipadu.results', { count: visible.length })}
         </p>
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {visible.map((o) => (
@@ -200,7 +240,10 @@ export function VazhipaduPage() {
       <PageHeading title={t('vazhipadu.title')} intro={t('vazhipadu.intro')} />
 
       {badLink && (
-        <p role="status" className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm">
+        <p
+          role="status"
+          className="flex items-start gap-2 rounded-lg border bg-secondary/50 p-3 text-sm"
+        >
           <Info aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           {t('vazhipadu.badLink')}
         </p>
@@ -212,7 +255,11 @@ export function VazhipaduPage() {
             <ErrorState message={err(temples.error)} onRetry={temples.retry} />
           ) : (
             <div className="flex flex-wrap items-end gap-4 rounded-xl border bg-card p-4">
-              <FormField id="vazhipadu-temple" label={t('vazhipadu.temple')} className="min-w-0 flex-1 basis-56">
+              <FormField
+                id="vazhipadu-temple"
+                label={t('vazhipadu.temple')}
+                className="min-w-0 flex-1 basis-56"
+              >
                 {(control) => (
                   <NativeSelect
                     {...control}
@@ -234,7 +281,10 @@ export function VazhipaduPage() {
           )}
 
           <Tabs value={category} onValueChange={(v) => update({ category: v === ALL ? '' : v })}>
-            <TabsList aria-label={t('vazhipadu.categories')} className="h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0">
+            <TabsList
+              aria-label={t('vazhipadu.categories')}
+              className="h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0"
+            >
               {TABS.map((c) => (
                 <TabsTrigger
                   key={c}
@@ -251,7 +301,10 @@ export function VazhipaduPage() {
           </Tabs>
         </div>
 
-        <aside aria-labelledby="cart-heading" className="hidden self-start rounded-xl border bg-card p-4 lg:sticky lg:top-24 lg:block">
+        <aside
+          aria-labelledby="cart-heading"
+          className="hidden self-start rounded-xl border bg-card p-4 lg:sticky lg:top-24 lg:block"
+        >
           <h2 id="cart-heading" className="mb-2 text-xl font-semibold text-primary">
             {t('cart.title')}
           </h2>

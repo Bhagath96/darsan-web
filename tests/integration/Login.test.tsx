@@ -7,7 +7,11 @@ import { loadAuthState } from '@/store/auth/authSlice'
 import { STORAGE_KEYS } from '@/store/persistence'
 import { currentUrl, renderApp } from '../utils/renderWithProviders'
 
-async function logIn(user: ReturnType<typeof renderApp>['user'], username: string, password: string) {
+async function logIn(
+  user: ReturnType<typeof renderApp>['user'],
+  username: string,
+  password: string,
+) {
   await user.type(await screen.findByLabelText('Username'), username)
   await user.type(screen.getByLabelText('Password'), password)
   await user.click(screen.getByRole('button', { name: 'Log in' }))
@@ -26,7 +30,9 @@ describe('Login page', () => {
   it('shows an error for a wrong password and keeps the user on the page', async () => {
     const { user, router } = renderApp({ url: '/login' })
     await logIn(user, 'devotee', 'wrong')
-    const alert = (await screen.findByText('Incorrect username or password.')).closest('[role="alert"]')
+    const alert = (await screen.findByText('Incorrect username or password.')).closest(
+      '[role="alert"]',
+    )
     expect(alert).toHaveFocus()
     expect(currentUrl(router)).toBe('/login')
   })
@@ -45,7 +51,9 @@ describe('Login page', () => {
     const { user, router } = renderApp({ url: '/login?redirect=%2Ftemples%2Ftm-sastha' })
     await logIn(user, 'devotee', 'devotee123')
     await waitFor(() => expect(currentUrl(router)).toBe('/temples/tm-sastha'))
-    expect(await screen.findByRole('button', { name: 'Account menu for Anil Kumar' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', { name: 'Account menu for Anil Kumar' }),
+    ).toBeInTheDocument()
     expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.session) ?? '{}')).toMatchObject({
       user: { username: 'devotee' },
     })
@@ -93,17 +101,39 @@ describe('Session', () => {
     const token = issueToken('u-staff-1')
     localStorage.setItem(
       STORAGE_KEYS.session,
-      JSON.stringify({ token, user: { id: 'u-staff-1', username: 'staff', name: 'Ravi Menon', phone: '9447011111', role: 'STAFF', templeId: 'tm-krishna' } }),
+      JSON.stringify({
+        token,
+        user: {
+          id: 'u-staff-1',
+          username: 'staff',
+          name: 'Ravi Menon',
+          phone: '9447011111',
+          role: 'STAFF',
+          templeId: 'tm-krishna',
+        },
+      }),
     )
     renderApp({ preloadedState: { auth: loadAuthState() } })
-    expect(await screen.findByRole('button', { name: 'Account menu for Ravi Menon' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('button', { name: 'Account menu for Ravi Menon' }),
+    ).toBeInTheDocument()
   })
 
   it('an expired saved session logs the user out', async () => {
     const expired = issueToken('u-devotee-1', Date.now() - 30 * 24 * 60 * 60 * 1000)
     localStorage.setItem(
       STORAGE_KEYS.session,
-      JSON.stringify({ token: expired, user: { id: 'u-devotee-1', username: 'devotee', name: 'Anil Kumar', phone: '9847012345', role: 'DEVOTEE', templeId: null } }),
+      JSON.stringify({
+        token: expired,
+        user: {
+          id: 'u-devotee-1',
+          username: 'devotee',
+          name: 'Anil Kumar',
+          phone: '9847012345',
+          role: 'DEVOTEE',
+          templeId: null,
+        },
+      }),
     )
     const store = makeStore({ auth: loadAuthState() })
     await waitFor(() => expect(store.getState().auth.user).toBeNull())
@@ -114,7 +144,17 @@ describe('Session', () => {
     const token = issueToken('u-devotee-1')
     localStorage.setItem(
       STORAGE_KEYS.session,
-      JSON.stringify({ token, user: { id: 'u-devotee-1', username: 'devotee', name: 'Anil Kumar', phone: '9847012345', role: 'DEVOTEE', templeId: null } }),
+      JSON.stringify({
+        token,
+        user: {
+          id: 'u-devotee-1',
+          username: 'devotee',
+          name: 'Anil Kumar',
+          phone: '9847012345',
+          role: 'DEVOTEE',
+          templeId: null,
+        },
+      }),
     )
     failNextCalls(1)
     const store = makeStore({ auth: loadAuthState() })

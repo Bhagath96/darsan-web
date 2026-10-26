@@ -69,7 +69,13 @@ function isSession(value: unknown): value is Session {
 export function loadAuthState(): AuthState {
   const saved = loadJson(STORAGE_KEYS.session, isSession)
   if (!saved) return initialAuthState
-  return { ...initialAuthState, user: saved.user, token: saved.token, status: 'success', restoring: true }
+  return {
+    ...initialAuthState,
+    user: saved.user,
+    token: saved.token,
+    status: 'success',
+    restoring: true,
+  }
 }
 
 const startRequest = (state: AuthState) => {

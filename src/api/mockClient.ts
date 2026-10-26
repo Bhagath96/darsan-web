@@ -89,7 +89,10 @@ export async function simulate<T>(
   const failure = pickFailure(cfg, Boolean(idempotencyKey))
 
   if (failure === 'before') {
-    throw new ApiError('NETWORK', 'Could not reach the server. Please check your connection and try again.')
+    throw new ApiError(
+      'NETWORK',
+      'Could not reach the server. Please check your connection and try again.',
+    )
   }
 
   const store = getDb().idempotency

@@ -6,7 +6,13 @@ import { simulate } from '@/api/mockClient'
 /** Resolves to "pending" if the promise has not settled yet. */
 async function stateOf(promise: Promise<unknown>) {
   const pending = Symbol('pending')
-  const result = await Promise.race([promise.then(() => 'resolved', () => 'rejected'), Promise.resolve(pending)])
+  const result = await Promise.race([
+    promise.then(
+      () => 'resolved',
+      () => 'rejected',
+    ),
+    Promise.resolve(pending),
+  ])
   return result === pending ? 'pending' : result
 }
 
@@ -29,7 +35,10 @@ describe('simulate()', () => {
 
   it('never waits longer than maxDelay', async () => {
     vi.useFakeTimers()
-    configureMock({ minDelay: 200, maxDelay: 1500, failureRate: 0, random: () => 0.9999 }, 'darshan')
+    configureMock(
+      { minDelay: 200, maxDelay: 1500, failureRate: 0, random: () => 0.9999 },
+      'darshan',
+    )
     const call = simulate('darshan', () => 'ok')
     await vi.advanceTimersByTimeAsync(1500)
     await expect(call).resolves.toBe('ok')
@@ -97,7 +106,9 @@ describe('simulate()', () => {
         if (attempt === 1) throw new ApiError('CONFLICT', 'Only 2 tickets left.')
         return 'ok'
       }
-      await expect(simulate('darshan', action, { idempotencyKey: 'k3' })).rejects.toMatchObject({ code: 'CONFLICT' })
+      await expect(simulate('darshan', action, { idempotencyKey: 'k3' })).rejects.toMatchObject({
+        code: 'CONFLICT',
+      })
       await expect(simulate('darshan', action, { idempotencyKey: 'k3' })).resolves.toBe('ok')
     })
   })

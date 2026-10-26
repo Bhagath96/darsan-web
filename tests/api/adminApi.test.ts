@@ -23,8 +23,18 @@ describe('bookingApi.searchBookings', () => {
 
   it('filters by date, temple and status', async () => {
     actAs('admin')
-    const result = await bookingApi.searchBookings({ date: TODAY, templeId: 'tm-krishna', status: 'BOOKED', page: 1, pageSize: 50 })
-    expect(result.items.every((b) => b.date === TODAY && b.templeId === 'tm-krishna' && b.status === 'BOOKED')).toBe(true)
+    const result = await bookingApi.searchBookings({
+      date: TODAY,
+      templeId: 'tm-krishna',
+      status: 'BOOKED',
+      page: 1,
+      pageSize: 50,
+    })
+    expect(
+      result.items.every(
+        (b) => b.date === TODAY && b.templeId === 'tm-krishna' && b.status === 'BOOKED',
+      ),
+    ).toBe(true)
   })
 
   it('limits staff to their temple, and refuses devotees', async () => {
@@ -33,7 +43,9 @@ describe('bookingApi.searchBookings', () => {
     expect(result.items.every((b) => b.templeId === 'tm-krishna')).toBe(true)
 
     actAs('devotee')
-    await expect(bookingApi.searchBookings({ page: 1, pageSize: 10 })).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(bookingApi.searchBookings({ page: 1, pageSize: 10 })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
   })
 })
 
@@ -42,14 +54,19 @@ describe('bookingApi.updateSlot', () => {
     actAs('admin')
     const before = getDb().slots.find((s) => s.id === TEN_LEFT)!
     const booked = before.totalCapacity - before.remainingTickets
-    const updated = await bookingApi.updateSlot({ slotId: TEN_LEFT, totalCapacity: before.totalCapacity + 20 })
+    const updated = await bookingApi.updateSlot({
+      slotId: TEN_LEFT,
+      totalCapacity: before.totalCapacity + 20,
+    })
     expect(updated.remainingTickets).toBe(30)
     expect(updated.totalCapacity - updated.remainingTickets).toBe(booked)
   })
 
   it("won't set capacity below the tickets already booked", async () => {
     actAs('admin')
-    await expect(bookingApi.updateSlot({ slotId: TEN_LEFT, totalCapacity: 5 })).rejects.toMatchObject({
+    await expect(
+      bookingApi.updateSlot({ slotId: TEN_LEFT, totalCapacity: 5 }),
+    ).rejects.toMatchObject({
       code: 'CONFLICT',
     })
   })
@@ -59,13 +76,21 @@ describe('bookingApi.updateSlot', () => {
     await bookingApi.updateSlot({ slotId: TEN_LEFT, isBlocked: true })
     actAs('devotee')
     await expect(
-      bookingApi.createBooking({ slotId: TEN_LEFT, devoteeName: 'Anil', phone: '9847012345', ticketCount: 1, idempotencyKey: 'k' }),
+      bookingApi.createBooking({
+        slotId: TEN_LEFT,
+        devoteeName: 'Anil',
+        phone: '9847012345',
+        ticketCount: 1,
+        idempotencyKey: 'k',
+      }),
     ).rejects.toMatchObject({ code: 'CONFLICT' })
   })
 
   it('is admin only', async () => {
     actAs('staff')
-    await expect(bookingApi.updateSlot({ slotId: TEN_LEFT, isBlocked: true })).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(
+      bookingApi.updateSlot({ slotId: TEN_LEFT, isBlocked: true }),
+    ).rejects.toMatchObject({ code: 'FORBIDDEN' })
   })
 })
 
@@ -81,14 +106,20 @@ describe('templeApi.updateOffering', () => {
 
   it('rejects a non-whole or zero price, and staff edits', async () => {
     actAs('admin')
-    await expect(templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 0 })).rejects.toMatchObject({
+    await expect(
+      templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 0 }),
+    ).rejects.toMatchObject({
       code: 'VALIDATION',
     })
-    await expect(templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 12.5 })).rejects.toMatchObject({
+    await expect(
+      templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 12.5 }),
+    ).rejects.toMatchObject({
       code: 'VALIDATION',
     })
     actAs('staff')
-    await expect(templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 35 })).rejects.toMatchObject({
+    await expect(
+      templeApi.updateOffering({ offeringId: 'tm-krishna--pushpanjali', price: 35 }),
+    ).rejects.toMatchObject({
       code: 'FORBIDDEN',
     })
   })
@@ -114,22 +145,32 @@ describe('noticeApi create and delete', () => {
 
   it('keeps staff to their own temple; admins can post for all temples', async () => {
     actAs('staff')
-    await expect(noticeApi.createNotice({ ...input, templeId: 'tm-sastha' })).rejects.toMatchObject({ code: 'FORBIDDEN' })
-    await expect(noticeApi.createNotice({ ...input, templeId: null })).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(noticeApi.createNotice({ ...input, templeId: 'tm-sastha' })).rejects.toMatchObject(
+      { code: 'FORBIDDEN' },
+    )
+    await expect(noticeApi.createNotice({ ...input, templeId: null })).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
     actAs('admin')
-    await expect(noticeApi.createNotice({ ...input, templeId: null })).resolves.toMatchObject({ templeId: null })
+    await expect(noticeApi.createNotice({ ...input, templeId: null })).resolves.toMatchObject({
+      templeId: null,
+    })
   })
 
   it('needs both languages', async () => {
     actAs('admin')
-    await expect(noticeApi.createNotice({ ...input, title: { en: 'Only English', ml: ' ' } })).rejects.toMatchObject({
+    await expect(
+      noticeApi.createNotice({ ...input, title: { en: 'Only English', ml: ' ' } }),
+    ).rejects.toMatchObject({
       code: 'VALIDATION',
     })
   })
 
   it("deletes a notice; staff can't delete another temple's notice", async () => {
     actAs('staff')
-    await expect(noticeApi.deleteNotice('nt-shivaratri')).rejects.toMatchObject({ code: 'FORBIDDEN' })
+    await expect(noticeApi.deleteNotice('nt-shivaratri')).rejects.toMatchObject({
+      code: 'FORBIDDEN',
+    })
     await noticeApi.deleteNotice('nt-ekadasi')
     await expect(noticeApi.getNotice('nt-ekadasi')).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })

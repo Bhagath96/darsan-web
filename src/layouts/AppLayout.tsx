@@ -46,7 +46,11 @@ export function AppLayout() {
     <div className="flex min-h-dvh flex-col">
       <SkipLink />
       <Header />
-      <main id={MAIN_CONTENT_ID} tabIndex={-1} className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 outline-none">
+      <main
+        id={MAIN_CONTENT_ID}
+        tabIndex={-1}
+        className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 outline-none"
+      >
         <Outlet />
       </main>
       <Footer />

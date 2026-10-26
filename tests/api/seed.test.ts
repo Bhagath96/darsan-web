@@ -28,7 +28,9 @@ const templeSchema = z.strictObject({
   about: localized,
   address: localized,
   contactPhone: z.string().regex(/^0\d{10}$/),
-  schedule: z.array(z.strictObject({ time: z.string().regex(/^\d{2}:\d{2}$/), name: localized })).min(1),
+  schedule: z
+    .array(z.strictObject({ time: z.string().regex(/^\d{2}:\d{2}$/), name: localized }))
+    .min(1),
 })
 
 const noticeSchema = z.strictObject({
@@ -114,7 +116,9 @@ describe('generated seed data', () => {
       expect(o.totalAmount).toBe(o.items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0))
       expect(NAKSHATRA_IDS).toContain(o.star)
     }
-    expect(new Set(orders.map((o) => o.status))).toEqual(new Set(['CONFIRMED', 'CANCELLED', 'COMPLETED']))
+    expect(new Set(orders.map((o) => o.status))).toEqual(
+      new Set(['CONFIRMED', 'CANCELLED', 'COMPLETED']),
+    )
   })
 
   it('has about 20 bookings, including the demo devotee’s', () => {

@@ -15,7 +15,11 @@ function createDb(now: Date) {
     sessions: new Map<string, string>(),
     /** idempotency key → first result */
     idempotency: new Map<string, unknown>(),
-    counters: { order: 10_000 + seed.orders.length, booking: 1000 + seed.bookings.length, notice: 0 },
+    counters: {
+      order: 10_000 + seed.orders.length,
+      booking: 1000 + seed.bookings.length,
+      notice: 0,
+    },
   }
 }
 

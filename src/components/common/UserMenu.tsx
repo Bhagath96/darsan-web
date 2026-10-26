@@ -18,7 +18,9 @@ import type { AuthUser } from '@/types'
 export function RoleBadge({ user }: { user: AuthUser }) {
   const { t } = useT()
   return (
-    <Badge variant={user.role === 'DEVOTEE' ? 'secondary' : 'default'}>{t(`role.${user.role}`)}</Badge>
+    <Badge variant={user.role === 'DEVOTEE' ? 'secondary' : 'default'}>
+      {t(`role.${user.role}`)}
+    </Badge>
   )
 }
 
@@ -29,7 +31,11 @@ export function UserMenu({ user }: { user: AuthUser }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="h-11 max-w-48 gap-2 px-3" aria-label={t('user.menu', { name: user.name })}>
+        <Button
+          variant="outline"
+          className="h-11 max-w-48 gap-2 px-3"
+          aria-label={t('user.menu', { name: user.name })}
+        >
           <UserRound aria-hidden="true" />
           <span className="truncate">{user.name}</span>
         </Button>

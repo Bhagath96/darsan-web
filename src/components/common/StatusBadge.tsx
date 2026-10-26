@@ -6,10 +6,16 @@ import type { BookingStatus, OrderStatus } from '@/types'
 type Status = { kind: 'order'; status: OrderStatus } | { kind: 'booking'; status: BookingStatus }
 
 const LOOK: Record<string, { icon: LucideIcon; className: string }> = {
-  CONFIRMED: { icon: Clock3, className: 'border-primary/30 bg-secondary text-secondary-foreground' },
+  CONFIRMED: {
+    icon: Clock3,
+    className: 'border-primary/30 bg-secondary text-secondary-foreground',
+  },
   BOOKED: { icon: CheckCircle2, className: 'border-success/30 bg-success/10 text-success' },
   COMPLETED: { icon: CheckCircle2, className: 'border-success/30 bg-success/10 text-success' },
-  CANCELLED: { icon: CircleSlash, className: 'border-destructive/30 bg-destructive/10 text-destructive' },
+  CANCELLED: {
+    icon: CircleSlash,
+    className: 'border-destructive/30 bg-destructive/10 text-destructive',
+  },
 }
 
 /** Status with an icon and a word, so it never relies on colour alone. */

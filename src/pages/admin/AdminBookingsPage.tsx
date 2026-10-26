@@ -137,7 +137,11 @@ export function AdminBookingsPage() {
         </FormField>
         <FormField id="bookings-status" label={t('common.status')}>
           {(control) => (
-            <NativeSelect {...control} value={status} onChange={(e) => update({ status: e.target.value }, { resetPage: true })}>
+            <NativeSelect
+              {...control}
+              value={status}
+              onChange={(e) => update({ status: e.target.value }, { resetPage: true })}
+            >
               <option value="">{t('common.anyStatus')}</option>
               {STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -164,7 +168,13 @@ export function AdminBookingsPage() {
           title={t('adminBookings.empty')}
           action={
             hasFilters && (
-              <Button variant="outline" className="h-11" onClick={() => update({ phone: null, date: null, status: null, temple: null, page: null })}>
+              <Button
+                variant="outline"
+                className="h-11"
+                onClick={() =>
+                  update({ phone: null, date: null, status: null, temple: null, page: null })
+                }
+              >
                 {t('common.clearFilters')}
               </Button>
             )
@@ -205,7 +215,9 @@ export function AdminBookingsPage() {
                         <span className="block">
                           {date(b.date)}, {time(b.startsAt)}
                         </span>
-                        {temple && <span className="block text-muted-foreground">{pick(temple.name)}</span>}
+                        {temple && (
+                          <span className="block text-muted-foreground">{pick(temple.name)}</span>
+                        )}
                       </span>
                     </RCell>
                     <RCell label={t('adminBookings.tickets')} className="tabular-nums">

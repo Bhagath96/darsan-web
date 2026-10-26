@@ -8,10 +8,9 @@ describe('Home page', () => {
   it('shows the temples and the latest notices', async () => {
     renderApp()
     const temples = await screen.findByRole('region', { name: 'Our temples' })
-    expect(await within(temples).findByRole('link', { name: 'Sree Krishna Temple' })).toHaveAttribute(
-      'href',
-      '/temples/tm-krishna',
-    )
+    expect(
+      await within(temples).findByRole('link', { name: 'Sree Krishna Temple' }),
+    ).toHaveAttribute('href', '/temples/tm-krishna')
     expect(within(temples).getAllByRole('listitem')).toHaveLength(3)
 
     const notices = screen.getByRole('region', { name: 'Latest notices' })
@@ -23,23 +22,32 @@ describe('Home page', () => {
     const { user } = renderApp()
     const temples = await screen.findByRole('region', { name: 'Our temples' })
     await user.click(await within(temples).findByRole('button', { name: 'Try again' }))
-    expect(await within(temples).findByRole('link', { name: 'Sree Mahadeva Temple' })).toBeInTheDocument()
+    expect(
+      await within(temples).findByRole('link', { name: 'Sree Mahadeva Temple' }),
+    ).toBeInTheDocument()
   })
 })
 
 describe('Temple details', () => {
   it('shows the temple, its daily schedule, contact and its own notices', async () => {
     renderApp({ url: '/temples/tm-krishna' })
-    expect(await screen.findByRole('heading', { level: 1, name: 'Sree Krishna Temple' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Sree Krishna Temple' }),
+    ).toBeInTheDocument()
 
     const schedule = screen.getByRole('table')
     expect(within(schedule).getByRole('cell', { name: 'Usha Pooja' })).toBeInTheDocument()
     expect(within(schedule).getByRole('cell', { name: '4:30 am' })).toBeInTheDocument()
 
-    expect(screen.getByRole('link', { name: '0487 200 0001' })).toHaveAttribute('href', 'tel:04872000001')
+    expect(screen.getByRole('link', { name: '0487 200 0001' })).toHaveAttribute(
+      'href',
+      'tel:04872000001',
+    )
 
     const notices = screen.getByRole('region', { name: 'Notices for this temple' })
-    expect(await within(notices).findByRole('link', { name: /Ekadasi festival/ })).toBeInTheDocument()
+    expect(
+      await within(notices).findByRole('link', { name: /Ekadasi festival/ }),
+    ).toBeInTheDocument()
     expect(within(notices).queryByRole('link', { name: /Shivaratri/ })).not.toBeInTheDocument()
   })
 
@@ -102,7 +110,10 @@ describe('Notifications page', () => {
     await user.click(await screen.findByRole('link', { name: /Shivaratri/ }))
     expect(await screen.findByRole('heading', { level: 1, name: /Shivaratri/ })).toBeInTheDocument()
     expect(screen.getByText(/stays open through the night/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'All notifications' })).toHaveAttribute('href', '/notifications')
+    expect(screen.getByRole('link', { name: 'All notifications' })).toHaveAttribute(
+      'href',
+      '/notifications',
+    )
   })
 
   it('shows "not found" for a removed notice', async () => {
@@ -118,7 +129,9 @@ describe('Notification bell', () => {
     const bell = await screen.findByRole('link', { name: /^Notifications, \d+ new$/ })
     await user.click(bell)
     await screen.findByRole('heading', { level: 1, name: 'Notifications' })
-    await waitFor(() => expect(screen.queryByRole('link', { name: /new$/ })).not.toBeInTheDocument())
+    await waitFor(() =>
+      expect(screen.queryByRole('link', { name: /new$/ })).not.toBeInTheDocument(),
+    )
     expect(localStorage.getItem(STORAGE_KEYS.noticesSeen)).not.toBeNull()
   })
 })
@@ -129,13 +142,17 @@ describe('Language', () => {
     await screen.findByRole('heading', { level: 1, name: 'Sree Krishna Temple' })
 
     await user.click(screen.getByRole('button', { name: 'Switch to Malayalam' }))
-    expect(await screen.findByRole('heading', { level: 1, name: 'ശ്രീ കൃഷ്ണ ക്ഷേത്രം' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'ശ്രീ കൃഷ്ണ ക്ഷേത്രം' }),
+    ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'ദിവസേനയുള്ള പൂജാക്രമം' })).toBeInTheDocument()
     expect(screen.getByRole('cell', { name: 'ഉഷഃപൂജ' })).toBeInTheDocument()
     expect(document.documentElement.lang).toBe('ml')
     expect(localStorage.getItem(STORAGE_KEYS.language)).toBe('"ml"')
 
     await user.click(screen.getByRole('button', { name: 'Switch to English' }))
-    expect(await screen.findByRole('heading', { level: 1, name: 'Sree Krishna Temple' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Sree Krishna Temple' }),
+    ).toBeInTheDocument()
   })
 })

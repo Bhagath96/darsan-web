@@ -11,10 +11,13 @@ import type { CreateOrderRequest, Order, OrderLine, OrderQuery, Paged } from '@/
 
 function validateOrder(request: CreateOrderRequest): OrderLine[] {
   const db = getDb()
-  if (!db.temples.some((t) => t.id === request.templeId)) throw new ApiError('NOT_FOUND', 'Temple not found.')
+  if (!db.temples.some((t) => t.id === request.templeId))
+    throw new ApiError('NOT_FOUND', 'Temple not found.')
   if (request.items.length === 0) throw new ApiError('VALIDATION', 'Add at least one offering.')
-  if (request.devoteeName.trim().length < 2) throw new ApiError('VALIDATION', 'Please enter the devotee name.')
-  if (!normalizePhone(request.phone)) throw new ApiError('VALIDATION', 'Please enter a valid 10-digit mobile number.')
+  if (request.devoteeName.trim().length < 2)
+    throw new ApiError('VALIDATION', 'Please enter the devotee name.')
+  if (!normalizePhone(request.phone))
+    throw new ApiError('VALIDATION', 'Please enter a valid 10-digit mobile number.')
   if (!(NAKSHATRA_IDS as readonly string[]).includes(request.star)) {
     throw new ApiError('VALIDATION', 'Please choose a birth star.')
   }
@@ -29,10 +32,16 @@ function validateOrder(request: CreateOrderRequest): OrderLine[] {
 
   // Prices come from the server catalogue, never from the client.
   return request.items.map(({ offeringId, quantity }) => {
-    const offering = db.offerings.find((o) => o.id === offeringId && o.templeId === request.templeId)
-    if (!offering?.isActive) throw new ApiError('CONFLICT', 'One of the offerings is no longer available.')
+    const offering = db.offerings.find(
+      (o) => o.id === offeringId && o.templeId === request.templeId,
+    )
+    if (!offering?.isActive)
+      throw new ApiError('CONFLICT', 'One of the offerings is no longer available.')
     if (!Number.isInteger(quantity) || quantity < MIN_QUANTITY || quantity > MAX_QUANTITY) {
-      throw new ApiError('VALIDATION', `Quantity must be between ${MIN_QUANTITY} and ${MAX_QUANTITY}.`)
+      throw new ApiError(
+        'VALIDATION',
+        `Quantity must be between ${MIN_QUANTITY} and ${MAX_QUANTITY}.`,
+      )
     }
     return { offeringId, offeringName: offering.name, quantity, unitPrice: offering.price }
   })
@@ -116,7 +125,8 @@ export function cancelOrder(orderId: string): Promise<Order> {
     const order = visibleOrders(user).find((o) => o.id === orderId)
     if (!order) throw new ApiError('NOT_FOUND', 'Order not found.')
     if (order.status === 'CANCELLED') return order
-    if (order.status !== 'CONFIRMED') throw new ApiError('CONFLICT', 'Only confirmed orders can be cancelled.')
+    if (order.status !== 'CONFIRMED')
+      throw new ApiError('CONFLICT', 'Only confirmed orders can be cancelled.')
     order.status = 'CANCELLED'
     return order
   })

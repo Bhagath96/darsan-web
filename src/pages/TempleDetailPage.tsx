@@ -19,7 +19,10 @@ function formatLandline(phone: string): string {
 function BackLink() {
   const { t } = useT()
   return (
-    <Link to="/temples" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:underline">
+    <Link
+      to="/temples"
+      className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:underline"
+    >
       <ArrowLeft aria-hidden="true" className="size-4" />
       {t('temple.allTemples')}
     </Link>
@@ -49,7 +52,9 @@ function ScheduleTable({ temple }: { temple: Temple }) {
           <tbody>
             {temple.schedule.map((item) => (
               <tr key={item.time} className="border-t">
-                <td className="px-4 py-2.5 whitespace-nowrap tabular-nums">{time(istToInstant(today, item.time))}</td>
+                <td className="px-4 py-2.5 whitespace-nowrap tabular-nums">
+                  {time(istToInstant(today, item.time))}
+                </td>
                 <td className="px-4 py-2.5">{pick(item.name)}</td>
               </tr>
             ))}
@@ -137,10 +142,16 @@ export function TempleDetailPage() {
               {pick(temple.location)}
             </p>
             <div className="flex flex-wrap gap-3 pt-3">
-              <Link to={`/darshan?temple=${temple.id}`} className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}>
+              <Link
+                to={`/darshan?temple=${temple.id}`}
+                className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}
+              >
                 {t('temple.bookDarshan')}
               </Link>
-              <Link to={`/vazhipadu?temple=${temple.id}`} className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}>
+              <Link
+                to={`/vazhipadu?temple=${temple.id}`}
+                className={buttonVariants({ variant: 'secondary', className: 'h-11 px-5' })}
+              >
                 {t('temple.offerVazhipadu')}
               </Link>
             </div>
@@ -159,7 +170,10 @@ export function TempleDetailPage() {
           <ScheduleTable temple={temple} />
         </div>
 
-        <aside aria-labelledby="temple-visit" className="min-w-0 space-y-4 self-start rounded-xl border bg-card p-5 lg:sticky lg:top-24">
+        <aside
+          aria-labelledby="temple-visit"
+          className="min-w-0 space-y-4 self-start rounded-xl border bg-card p-5 lg:sticky lg:top-24"
+        >
           <h2 id="temple-visit" className="text-xl font-semibold text-primary">
             {t('temple.visit')}
           </h2>
@@ -183,7 +197,10 @@ export function TempleDetailPage() {
               <div>
                 <dt className="font-medium">{t('temple.phone')}</dt>
                 <dd>
-                  <a href={`tel:${temple.contactPhone}`} className="inline-flex min-h-11 items-center text-primary underline-offset-4 hover:underline">
+                  <a
+                    href={`tel:${temple.contactPhone}`}
+                    className="inline-flex min-h-11 items-center text-primary underline-offset-4 hover:underline"
+                  >
                     {formatLandline(temple.contactPhone)}
                   </a>
                 </dd>

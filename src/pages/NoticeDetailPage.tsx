@@ -13,7 +13,10 @@ import { noticeRequested, selectNoticeDetail } from '@/store/notices/noticesSlic
 function BackLink() {
   const { t } = useT()
   return (
-    <Link to="/notifications" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:underline">
+    <Link
+      to="/notifications"
+      className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:underline"
+    >
       <ArrowLeft aria-hidden="true" className="size-4" />
       {t('notices.back')}
     </Link>
@@ -44,7 +47,10 @@ export function NoticeDetailPage() {
             <EmptyState title={detail.error.message} />
           </>
         ) : (
-          <ErrorState message={err(detail.error)} onRetry={() => dispatch(noticeRequested(noticeId))} />
+          <ErrorState
+            message={err(detail.error)}
+            onRetry={() => dispatch(noticeRequested(noticeId))}
+          />
         )}
       </div>
     )

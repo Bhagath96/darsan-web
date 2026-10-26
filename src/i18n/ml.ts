@@ -36,7 +36,8 @@ export const ml: Dictionary = {
   'errors.UNKNOWN': 'എന്തോ പിശക് സംഭവിച്ചു. വീണ്ടും ശ്രമിക്കുക.',
 
   'home.heroTitle': 'കേരളത്തിലെ ക്ഷേത്രങ്ങളിൽ ദർശനവും വഴിപാടും ബുക്ക് ചെയ്യൂ',
-  'home.heroText': 'ക്ഷേത്രം തിരഞ്ഞെടുക്കുക, ദർശന സമയമോ വഴിപാടോ തിരഞ്ഞെടുക്കുക, നിമിഷങ്ങൾക്കകം സ്ഥിരീകരണം നേടുക.',
+  'home.heroText':
+    'ക്ഷേത്രം തിരഞ്ഞെടുക്കുക, ദർശന സമയമോ വഴിപാടോ തിരഞ്ഞെടുക്കുക, നിമിഷങ്ങൾക്കകം സ്ഥിരീകരണം നേടുക.',
   'home.ctaTemples': 'ക്ഷേത്രങ്ങൾ കാണുക',
   'home.ctaNotices': 'പുതിയ അറിയിപ്പുകൾ',
   'home.templesTitle': 'ഞങ്ങളുടെ ക്ഷേത്രങ്ങൾ',
@@ -119,7 +120,8 @@ export const ml: Dictionary = {
   'login.switchPortal': 'മറ്റേ ലോഗിനിലേക്ക് പോകുക',
 
   'register.title': 'അക്കൗണ്ട് തുടങ്ങുക',
-  'register.intro': 'ദർശനം ബുക്ക് ചെയ്യാനും വഴിപാട് നടത്താനും ബുക്കിങ്ങുകൾ നോക്കാനും രജിസ്റ്റർ ചെയ്യുക.',
+  'register.intro':
+    'ദർശനം ബുക്ക് ചെയ്യാനും വഴിപാട് നടത്താനും ബുക്കിങ്ങുകൾ നോക്കാനും രജിസ്റ്റർ ചെയ്യുക.',
   'register.name': 'മുഴുവൻ പേര്',
   'register.phone': 'മൊബൈൽ നമ്പർ',
   'register.phoneHint': '10 അക്ക ഇന്ത്യൻ മൊബൈൽ നമ്പർ. ബുക്കിങ്ങുകൾ ഇതുമായി ബന്ധിപ്പിക്കും.',
@@ -163,7 +165,8 @@ export const ml: Dictionary = {
   'account.passwordChanged': 'നിങ്ങളുടെ പാസ്‌വേഡ് മാറ്റി.',
 
   'forbidden.title': 'ഈ പേജ് തുറക്കാൻ അനുമതിയില്ല',
-  'forbidden.text': 'നിങ്ങളുടെ അക്കൗണ്ടിന് ({role}) ഈ പേജ് തുറക്കാനാവില്ല. ഇത് തെറ്റാണെന്ന് തോന്നിയാൽ ക്ഷേത്ര ഓഫീസുമായി ബന്ധപ്പെടുക.',
+  'forbidden.text':
+    'നിങ്ങളുടെ അക്കൗണ്ടിന് ({role}) ഈ പേജ് തുറക്കാനാവില്ല. ഇത് തെറ്റാണെന്ന് തോന്നിയാൽ ക്ഷേത്ര ഓഫീസുമായി ബന്ധപ്പെടുക.',
   'forbidden.home': 'ഹോമിലേക്ക് പോകുക',
 
   'session.expired': 'നിങ്ങളുടെ സെഷൻ അവസാനിച്ചു. വീണ്ടും ലോഗിൻ ചെയ്യുക.',
@@ -239,7 +242,8 @@ export const ml: Dictionary = {
   'dashboard.utilisationValue': '{percent}% ടിക്കറ്റുകൾ ബുക്ക് ചെയ്തു',
   'dashboard.slotsSummary': '{full} സ്ലോട്ടുകൾ നിറഞ്ഞു · {blocked} അടച്ചു',
   'dashboard.byTemple': 'ക്ഷേത്രം തിരിച്ചുള്ള വരുമാനം',
-  'dashboard.byTempleCaption': 'ഓരോ ക്ഷേത്രത്തിലെയും വഴിപാട് വരുമാനം, ഓർഡറുകൾ, സജീവ ദർശന ബുക്കിങ്ങുകൾ',
+  'dashboard.byTempleCaption':
+    'ഓരോ ക്ഷേത്രത്തിലെയും വഴിപാട് വരുമാനം, ഓർഡറുകൾ, സജീവ ദർശന ബുക്കിങ്ങുകൾ',
   'dashboard.orders': 'ഓർഡറുകൾ',
   'dashboard.bookings': 'സജീവ ബുക്കിങ്ങുകൾ',
   'dashboard.showTable': 'പട്ടികയായി കാണിക്കുക',
@@ -247,7 +251,8 @@ export const ml: Dictionary = {
   'dashboard.barTooltip': '{orders} ഓർഡറുകളിൽ നിന്ന് {revenue}',
 
   'adminBookings.title': 'ദർശന ബുക്കിങ്ങുകൾ',
-  'adminBookings.intro': 'മൊബൈൽ നമ്പർ, തീയതി, നില എന്നിവ വഴി ബുക്കിങ്ങുകൾ കണ്ടെത്തി ഭക്തർക്കുവേണ്ടി റദ്ദാക്കാം.',
+  'adminBookings.intro':
+    'മൊബൈൽ നമ്പർ, തീയതി, നില എന്നിവ വഴി ബുക്കിങ്ങുകൾ കണ്ടെത്തി ഭക്തർക്കുവേണ്ടി റദ്ദാക്കാം.',
   'adminBookings.ref': 'ബുക്കിങ്',
   'adminBookings.devotee': 'ഭക്തൻ',
   'adminBookings.darshan': 'ദർശനം',
@@ -256,7 +261,8 @@ export const ml: Dictionary = {
   'adminBookings.cancel': 'റദ്ദാക്കുക',
   'adminBookings.cancelOf': 'ബുക്കിങ് {ref} റദ്ദാക്കുക',
   'adminBookings.confirmTitle': 'ബുക്കിങ് {ref} റദ്ദാക്കണോ?',
-  'adminBookings.confirmText': '{date} {time}-ന് {name}-ന്റെ {tickets} ടിക്കറ്റുകൾ മറ്റുള്ളവർക്ക് ബുക്ക് ചെയ്യാനായി ഒഴിവാകും.',
+  'adminBookings.confirmText':
+    '{date} {time}-ന് {name}-ന്റെ {tickets} ടിക്കറ്റുകൾ മറ്റുള്ളവർക്ക് ബുക്ക് ചെയ്യാനായി ഒഴിവാകും.',
   'adminBookings.confirm': 'അതെ, റദ്ദാക്കുക',
   'adminBookings.keep': 'ബുക്കിങ് നിലനിർത്തുക',
   'adminBookings.started': 'ദർശനം ആരംഭിച്ചതിനാൽ ഇനി റദ്ദാക്കാനാവില്ല.',
@@ -307,7 +313,8 @@ export const ml: Dictionary = {
   'adminSlots.capacityInvalid': '{min} മുതൽ {max} വരെയുള്ള ഒരു പൂർണ്ണസംഖ്യ നൽകുക.',
 
   'adminRates.title': 'വഴിപാട് നിരക്കുകൾ',
-  'adminRates.intro': 'നിരക്കുകൾ നിശ്ചയിക്കുക, ഭക്തർക്ക് ബുക്ക് ചെയ്യാവുന്ന വഴിപാടുകൾ തിരഞ്ഞെടുക്കുക. നടത്തിയ ഓർഡറുകളുടെ നിരക്ക് മാറില്ല.',
+  'adminRates.intro':
+    'നിരക്കുകൾ നിശ്ചയിക്കുക, ഭക്തർക്ക് ബുക്ക് ചെയ്യാവുന്ന വഴിപാടുകൾ തിരഞ്ഞെടുക്കുക. നടത്തിയ ഓർഡറുകളുടെ നിരക്ക് മാറില്ല.',
   'adminRates.offering': 'വഴിപാട്',
   'adminRates.category': 'വിഭാഗം',
   'adminRates.price': 'നിരക്ക് (₹)',
@@ -321,7 +328,8 @@ export const ml: Dictionary = {
   'adminRates.empty': 'ഈ ക്ഷേത്രത്തിൽ വഴിപാടുകളൊന്നുമില്ല.',
 
   'adminNotices.title': 'അറിയിപ്പുകൾ',
-  'adminNotices.intro': 'ഉത്സവ തീയതികൾ, സമയമാറ്റങ്ങൾ, നട അടയ്ക്കൽ എന്നിവ വെബ്സൈറ്റിൽ പ്രസിദ്ധീകരിക്കുക.',
+  'adminNotices.intro':
+    'ഉത്സവ തീയതികൾ, സമയമാറ്റങ്ങൾ, നട അടയ്ക്കൽ എന്നിവ വെബ്സൈറ്റിൽ പ്രസിദ്ധീകരിക്കുക.',
   'adminNotices.new': 'പുതിയ അറിയിപ്പ്',
   'adminNotices.temple': 'ക്ഷേത്രം',
   'adminNotices.allTemples': 'എല്ലാ ക്ഷേത്രങ്ങളും',
@@ -358,21 +366,25 @@ export const ml: Dictionary = {
 
   'home.servicesTitle': 'സേവനങ്ങൾ',
   'home.darshanTitle': 'ദർശനം ബുക്ക് ചെയ്യുക',
-  'home.darshanText': 'ക്ഷേത്രം, ദിവസം, സമയം എന്നിവ തിരഞ്ഞെടുക്കുക. ഒരു ബുക്കിങ്ങിൽ 10 ടിക്കറ്റ് വരെ.',
+  'home.darshanText':
+    'ക്ഷേത്രം, ദിവസം, സമയം എന്നിവ തിരഞ്ഞെടുക്കുക. ഒരു ബുക്കിങ്ങിൽ 10 ടിക്കറ്റ് വരെ.',
   'home.vazhipaduTitle': 'വഴിപാട് നടത്തുക',
-  'home.vazhipaduText': 'പുഷ്പാഞ്ജലി, അർച്ചന, പായസം തുടങ്ങിയവ നിങ്ങളുടെ കുടുംബാംഗങ്ങളുടെ പേരിലും നാളിലും.',
+  'home.vazhipaduText':
+    'പുഷ്പാഞ്ജലി, അർച്ചന, പായസം തുടങ്ങിയവ നിങ്ങളുടെ കുടുംബാംഗങ്ങളുടെ പേരിലും നാളിലും.',
   'temple.bookDarshan': 'ദർശനം ബുക്ക് ചെയ്യുക',
   'temple.offerVazhipadu': 'വഴിപാട് നടത്തുക',
 
   'darshan.title': 'ദർശനം ബുക്ക് ചെയ്യുക',
-  'darshan.intro': 'ക്ഷേത്രവും ദിവസവും തിരഞ്ഞെടുത്ത് സമയം തിരഞ്ഞെടുക്കുക. എല്ലാ സമയവും ഇന്ത്യൻ സമയം (IST).',
+  'darshan.intro':
+    'ക്ഷേത്രവും ദിവസവും തിരഞ്ഞെടുത്ത് സമയം തിരഞ്ഞെടുക്കുക. എല്ലാ സമയവും ഇന്ത്യൻ സമയം (IST).',
   'darshan.temple': 'ക്ഷേത്രം',
   'darshan.day': 'ദിവസം',
   'darshan.slotsFor': '{date}-ലെ സമയങ്ങൾ',
   'darshan.copyLink': 'ലിങ്ക് പകർത്തുക',
   'darshan.linkCopied': 'ലിങ്ക് പകർത്തി.',
   'darshan.copyFallback': 'പങ്കിടാൻ ഈ ലിങ്ക് പകർത്തുക:',
-  'darshan.badLink': 'ലിങ്കിലെ ക്ഷേത്രമോ ദിവസമോ (അടുത്ത 7 ദിവസത്തിനു പുറത്ത്) ശരിയല്ലാത്തതിനാൽ പുനഃക്രമീകരിച്ചു.',
+  'darshan.badLink':
+    'ലിങ്കിലെ ക്ഷേത്രമോ ദിവസമോ (അടുത്ത 7 ദിവസത്തിനു പുറത്ത്) ശരിയല്ലാത്തതിനാൽ പുനഃക്രമീകരിച്ചു.',
   'darshan.empty': 'ഈ ദിവസം ദർശന സമയങ്ങളൊന്നുമില്ല.',
   'darshan.ticketsLeft': '{capacity}-ൽ {remaining} ടിക്കറ്റുകൾ ബാക്കി',
   'darshan.full': 'നിറഞ്ഞു',
@@ -422,7 +434,8 @@ export const ml: Dictionary = {
   'myBookings.started': 'ദർശനം ആരംഭിച്ചു — ഇനി റദ്ദാക്കാനാവില്ല.',
 
   'vazhipadu.title': 'വഴിപാട്',
-  'vazhipadu.intro': 'ഒരു ക്ഷേത്രത്തിലെ വഴിപാടുകൾ തിരഞ്ഞെടുത്ത് ഭക്തന്റെ പേര്, നാള്, വഴിപാട് തീയതി എന്നിവ നൽകുക.',
+  'vazhipadu.intro':
+    'ഒരു ക്ഷേത്രത്തിലെ വഴിപാടുകൾ തിരഞ്ഞെടുത്ത് ഭക്തന്റെ പേര്, നാള്, വഴിപാട് തീയതി എന്നിവ നൽകുക.',
   'vazhipadu.temple': 'ക്ഷേത്രം',
   'vazhipadu.search': 'വഴിപാടുകൾ തിരയുക',
   'vazhipadu.categories': 'വഴിപാട് വിഭാഗങ്ങൾ',
@@ -437,7 +450,8 @@ export const ml: Dictionary = {
   'vazhipadu.inCart': 'കാർട്ടിൽ {count}',
   'vazhipadu.added': '{name} കാർട്ടിൽ ചേർത്തു.',
   'vazhipadu.replaceTitle': 'പുതിയ കാർട്ട് തുടങ്ങണോ?',
-  'vazhipadu.replaceText': 'നിങ്ങളുടെ കാർട്ടിൽ {temple}-ലെ വഴിപാടുകളുണ്ട്. ഒരു ഓർഡർ ഒരു ക്ഷേത്രത്തിനു മാത്രം. കാർട്ട് ഒഴിവാക്കി {name} ചേർക്കണോ?',
+  'vazhipadu.replaceText':
+    'നിങ്ങളുടെ കാർട്ടിൽ {temple}-ലെ വഴിപാടുകളുണ്ട്. ഒരു ഓർഡർ ഒരു ക്ഷേത്രത്തിനു മാത്രം. കാർട്ട് ഒഴിവാക്കി {name} ചേർക്കണോ?',
   'vazhipadu.replaceConfirm': 'കാർട്ട് ഒഴിവാക്കി ചേർക്കുക',
   'vazhipadu.replaceKeep': 'എന്റെ കാർട്ട് നിലനിർത്തുക',
   'vazhipadu.badLink': 'ലിങ്കിലെ ക്ഷേത്രമോ വിഭാഗമോ തിരിച്ചറിയാനായില്ല, അതിനാൽ പുനഃക്രമീകരിച്ചു.',
@@ -459,7 +473,8 @@ export const ml: Dictionary = {
   'cart.removed': '{name} കാർട്ടിൽ നിന്ന് നീക്കി.',
 
   'checkout.title': 'വഴിപാട് വിവരങ്ങൾ',
-  'checkout.intro': 'ആരുടെ പേരിലാണ് വഴിപാട്, ഏതു ദിവസം? ഓർഡർ ചെയ്യുന്നതിനു മുമ്പ് വിവരങ്ങൾ പരിശോധിക്കുക.',
+  'checkout.intro':
+    'ആരുടെ പേരിലാണ് വഴിപാട്, ഏതു ദിവസം? ഓർഡർ ചെയ്യുന്നതിനു മുമ്പ് വിവരങ്ങൾ പരിശോധിക്കുക.',
   'checkout.summary': 'നിങ്ങളുടെ വഴിപാടുകൾ',
   'checkout.details': 'ഭക്തന്റെ വിവരങ്ങൾ',
   'checkout.devoteeName': 'ഭക്തന്റെ പേര്',
@@ -517,6 +532,7 @@ export const ml: Dictionary = {
   'notFound.home': 'ഹോമിലേക്ക് പോകുക',
 
   'crash.title': 'ഈ പേജ് കാണിക്കാനായില്ല',
-  'crash.text': 'അപ്രതീക്ഷിതമായ ഒരു പിശക് സംഭവിച്ചു. പേജ് റീലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ഹോമിലേക്ക് മടങ്ങുക.',
+  'crash.text':
+    'അപ്രതീക്ഷിതമായ ഒരു പിശക് സംഭവിച്ചു. പേജ് റീലോഡ് ചെയ്യുക, അല്ലെങ്കിൽ ഹോമിലേക്ക് മടങ്ങുക.',
   'crash.reload': 'പേജ് റീലോഡ് ചെയ്യുക',
 }
