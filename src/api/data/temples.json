@@ -1,0 +1,26 @@
+[
+  {
+    "id": "tm-krishna",
+    "name": { "en": "Sree Krishna Temple", "ml": "ശ്രീ കൃഷ്ണ ക്ഷേത്രം" },
+    "location": { "en": "Thrissur", "ml": "തൃശ്ശൂർ" },
+    "deity": { "en": "Lord Krishna", "ml": "ശ്രീകൃഷ്ണൻ" },
+    "image": "temple-krishna",
+    "timings": "3:00 am – 1:30 pm · 4:30 pm – 9:15 pm"
+  },
+  {
+    "id": "tm-mahadeva",
+    "name": { "en": "Sree Mahadeva Temple", "ml": "ശ്രീ മഹാദേവ ക്ഷേത്രം" },
+    "location": { "en": "Kozhikode", "ml": "കോഴിക്കോട്" },
+    "deity": { "en": "Lord Shiva", "ml": "ശിവൻ" },
+    "image": "temple-mahadeva",
+    "timings": "4:00 am – 12:00 pm · 5:00 pm – 8:30 pm"
+  },
+  {
+    "id": "tm-sastha",
+    "name": { "en": "Sree Dharma Sastha Temple", "ml": "ശ്രീ ധർമ്മശാസ്താ ക്ഷേത്രം" },
+    "location": { "en": "Pathanamthitta", "ml": "പത്തനംതിട്ട" },
+    "deity": { "en": "Lord Ayyappa", "ml": "അയ്യപ്പൻ" },
+    "image": "temple-sastha",
+    "timings": "4:00 am – 1:00 pm · 3:00 pm – 11:00 pm"
+  }
+]
