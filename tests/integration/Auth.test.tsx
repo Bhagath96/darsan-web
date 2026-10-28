@@ -21,7 +21,7 @@ describe('Two login portals', () => {
     await fillLogin(user, 'staff', 'staff123')
     await waitFor(() => expect(currentUrl(router)).toBe('/admin'))
     expect(await screen.findByRole('heading', { name: 'Welcome, Ravi Menon' })).toBeInTheDocument()
-    expect(screen.getByText('You can manage Sree Krishna Temple.')).toBeInTheDocument()
+    expect(await screen.findByText('You can manage Sree Krishna Temple.')).toBeInTheDocument()
   })
 
   it('refuses a staff account on the devotee login, with a link to the right page', async () => {

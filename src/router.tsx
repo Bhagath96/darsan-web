@@ -1,31 +1,34 @@
 import type { RouteObject } from 'react-router'
-import { AdminLayout } from '@/layouts/AdminLayout'
 import { AppLayout } from '@/layouts/AppLayout'
 import { RequireAuth, RequirePermission, RequireRole } from '@/layouts/guards'
-import { AccountPage } from '@/pages/AccountPage'
-import { AdminBookingsPage } from '@/pages/admin/AdminBookingsPage'
-import { AdminDashboardPage } from '@/pages/admin/AdminDashboardPage'
-import { AdminHomePage } from '@/pages/admin/AdminHomePage'
-import { AdminNoticesPage } from '@/pages/admin/AdminNoticesPage'
-import { AdminOrdersPage } from '@/pages/admin/AdminOrdersPage'
-import { AdminRatesPage } from '@/pages/admin/AdminRatesPage'
-import { AdminSlotsPage } from '@/pages/admin/AdminSlotsPage'
 import { ForbiddenPage } from '@/pages/ForbiddenPage'
-import { DarshanPage } from '@/pages/darshan/DarshanPage'
-import { MyBookingsPage } from '@/pages/darshan/MyBookingsPage'
 import { HomePage } from '@/pages/HomePage'
-import { LoginPage, StaffLoginPage } from '@/pages/LoginPage'
 import { NoticeDetailPage } from '@/pages/NoticeDetailPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { NotificationsPage } from '@/pages/NotificationsPage'
-import { RegisterPage } from '@/pages/RegisterPage'
 import { RouteErrorPage } from '@/pages/RouteErrorPage'
 import { TempleDetailPage } from '@/pages/TempleDetailPage'
+import {
+  AccountPage,
+  AdminBookingsPage,
+  AdminDashboardPage,
+  AdminHomePage,
+  AdminLayout,
+  AdminNoticesPage,
+  AdminOrdersPage,
+  AdminRatesPage,
+  AdminSlotsPage,
+  CheckoutPage,
+  LoginPage,
+  DarshanPage,
+  MyBookingsPage,
+  MyOrdersPage,
+  ReceiptPage,
+  RegisterPage,
+  StaffLoginPage,
+  VazhipaduPage,
+} from '@/pages/lazyPages'
 import { TemplesPage } from '@/pages/TemplesPage'
-import { CheckoutPage } from '@/pages/vazhipadu/CheckoutPage'
-import { MyOrdersPage } from '@/pages/vazhipadu/MyOrdersPage'
-import { ReceiptPage } from '@/pages/vazhipadu/ReceiptPage'
-import { VazhipaduPage } from '@/pages/vazhipadu/VazhipaduPage'
 
 /** Route table. Exported as plain objects so tests can mount it in a memory router. */
 export const routes: RouteObject[] = [

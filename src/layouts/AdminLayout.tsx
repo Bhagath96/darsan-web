@@ -1,6 +1,8 @@
+import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { ADMIN_NAV_ITEMS } from '@/components/admin/adminNav'
 import { visibleNavItems } from '@/components/common/navItems'
+import { LoadingState } from '@/components/common/states'
 import { useT } from '@/i18n'
 import { cn } from '@/lib/utils'
 import { selectCurrentUser } from '@/store/auth/authSlice'
@@ -41,7 +43,9 @@ export function AdminLayout() {
         </ul>
       </nav>
       <div className="min-w-0">
-        <Outlet />
+        <Suspense fallback={<LoadingState rows={4} />}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   )

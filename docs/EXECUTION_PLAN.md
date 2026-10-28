@@ -1,357 +1,304 @@
-# Darsan Web — Complete Execution Plan
+# Darsan Web — Execution Plan and Status
 
-This is the step-by-step plan for building **darsan-web**. The design reference (architecture, data models, mock API rules, UI palette, decisions) is [PLAN.md](./PLAN.md). This file says **what gets done, in what order, and when work stops for your review**.
+**Last updated:** 26 Oct 2026
+**Status:** 4 of 5 modules finished and merged into `main`. Module 5 (deployment readiness) is mostly done but **not committed**; it was stopped on request.
 
-**Rule for every phase:** work stops at each ⛔ checkpoint and waits for your "go". Nothing is pushed to GitHub, and no next phase starts, without your approval.
+The design reference (architecture, data model, mock API rules, colours) is [PLAN.md](./PLAN.md). This file records **what was built, in what order, what is still missing, and how to continue**.
 
 ---
 
-## 1. Project facts
+## 1. Status at a glance
 
-| Item                | Value                                                                                                                                                                                    |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Project / repo name | `darsan-web` (public GitHub repo, your account)                                                                                                                                          |
-| Local folder        | `C:\Users\hh\darsan-web`                                                                                                                                                                 |
-| Old folder          | `C:\Users\hh\customer-app`: outdated copy. Couldn't be renamed while VS Code had it open. Delete it once you've switched folders.                                                        |
-| Stack               | React 19 · TypeScript 6 (strict) · Vite 8 · Tailwind CSS v4 · shadcn/ui (Radix) · Redux Toolkit + redux-saga · React Router 8 · react-hook-form + zod 4 · Vitest + React Testing Library |
-| Modules             | **Darshan** (slot tickets) first, then **Vazhipadu** (offerings), then admin tools                                                                                                       |
-| Roles               | Guest (not logged in), DEVOTEE, STAFF (tied to one temple), ADMIN                                                                                                                        |
-| Login               | Mock login; users stored in `src/api/data/users.json`                                                                                                                                    |
-| Data                | Mock API in `src/api/`, in memory, random 200–1500 ms delay, configurable failure rate                                                                                                   |
-| Languages           | English and Malayalam                                                                                                                                                                    |
+| #   | Module                                       | Status                           | Where                       |
+| --- | -------------------------------------------- | -------------------------------- | --------------------------- |
+| 0   | Base project (scaffold, mock API, tests)     | ✅ Done                          | `main` · `a4ebe13`          |
+| 1   | Website: temples, notifications, login page  | ✅ Done                          | `main` · `d8afe2f`          |
+| 2   | Login for devotees and admins, roles, guards | ✅ Done                          | `main` · `84a9e69`          |
+| 3   | Admin portal                                 | ✅ Done                          | `main` · `2cfa095`          |
+| 4   | Customer: darshan and vazhipadu              | ✅ Done                          | `main` · `b84aee5`          |
+| 5   | Deployment readiness                         | 🟡 Stopped part-way, uncommitted | branch `chore/deploy-ready` |
 
-### Demo users (`src/api/data/users.json`)
+| Check (last full run)                               | Result                                                                     |
+| --------------------------------------------------- | -------------------------------------------------------------------------- |
+| Tests                                               | **217 passed**, 0 failed (18 test files)                                   |
+| Coverage                                            | 91.8% statements · 83.1% branches · 92.3% functions · 93.7% lines          |
+| Type check (`tsc -b`, strict)                       | Passes                                                                     |
+| Lint (oxlint)                                       | Passes, 0 warnings                                                         |
+| Prettier                                            | 1 file left to format: `tests/lib/mockSettings.test.ts`                    |
+| Production build                                    | Passes; first visit ≈ 212 kB JS gzipped (was 271 kB before code splitting) |
+| CSP check (headless Chrome on the production build) | No violations, no console errors                                           |
+| Layout at 360 px                                    | No sideways scroll on any page (checked with screenshots)                  |
 
-| Username  | Password     | Role    | Notes                                       |
-| --------- | ------------ | ------- | ------------------------------------------- |
-| `devotee` | `devotee123` | DEVOTEE | Anil Kumar, 9847012345; has seeded bookings |
-| `lakshmi` | `lakshmi123` | DEVOTEE | Lakshmi Nair, 9995012345                    |
-| `staff`   | `staff123`   | STAFF   | Ravi Menon, Sree Krishna Temple only        |
-| `admin`   | `admin123`   | ADMIN   | All temples                                 |
+---
+
+## 2. Project facts
+
+| Item      | Value                                                                                                                                                                                                          |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Project   | `darsan-web`: temple darshan and vazhipadu booking portal                                                                                                                                                      |
+| Folder    | `C:\Bhagath\darsan-web`                                                                                                                                                                                        |
+| Git       | Local repo: `main` + branch `chore/deploy-ready`. **Not on GitHub yet** (GitHub CLI `gh` is not installed). Commits are authored as `bhagathrudolf <bhagathrudolf@gmail.com>` (repo-local git config).         |
+| Stack     | React 19 · TypeScript 6 (strict) · Vite 8 · Tailwind CSS v4 · shadcn/ui (Radix) · Redux Toolkit + redux-saga · React Router 8 · react-hook-form + zod 4 · Vitest 5 + React Testing Library · oxlint · Prettier |
+| Node      | 24 locally and in CI (`.nvmrc`); `>=22.12` supported                                                                                                                                                           |
+| Languages | English and Malayalam (typed dictionaries: a missing Malayalam key fails the type check)                                                                                                                       |
+| Data      | In-browser mock API (`src/api/`): random 200–1500 ms delay, configurable failure rate, "saved but response lost" failures, idempotency keys, token and role checks                                             |
+| Run       | `npm ci`, then `npm run dev` → http://localhost:5173                                                                                                                                                           |
+
+### Demo users
+
+| Login page     | Username  | Password     | Role    | Notes                                       |
+| -------------- | --------- | ------------ | ------- | ------------------------------------------- |
+| `/login`       | `devotee` | `devotee123` | DEVOTEE | Anil Kumar, 9847012345, has seeded bookings |
+| `/login`       | `lakshmi` | `lakshmi123` | DEVOTEE | Lakshmi Nair, 9995012345                    |
+| `/admin/login` | `staff`   | `staff123`   | STAFF   | Ravi Menon, Sree Krishna Temple only        |
+| `/admin/login` | `admin`   | `admin123`   | ADMIN   | All temples                                 |
+
+New devotee accounts can be created at `/register`.
 
 ### What each role can do
 
-| Action                                 |  Guest  | Devotee  |        Staff         | Admin  |
-| -------------------------------------- | :-----: | :------: | :------------------: | :----: |
-| View temples, slots, offerings         |   ✅    |    ✅    |          ✅          |   ✅   |
-| Book darshan / place vazhipadu order   | → login |    ✅    | ✅ (counter booking) |   ✅   |
-| See own bookings / orders              |    —    |    ✅    |          ✅          |   ✅   |
-| Search any devotee's bookings / orders |    —    |    —     |    ✅ own temple     | ✅ all |
-| Cancel any booking / order             |    —    | own only |    ✅ own temple     | ✅ all |
-| Dashboard, slot and rate management    |    —    |    —     |          —           |   ✅   |
+| Action                                    |  Guest  | Devotee |   Staff    | Admin |
+| ----------------------------------------- | :-----: | :-----: | :--------: | :---: |
+| View temples, notices, slots, offerings   |   ✅    |   ✅    |     ✅     |  ✅   |
+| Book darshan / place vazhipadu order      | → login |   ✅    |     ✅     |  ✅   |
+| See and cancel own bookings and orders    |    —    |   ✅    |     ✅     |  ✅   |
+| Search and cancel any booking / order     |    —    |    —    | own temple |  all  |
+| Publish and delete notices                |    —    |    —    | own temple |  all  |
+| Dashboard, slot capacity, offering prices |    —    |    —    |     —      |  ✅   |
+
+### Pages (routes)
+
+| Area                       | Routes                                                                                                                            |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Public website             | `/`, `/temples`, `/temples/:templeId`, `/notifications`, `/notifications/:noticeId`                                               |
+| Accounts                   | `/login`, `/admin/login`, `/register`, `/account` (login needed), `/403`                                                          |
+| Darshan                    | `/darshan?temple=&date=`, `/darshan/my-bookings` (login needed)                                                                   |
+| Vazhipadu                  | `/vazhipadu?temple=&q=&category=`, `/vazhipadu/checkout`, `/vazhipadu/orders/:orderNumber`, `/vazhipadu/my-orders` (login needed) |
+| Admin portal (staff/admin) | `/admin`, `/admin/dashboard`, `/admin/bookings`, `/admin/orders`, `/admin/slots`, `/admin/rates`, `/admin/notices`                |
 
 ---
 
-## 2. Current status (when this plan was written)
+## 3. How the execution order changed
 
-Done in `C:\Users\hh\darsan-web` (nothing committed yet; no git repo yet):
+The original plan built Darshan first (P1–P5), then Vazhipadu (V1–V5), then admin tools, with one GitHub PR per phase.
 
-- [x] Vite React-TS scaffold, strict TypeScript, `@/` path alias, npm scripts
-- [x] Tailwind v4 + shadcn/ui (Radix) components + temple colour theme (`src/index.css`)
-- [x] All dependencies installed
-- [x] Domain types (`src/types/index.ts`), constants (27 nakshatras), date (IST) / currency (₹) / phone helpers, permissions map
-- [x] JSON seed data: 4 users, 3 temples, 30 offerings (6 inactive)
-- [x] Mock API: network simulator, idempotency, in-memory DB, auth, temples, darshan bookings, vazhipadu orders
-- [x] Store skeleton (language + announcer slices), i18n (EN/ML), layout, header, footer, skip link, loading/empty/error components, home and 404 pages
-- [x] 7 photos converted to WebP (hero, 3 temples, lamp, payasam, abhishekam), all ≤ 126 KB, with license credits
-- [ ] **Not verified yet:** type check, build and dev server have not been run since the last files were written
-- [ ] Not done: tests, README, PR template, git init, GitHub repo, offering photos for Pushpanjali / Archana / Nivedyam / Homam / Special
+On 26 Oct 2026 the order was changed to **modules**, with the owner's confirmation after each one:
 
-**First action when you approve:** Phase 1, step 1 (verify what exists), _before_ writing anything new.
+1. Website with temple details, notifications and login
+2. Login for both customers and admins
+3. Admin module
+4. Customer module
+5. Deployment ready
+
+Each module was built on its own branch in small commits. Before confirmation it was checked: types, lint, tests, build, and screenshots at 360 px and desktop. After confirmation it was **squash-merged into `main`** locally. GitHub PRs were not possible (no `gh`), so the PR template exists but has not been used yet.
 
 ---
 
-## 3. Working rules (every phase)
+## 4. Completed work by module
 
-### Git and PRs
+### Module 0 — Base project ✅ (`a4ebe13`)
 
-1. `main` gets exactly **one** direct commit (Phase 1). Everything else goes branch → PR → review → merge.
-2. Each branch starts from the latest `main`: `git switch main && git pull && git switch -c <branch>`.
-3. Commits are small and describe the change ("Add slot list for selected temple"). Never "fix", "wip", "changes" or "final".
-4. Before opening a PR, all must pass: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build`.
-5. PR description uses the template (§9): Problem / Assumptions / Decisions & trade-offs / How to test, plus "AI corrections" where relevant.
-6. Review: read the full diff, leave **at least one comment on a specific line**, then address it with a follow-up commit or a reply.
-7. Merge with **squash**, delete the branch, `git pull` on `main`.
+- [x] Vite + React + strict TypeScript, `@/` alias, Tailwind v4 + shadcn/ui with the temple colour theme
+- [x] Domain types, 27 nakshatras, IST date helpers, ₹ formatting, phone validation, permission map
+- [x] Mock API: network simulator, idempotency store, in-memory DB, seeded data (4 users, 3 temples, 30 offerings, 7 days × 6 slots per temple, ~20 bookings, 50 orders)
+- [x] Test harness (`tests/setup.ts`, `renderWithProviders`, frozen-clock helpers) plus API and seed tests
+- [x] PR template (`.github/pull_request_template.md`)
+- [x] Fixed the missing `src/assets/images/credits.json` that stopped the dev server
 
-### Code standards
+### Module 1 — Website ✅ (`d8afe2f`)
 
-- Components never call the API directly: component → action → saga → API → slice → selector.
-- Every async slice uses `{ data, status: 'idle'|'loading'|'success'|'error', error }`.
-- Fetches use `takeLatest`; submits use `takeLeading` + an idempotency key.
-- Every user-visible string goes in `src/i18n/en.ts` **and** `ml.ts` (the type check fails if one is missing).
-- Every form field has a `<label>`; tests find fields with `getByLabelText`.
-- Mobile first; nothing wider than 360 px; tap targets ≥ 44 px.
+- [x] Home: hero, latest important notices, temple cards
+- [x] Temple list and temple detail: about, daily pooja schedule in IST, opening hours, address, tap-to-call phone, the temple's notices
+- [x] **Notifications** (new feature):
+  - 11 seeded notices (festival / timing change / closure / general)
+  - temple and type filters kept in the URL, and a page for each notice
+  - a header bell with the unread count
+- [x] Login page: validation, show/hide password, demo-accounts box, safe `?redirect=`, session saved and restored
+- [x] Responsive header with a phone menu, EN/ML switch, footer with quick links and photo credits, error page, focus moves to the content on navigation
 
-### Checkpoint report (at every ⛔)
+### Module 2 — Login for devotees and admins ✅ (`84a9e69`)
 
-At each stop I report: what was done, test/build results, PR link, screenshots or what to click to check it, open questions.
+- [x] **Two login pages**: `/login` (devotees) and `/admin/login` (staff/admin). Each refuses the other kind of account and links to the right page.
+- [x] **Devotee sign-up** (`/register`) with an error summary; accounts survive a page reload
+- [x] **My account**: edit name and phone, change password
+- [x] `RequireAuth`, `RequireRole` and `RequirePermission` guards; 403 page; admin portal shell
+- [x] Session after reload: a network error keeps the user logged in and retries; an invalid token logs them out
+- [x] A "session expired" message when the server rejects a token mid-use
 
----
+### Module 3 — Admin portal ✅ (`2cfa095`)
 
-## 4. Phase 0 — Prerequisites (you)
+- [x] **Dashboard** (admin only), with a temple filter:
+  - revenue headline; today's tickets and offerings; upcoming and cancelled bookings
+  - slot-fill meter and orders by status
+  - revenue-by-temple chart with a table view
+- [x] Darshan booking search (part of a phone number, date, status, temple) with cancel
+- [x] **Vazhipadu orders:**
+  - filters and page number kept in the URL; an out-of-range page snaps to the last one
+  - cancel shows at once and rolls back on failure
+  - **CSV export** of all matching orders, protected against spreadsheet formula injection
+- [x] Slot capacity (never below the tickets already booked) and close/open for booking, with rollback
+- [x] Offering prices and on/off switch, with rollback
+- [x] Bilingual notice publishing and deletion; staff limited to their own temple
+- [x] Tables turn into cards on phones; the admin menu shows only permitted pages
 
-| #   | Task                                                          | Why                               |
-| --- | ------------------------------------------------------------- | --------------------------------- |
-| 0.1 | Install GitHub CLI: `winget install GitHub.cli`               | Needed to create the repo and PRs |
-| 0.2 | Log in: `gh auth login` (GitHub.com → HTTPS → browser)        | Lets me push and open PRs as you  |
-| 0.3 | Open `C:\Users\hh\darsan-web` in VS Code (File → Open Folder) | The project now lives there       |
-| 0.4 | (Optional) delete `C:\Users\hh\customer-app` after switching  | It's an outdated copy             |
+### Module 4 — Customer ✅ (`b84aee5`)
 
-⛔ **Checkpoint 0:** tell me when 0.1–0.3 are done.
+**Darshan (original phases P1–P5)**
 
----
+- [x] **P1:**
+  - temple picker, 7-day picker, and slot cards (IST time, tickets left, Full / Started / Closed with the reason)
+  - booking dialog with name and phone prefilled; 3 of 10 booked → 7 left
+  - loading, empty and error states; guests are sent to login and back
+- [x] **P2:**
+  - `?temple=&date=` in the URL; Back restores the previous choice; bad links reset with a notice
+  - `takeLatest` + request id, with a passing race test; Copy link with a fallback
+- [x] **P3:**
+  - `takeLeading`, a disabled button, and an idempotency key reused on retry
+  - a failure keeps the typed values; a retry after a lost response returns the same booking
+- [x] **P4:** My bookings, cancel shown at once with rollback, started bookings show the reason, IST on any device time zone
+- [x] **P5:** Malayalam for every label, status and date; keyboard-only booking; focus moves to the confirmation, then returns to the Book button
 
-## 5. Phase 1 — Base project on `main`
+**Vazhipadu (original phases V1–V3, and the devotee side of V4)**
 
-**Goal:** a working, tested base that every feature builds on.
+- [x] **V1:** offerings with photo and ₹ price, category tabs, search on English and Malayalam names (debounced, kept in the URL), inactive offerings hidden
+- [x] **V2:**
+  - cart with 1–10 quantity steppers and ₹ totals, saved in localStorage
+  - one temple per cart (asks before replacing); prices follow catalogue changes
+  - order form with 27 nakshatras, a date from today to +90 days, and an error summary
+- [x] **V3:** safe submit (same as darshan); a failure keeps the cart and form; printable receipt; cart emptied on success
+- [x] My orders with cancel (a `mine` filter, so staff see only their own orders on this page)
+- [x] Five offering photos from Wikimedia Commons (Pushpanjali, Archana, Homam, Nivedyam, Special), WebP up to 103 KB, with credits
 
-| Step | Task                                                                                                                                                                                                                                           | Output                           |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| 1.1  | Verify existing work: `npm run typecheck`, `npm run build`, `npm run dev`; fix any errors                                                                                                                                                      | Clean build                      |
-| 1.2  | Test setup: `tests/setup.ts` (jest-dom, reset localStorage, reset mock DB, fast mock config), `tests/utils/renderWithProviders.tsx` (store + memory router)                                                                                    | Test harness                     |
-| 1.3  | Mock API tests: latency range, failure rate, `failNextCalls`, idempotent replay, "failed after save" case, slot/booking rules, order paging, permission checks                                                                                 | `tests/api/*.test.ts`            |
-| 1.4  | Seed data tests: users/temples/offerings JSON match their types; each temple has 8–10 offerings; ~50 orders; 7 days of slots; some full, some started                                                                                          | `tests/api/seed.test.ts`         |
-| 1.5  | Smoke test: app renders home page, skip link is first, 404 works                                                                                                                                                                               | `tests/integration/App.test.tsx` |
-| 1.6  | Remaining offering photos (Pushpanjali flowers, Archana, Nivedyam, Homam fire, Special) from Wikimedia Commons, WebP ≤ 150 KB, credits added. **No photos of identifiable children.** If rate-limited, the existing lamp photo is the fallback | `src/assets/images/*`            |
-| 1.7  | `.github/pull_request_template.md`                                                                                                                                                                                                             | PR template                      |
-| 1.8  | `README.md`: about, demo users, how to run / test / build, folder structure, mock API settings (`?fail=`, `?latency=`), photo credits, PR links table (filled in later)                                                                        | README                           |
-| 1.9  | `git init -b main`, one commit "Set up Vite React TypeScript project with mock API", `gh repo create darsan-web --public --source . --push`                                                                                                    | Repo on GitHub                   |
+### Module 5 — Deployment readiness 🟡 (branch `chore/deploy-ready`)
 
-**Done when:** typecheck, lint, tests and build all pass; dev server shows the home page; repo is on GitHub.
+Committed:
 
-⛔ **Checkpoint 1:** you open the dev server and the repo and approve.
+- [x] The whole codebase formatted with Prettier (`0b91e51`)
 
----
+Done but **not committed** (only in the working tree):
 
-## 6. Phase 2 — PR A0: Login and roles
-
-**Branch:** `feature/auth-login`
-
-| Area    | Work                                                                                                                                                                                                       |
-| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Store   | `store/auth`: slice `{ user, token, status, error, restoring }`; saga: `login` (takeLeading), `restoreSession` on start-up (`authApi.me`), `logout`; saves the token to localStorage; calls `setAuthToken` |
-| Pages   | `/login`: username, password (show/hide), errors under fields, "Incorrect username or password", loading button, demo users box, `?redirect=` back after login. `/403` page                                |
-| Routing | `RequireAuth` (sends guests to `/login?redirect=…`), `RequireRole([...])` (sends wrong roles to `/403`)                                                                                                    |
-| Header  | Login button for guests; user menu (name, role badge, Log out) for users; nav shows only allowed links                                                                                                     |
-| Rules   | A network error during session restore keeps the user logged in and retries; only an "expired/invalid" answer logs them out                                                                                |
-
-**Commits (planned):**
-
-1. Add auth slice and session persistence
-2. Add login and session restore sagas
-3. Add login page with validation
-4. Add route guards for login and roles
-5. Show user menu and logout in header
-6. Add login and route guard tests
-
-**Tests:** wrong password shows error · correct login redirects back · devotee opening an admin route gets 403 · guest opening a protected page goes to login · refresh keeps the session · logout clears it.
-
-⛔ **Checkpoint A0:** PR reviewed and merged; you try all 4 demo users.
-
----
-
-## 7. Phase 3 — Darshan P1: Slot list and booking form
-
-**Branch:** `feature/p1-slot-list-booking` · Brief: Grade I P1
-
-| Area          | Work                                                                                                                                                                                                              |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Store         | `temples` slice + saga (shared by both modules); `slots` slice + saga (`getSlots`); `booking` slice + saga (`createBooking`)                                                                                      |
-| Page          | `/darshan`: temple select, date select (today + 6 days, shown as buttons on desktop, select on mobile), slot cards: IST start time, remaining / capacity, badges **Full** and **Started** (disabled, with reason) |
-| Form          | Opens for the chosen slot: name, phone (prefilled from the logged-in user, editable), tickets (1 to min(10, remaining)). zod validation with a message under each field. Guests are sent to login first           |
-| After booking | Success panel with booking ref; slot list updates (3 booked of 10 → 7 remaining)                                                                                                                                  |
-| States        | Skeleton while loading · "No slots for this day" · error with **Try again**                                                                                                                                       |
-| Home          | Add the "Book Darshan" card; header gets a "Darshan" link                                                                                                                                                         |
-
-**Commits:** Add temples and slots state with sagas · Add darshan page with temple and date pickers · Show slot cards with remaining tickets and status · Add booking form with validation · Update remaining tickets after booking · Add darshan home card and nav link · Add slot list and booking tests
-
-**Tests (acceptance):** booking 3 in a slot with 10 left shows 7 · form rejects more tickets than remain · full and started slots can't be booked · load failure shows error, retry works · empty day shows empty state.
-
-⛔ **Checkpoint P1**
+- [x] Code splitting: everything outside the public website loads on demand (`src/pages/lazyPages.tsx`). The login pages do too, which moved zod and react-hook-form out of the first download.
+- [x] Mock settings at build time: `VITE_MOCK_FAILURE_RATE`, `VITE_MOCK_LATENCY_MS`, `VITE_MOCK_URL_PARAMS` (`src/mockSettings.ts`, `.env.example`, `src/env.d.ts`), with tests
+- [x] Hosting configs: `netlify.toml`, `vercel.json`, `Dockerfile` + `nginx.conf` + `.dockerignore`. They provide:
+  - the single-page-app fallback (refreshing any page works)
+  - security headers: CSP, nosniff, no framing, referrer and permissions policies, HSTS
+  - long-term caching for the hashed asset files
+- [x] zod switched to its no-eval mode (`src/lib/zod.ts`) so the CSP has no violations; a lint rule blocks direct `zod` imports
+- [x] GitHub Actions CI (`.github/workflows/ci.yml`): format, types, lint, tests, build, upload `dist`
+- [x] `package.json` at version 1.0.0 with `engines`, `format:check` and `check` scripts; `@vitest/coverage-v8` added and coverage configured
+- [x] `.nvmrc`, `public/robots.txt`, and `.gitignore` entries for env files and coverage
+- [x] Test async timeout raised to 3 s (lazy pages under coverage or on CI)
+- [x] README rewritten for running, testing and deploying
 
 ---
 
-## 8. Phase 4 — Darshan P2: Shareable filters
+## 5. What is missing
 
-**Branch:** `feature/p2-shareable-filters` · Brief: Grade I P2
+### Must do before calling the project finished
 
-| Work        | Detail                                                                                                                                                              |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| URL state   | `/darshan?temple=tm-sastha&date=2026-10-31`; the URL is the single source of truth; each change adds a history entry, so **Back** returns to the previous selection |
-| Bad links   | Unknown temple or a date outside the 7 days → falls back to the default and shows a short notice                                                                    |
-| Race safety | `takeLatest` cancels the old request; slice also stores a `requestId` and ignores late answers                                                                      |
-| Share       | "Copy link" button (falls back to showing the link if the clipboard is blocked)                                                                                     |
+| #   | Item                                                                                                                                    | Why it matters                                                                                                                                                                           | Effort        |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| 1   | Format `tests/lib/mockSettings.test.ts` (`npm run format`), run `npm run check`, commit Module 5 and merge it into `main`               | Module 5 work exists only in the working tree                                                                                                                                            | Small         |
+| 2   | Photo credits for the original 7 photos (`hero`, `lamp`, `payasam`, `abhishekam`, `temple-krishna`, `temple-mahadeva`, `temple-sastha`) | Their sources were never recorded, and CC licences require attribution before a public launch. Find the sources and add them to `credits.json`, or replace the photos with credited ones | Medium        |
+| 3   | Put the repo on GitHub: `winget install GitHub.cli`, `gh auth login`, `gh repo create darsan-web --public --source . --push`            | Needed for CI, PRs and hosting                                                                                                                                                           | Small (owner) |
+| 4   | Deploy once and check the live site                                                                                                     | The configs are written but nothing has been deployed. The Docker image is untested (Docker isn't installed on this machine)                                                             | Small         |
 
-**Commits:** Read and write temple and date from the URL · Ignore stale slot responses · Handle invalid temple or date in links · Add copy link button · Add shareable link and race tests
+### In the original plan but not done
 
-**Tests:** opening a link shows that temple and date · Back restores the previous selection · **slow first response arriving after a fast second one does not replace the slots** (deferred promises resolved out of order).
+| Item                                                     | Original phase     | Note                                                                           |
+| -------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------ |
+| One GitHub PR per phase, each with a line review comment | §3 working rules   | Replaced by local branches and squash merges; this can't be done retroactively |
+| README PR links table and screenshots                    | Phase 14           | No PRs exist; screenshots were only taken locally                              |
+| Automated accessibility checks (`vitest-axe`)            | PLAN §9 (optional) | Covered instead by tests that find elements by role and label                  |
+| Real-device 360 px check and a screen-reader run         | Phases 12 and 14   | Checked only with headless Chrome at 360 px and keyboard tests                 |
 
-⛔ **Checkpoint P2**
+### Nice to have (not started)
 
----
-
-## 9. Phase 5 — Darshan P3: Safe submit
-
-**Branch:** `feature/p3-safe-submit` · Brief: Grade I P3
-
-| Work         | Detail                                                                                                                                                                                                                       |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Double tap   | Button disabled + "Booking…" while sending; saga uses `takeLeading`, so extra clicks are ignored                                                                                                                             |
-| Retry safety | One idempotency key per booking attempt, kept across retries and replaced only after success or when the form changes. The mock API sometimes saves and _then_ fails; a retry with the same key returns the original booking |
-| Failure      | Error message above the form with **Try again**; every typed value stays                                                                                                                                                     |
-| PR text      | Explains the mock API change (idempotency store + "failed after save" mode)                                                                                                                                                  |
-
-**Commits:** Disable booking button while submitting · Ignore repeat submits in booking saga · Reuse idempotency key on retry · Keep form values after a failed booking · Add safe submit tests
-
-**Tests:** double-click Book → exactly one booking · failure keeps values and retry succeeds · "saved but response lost" + retry → still one booking, remaining tickets dropped only once.
-
-⛔ **Checkpoint P3**
+- Dark mode
+- Error monitoring (e.g. Sentry) and analytics (needs a privacy decision)
+- PWA / offline support (manifest + service worker)
+- Multi-day vazhipadu (one order over a date range), deferred in PLAN.md
+- A real backend instead of the mock API. The `src/api/*` functions are the place to swap: keep the signatures, replace the bodies with `fetch`.
 
 ---
 
-## 10. Phase 6 — Darshan P4: My bookings and cancellation
+## 6. Decisions that differ from the original plan
 
-**Branch:** `feature/p4-my-bookings` · Brief: Grade I P4
-
-| Work      | Detail                                                                                                                               |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Page      | `/darshan/my-bookings`: devotee sees their bookings straight away (own phone); staff/admin get a phone search box (`?phone=` in URL) |
-| Columns   | Temple · date · start time (IST) · tickets · status · action. Cards on mobile                                                        |
-| Cancel    | Confirm dialog → shows **Cancelled** at once (optimistic) → on API failure it goes back to **Booked** with an error message          |
-| Started   | No active cancel button; text: "Darshan has started — it can no longer be cancelled"                                                 |
-| Time zone | All times in Asia/Kolkata whatever the device setting                                                                                |
-
-**Commits:** Add my bookings state and saga · Add my bookings page with phone search for staff · Add cancel confirmation dialog · Cancel optimistically and roll back on failure · Block cancelling started bookings with a reason · Add my bookings tests
-
-**Tests:** cancel shows cancelled at once · failure reverts and shows error · started booking shows reason, no button · times correct when the device time zone is not India (`TZ=America/New_York`).
-
-⛔ **Checkpoint P4**
-
----
-
-## 11. Phase 7 — Darshan P5: Accessibility and Malayalam
-
-**Branch:** `feature/p5-a11y-malayalam` · Brief: Grade I P5 (WCAG 2.2 AA)
-
-| Work           | Detail                                                                                                                                   |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Language       | EN / മലയാളം toggle in the header; all labels, buttons, statuses, nakshatras, dates and times switch; choice saved; `<html lang>` updated |
-| Keyboard       | Whole flow (temple → date → slot → form → book) with Tab / Enter / Space / arrows; visible focus ring; dialogs trap focus and return it  |
-| Screen readers | Booking success or error is announced through the live region; after success, focus moves to the confirmation heading                    |
-| Forms          | Every field has a label; errors linked with `aria-describedby`; error summary focused on failed submit                                   |
-| Layout         | 360 px check on all darshan pages; contrast check                                                                                        |
-| PR text        | Written keyboard walkthrough                                                                                                             |
-
-**Commits:** Add language toggle and save the choice · Translate darshan screens to Malayalam · Format dates and times by language · Announce booking result to screen readers · Move focus to confirmation after booking · Link field errors for screen readers · Fix layout at 360 px · Add keyboard flow and language tests
-
-**Tests:** keyboard-only booking (user-event `tab` / `keyboard`, no clicks) · switching to Malayalam changes labels, buttons and date format · fields found by label in both languages.
-
-⛔ **Checkpoint P5 — big review.** Darshan module complete. You review the whole app before Vazhipadu starts.
+| Decision                                                                                         | Reason                                                                      |
+| ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| Module order instead of P1 → V5                                                                  | Requested by the owner on 26 Oct 2026                                       |
+| Local git with squash merges, no PRs                                                             | GitHub CLI not installed                                                    |
+| **Notifications** feature added (notices, filters, bell, admin publishing)                       | Requested as part of the website module                                     |
+| Separate devotee and staff login pages, plus devotee sign-up and My account                      | Request for "login for both customer and admin"                             |
+| Native `<select>` for temple, status and birth star                                              | Works with every screen reader, uses the phone's own picker, simple to test |
+| Day picker as one radio group with arrow keys (instead of buttons plus a separate mobile select) | One control for every screen width, one Tab stop                            |
+| Responsive tables (a table on desktop, cards on phones) with explicit ARIA roles                 | One DOM for both layouts, and the table semantics survive the card styling  |
+| Optimistic cancel stores the previous status in the slice                                        | The saga can't read the old status once the reducer has changed it          |
+| Mock user accounts kept in localStorage                                                          | So sign-ups survive a reload; bookings and orders still reset by design     |
+| One `orders` slice shared by the admin list and My orders                                        | Same API and cancel logic                                                   |
+| Lazy-loaded pages and zod's no-eval mode                                                         | Smaller first download, and a strict CSP without `eval`                     |
+| Chart colour `#9b2c2c` instead of the primary `#7a1f1f`                                          | Passes the chart palette validator (lightness and contrast)                 |
 
 ---
 
-## 12. Phases 8–12 — Vazhipadu V1–V5 (after your approval)
+## 7. How to continue
 
-Same workflow and level of detail; full scope is in PLAN.md §7.
+```bash
+cd C:\Bhagath\darsan-web
+git switch chore/deploy-ready
+npm run format            # fixes the one unformatted test file
+npm run check             # format, types, lint, tests, build
+git add -A && git commit -m "Make the app deployment ready"
+git switch main && git merge --squash chore/deploy-ready && git commit
+```
 
-| Phase | Branch                          | Scope                                                                                                                                         | Key tests                                                                  |
-| ----- | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| 8     | `feature/v1-offerings-list`     | Temple select, offerings with photo + ₹ price, search, category tabs, inactive hidden, loading/empty/error                                    | "push" → only Pushpanjali; failure → retry                                 |
-| 9     | `feature/v2-cart-and-form`      | Cart (add, quantity, remove), ₹ totals, saved in localStorage, one temple per cart, order form (name, phone, 27 nakshatras, date ≥ today IST) | 2×₹30 + 1×₹50 = ₹110; message per invalid field; refresh keeps cart        |
-| 10    | `feature/v3-order-confirmation` | Place order with `takeLeading` + idempotency key, failure keeps cart + form, receipt page, cart emptied                                       | double-click → one order; failure → retry works                            |
-| 11    | `feature/v4-orders-list-staff`  | Staff/admin orders table: date, status, phone filters in URL; pages; cancel with confirm, updates without reload                              | status filter → page 1; refresh keeps filters + page; cancel shows at once |
-| 12    | `feature/v5-mobile-and-a11y`    | 360 px for offerings, cart, form; keyboard flow; labels; contrast; Malayalam for vazhipadu screens                                            | keyboard order flow; label queries                                         |
-
-⛔ Checkpoint after each phase.
-
----
-
-## 13. Phase 13 — Admin tools
-
-| Branch                    | Scope                                                              |
-| ------------------------- | ------------------------------------------------------------------ |
-| `feature/admin-dashboard` | Counts by status, today's bookings and orders, revenue; admin only |
-| `feature/admin-slots`     | Change capacity, block / unblock a slot                            |
-| `feature/admin-rates`     | Edit offering price, turn offerings on / off                       |
-| `feature/admin-export`    | CSV export of the filtered orders list                             |
-
-⛔ Checkpoint after each.
+Then install and log in to `gh` and create the GitHub repo. Connect it to Netlify or Vercel (on Vercel, set `VITE_MOCK_FAILURE_RATE=0.05`), and check the live site.
 
 ---
 
-## 14. Phase 14 — Final
-
-1. Branch `docs/final-readme`: README PR links table, screenshots, final assumptions summary.
-2. Full check: typecheck, lint, all tests, build, manual run at 360 px and desktop, keyboard-only run.
-3. Repo check: every PR uses the template, has a line comment that was addressed, and is merged; no direct commits to `main` after Phase 1.
-
-⛔ **Final checkpoint.**
-
----
-
-## 15. Planned folder structure (end state)
+## 8. Folder structure (current)
 
 ```
 darsan-web/
-├── .github/pull_request_template.md
-├── docs/                 PLAN.md, EXECUTION_PLAN.md
+├── .github/            pull_request_template.md, workflows/ci.yml
+├── docs/               PLAN.md, EXECUTION_PLAN.md
+├── public/             favicon.svg, icons.svg, robots.txt
 ├── src/
-│   ├── api/              mockClient, db, seed, session, authApi, templeApi, bookingApi, orderApi
-│   │   └── data/         users.json, temples.json, offerings.json
-│   ├── assets/images/    *.webp + credits.json
+│   ├── api/            mockClient, db, seed, rng, session, userStore, errors,
+│   │                   authApi, templeApi, noticeApi, bookingApi, orderApi, adminApi
+│   │   └── data/       users.json, temples.json, offerings.json, notices.json
+│   ├── assets/images/  12 WebP photos + credits.json
 │   ├── components/
-│   │   ├── ui/           shadcn components
-│   │   ├── common/       Header, Footer, SkipLink, Announcer, states, Price, LanguageToggle, UserMenu
-│   │   ├── darshan/      TemplePicker, DatePicker, SlotCard, BookingForm, BookingCard, CancelDialog
-│   │   ├── vazhipadu/    OfferingCard, OfferingSearch, CartDrawer, CartLine, OrderForm, Receipt
-│   │   └── admin/        FilterBar, OrdersTable, Pagination, StatsCards, SlotManager, RateManager
-│   ├── hooks/            useUrlState, useDebounce
-│   ├── i18n/             en.ts, ml.ts, index.ts (useT)
-│   ├── layouts/          AppLayout, RequireAuth, RequireRole
-│   ├── lib/              constants, date, currency, phone, permissions, images, utils, validators
-│   ├── pages/            Home, Login, Forbidden, NotFound, darshan/*, vazhipadu/*, admin/*
-│   ├── store/            index, rootReducer, rootSaga, hooks, persistence + one folder per slice
-│   ├── types/            index.ts
-│   ├── router.tsx, App.tsx, main.tsx, index.css
-└── tests/                setup, utils, api/, store/, integration/
+│   │   ├── ui/         shadcn components (+ dropdown-menu, switch)
+│   │   ├── common/     Header, Footer, menus, FormField, ErrorSummary, NativeSelect,
+│   │   │               ConfirmDialog, Pagination, StatusBadge, states, CopyLinkButton…
+│   │   └── auth/  temples/  notices/  darshan/  vazhipadu/  admin/
+│   ├── hooks/          useTemples, useLatestNotices, useQueryParams, useDebouncedValue,
+│   │                   useNow, useLogout, useWelcomeToast, useSessionExpiredNotice
+│   ├── i18n/           en.ts, ml.ts, index.ts (useT)
+│   ├── layouts/        AppLayout, AdminLayout, guards
+│   ├── lib/            constants, date, currency, phone, permissions, validators, schemas,
+│   │                   zod, csv, redirect, slots, images, demoAccounts, id, utils
+│   ├── pages/          public pages, darshan/, vazhipadu/, admin/, lazyPages.tsx
+│   ├── store/          auth, i18n, notices, temples, darshan, vazhipadu, orders, admin, ui
+│   │                   + callApi, notify, sagaUtils, persistence, errors, types
+│   ├── types/          index.ts
+│   └── router.tsx, App.tsx, main.tsx, mockSettings.ts, env.d.ts, index.css
+├── tests/              setup, utils/, api/, store/, lib/, integration/
+├── Dockerfile, nginx.conf, netlify.toml, vercel.json, .env.example, .nvmrc
+└── README.md
 ```
 
 ---
 
-## 16. PR template (`.github/pull_request_template.md`)
+## 9. Risks and open questions
 
-```markdown
-## Problem
-
-What this PR solves (1–2 lines).
-
-## Assumptions
-
-Gaps in the problem statement and what I decided.
-
-## Decisions & trade-offs
-
-What I chose, and why over the alternatives.
-
-## AI corrections
-
-Places where AI-generated code or advice was wrong and how it was fixed.
-
-## How to test
-
-Commands, steps in the UI, test files.
-```
-
----
-
-## 17. Risks and open questions
-
-| Risk / question                                                                 | Plan                                                                                                                            |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Wikimedia rate-limits image downloads                                           | Download a few at a time with waits; the lamp photo is the fallback image                                                       |
-| Mock data resets on a full reload (in-memory, as the brief requires)            | Bookings made in a session disappear after reload; login, language and cart are kept in localStorage. Written in README and PRs |
-| Plain-text passwords in `users.json`                                            | Fine for a mock only; README says so                                                                                            |
-| shadcn CLI generated broken `cn` imports and a Base UI style                    | Already fixed (Radix style, `@/lib/utils`); listed under "AI corrections" in the Phase 1 notes                                  |
-| `@hookform/resolvers` v6 has a peer conflict                                    | Pinned to v5                                                                                                                    |
-| **Open:** should guests be able to view slots without logging in?               | Plan says yes (login is asked only when booking). Tell me if you want login required for everything                             |
-| **Open:** should staff be able to book on behalf of devotees (counter booking)? | Plan says yes. Tell me if not                                                                                                   |
+| Risk / question                           | Status                                                                  |
+| ----------------------------------------- | ----------------------------------------------------------------------- |
+| Uncredited photos (7)                     | **Open**, see §5 item 2                                                 |
+| Mock data resets on a full reload         | By design; documented in the README                                     |
+| Plain-text passwords in the mock          | Acceptable for a mock only; documented                                  |
+| Failure rate on a public demo             | Darshan defaults to 20% failures; the Netlify and Docker configs set 5% |
+| Docker image                              | Written but never built or run (no Docker on this machine)              |
+| Can guests view slots without logging in? | Decided: yes, login is asked only when booking                          |
+| Can staff book on behalf of devotees?     | Decided: yes (staff can book; name and phone are editable)              |

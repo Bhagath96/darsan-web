@@ -1,7 +1,11 @@
 import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
+import { cleanup, configure } from '@testing-library/react'
 import { afterEach, beforeEach } from 'vitest'
 import { configureMock, resetDb, resetMockConfig, setAuthToken } from '@/api'
+
+// Pages load on demand (React.lazy); the first load of a page is slower under coverage
+// instrumentation or on a busy CI machine, so give findBy*/waitFor more than the default 1 s.
+configure({ asyncUtilTimeout: 3000 })
 
 /**
  * Every test starts from the same place: fresh seed data, an empty localStorage,

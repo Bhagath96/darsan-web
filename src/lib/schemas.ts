@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from '@/lib/zod'
 import { isValidPhone } from './phone'
 import { isStrongPassword, NAME_PATTERN, USERNAME_PATTERN } from './validators'
 import type { MessageKey } from '@/i18n'

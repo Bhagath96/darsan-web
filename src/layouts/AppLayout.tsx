@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { Outlet, ScrollRestoration, useLocation } from 'react-router'
 import { Announcer } from '@/components/common/Announcer'
 import { Footer } from '@/components/common/Footer'
 import { Header } from '@/components/common/Header'
 import { MAIN_CONTENT_ID, SkipLink } from '@/components/common/SkipLink'
+import { LoadingState } from '@/components/common/states'
 import { Toaster } from '@/components/ui/sonner'
 import { useLatestNotices } from '@/hooks/useLatestNotices'
 import { useSessionExpiredNotice } from '@/hooks/useSessionExpiredNotice'
@@ -51,7 +52,9 @@ export function AppLayout() {
         tabIndex={-1}
         className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 outline-none"
       >
-        <Outlet />
+        <Suspense fallback={<LoadingState rows={4} />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
       <Announcer />

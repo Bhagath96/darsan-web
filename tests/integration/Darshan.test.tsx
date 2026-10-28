@@ -103,7 +103,7 @@ describe('P1 · slot list and booking', () => {
     const { user, router } = renderApp({ url })
     await user.click(await screen.findByRole('button', { name: 'Book the 8:00 am slot' }))
     expect(currentUrl(router)).toBe(`/login?redirect=${encodeURIComponent(url)}`)
-    await user.type(screen.getByLabelText('Username'), 'devotee')
+    await user.type(await screen.findByLabelText('Username'), 'devotee')
     await user.type(screen.getByLabelText('Password'), 'devotee123')
     await user.click(screen.getByRole('button', { name: 'Log in' }))
     await waitFor(() => expect(currentUrl(router)).toBe(url))
